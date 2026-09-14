@@ -1,0 +1,1 @@
+ALTER TABLE `product_inventory` ADD `prices_configured` integer DEFAULT false NOT NULL;
