@@ -58,7 +58,7 @@ export function CatalogCartDrawer() {
   );
   const lines = items.flatMap((item) => {
     const product = products.find((entry) => entry.slug === item.slug);
-    return product ? [{ ...item, product }] : [];
+    return product && item.quantity > 0 ? [{ ...item, product }] : [];
   });
 
   return (

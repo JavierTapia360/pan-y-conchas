@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { products, type Product } from '@/data/products';
+import { type Product } from '@/data/products';
 import { assets } from '@/data/assets';
 import { useCatalog, type CatalogProduct } from '@/hooks/use-catalog';
 
@@ -102,7 +102,7 @@ function isSelectionItem(item: unknown): item is SelectionItem {
   );
 }
 
-function sharedItemsFromUrl() {
+function sharedItemsFromUrl(catalog: CatalogProduct[]) {
   const requested = new URLSearchParams(window.location.search)
     .get('selection')
     ?.split(',')
@@ -113,7 +113,7 @@ function sharedItemsFromUrl() {
     if (value === 'wax') {
       return [waxSelectionItem()];
     }
-    const product = products.find((entry) => entry.slug === value);
+    const product = catalog.find((entry) => entry.slug === value);
     return product ? [productSelectionItem(product)] : [];
   });
 }
@@ -154,6 +154,7 @@ export function reconcileSelectionItems(
 
 export function SelectionProvider({ children }: { children: React.ReactNode }) {
   const catalog = useCatalog();
+  const [initialCatalog] = useState(catalog);
   const [items, setItems] = useState<SelectionItem[]>([]);
   const [compareItems, setCompareItems] = useState<SelectionItem[]>([]);
   const [recentItems, setRecentItems] = useState<SelectionItem[]>([]);
@@ -173,7 +174,7 @@ export function SelectionProvider({ children }: { children: React.ReactNode }) {
       const recent = JSON.parse(
         window.localStorage.getItem(RECENT_KEY) || '[]',
       ) as SelectionItem[];
-      const shared = sharedItemsFromUrl();
+      const shared = sharedItemsFromUrl(initialCatalog);
       queueMicrotask(() => {
         setItems(
           [...stored.filter(isSelectionItem), ...shared].filter(
@@ -189,7 +190,7 @@ export function SelectionProvider({ children }: { children: React.ReactNode }) {
     } catch {
       queueMicrotask(() => setHydrated(true));
     }
-  }, []);
+  }, [initialCatalog]);
 
   useEffect(() => {
     if (!hydrated) return;

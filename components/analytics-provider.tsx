@@ -15,18 +15,56 @@ export function AnalyticsProvider() {
   useEffect(() => {
     if (!FEATURES.analytics) return;
     let saved: Choice = null;
-    try { const value = window.localStorage.getItem(ANALYTICS_CONSENT_KEY); saved = value === 'accepted' || value === 'declined' ? value : null; } catch { /* Consent remains session-only. */ }
+    try {
+      const value = window.localStorage.getItem(ANALYTICS_CONSENT_KEY);
+      saved = value === 'accepted' || value === 'declined' ? value : null;
+    } catch {
+      /* Consent remains session-only. */
+    }
     queueMicrotask(() => setChoice(saved));
   }, []);
-  useEffect(() => { if (choice === 'accepted') track('page_view', { language }); }, [pathname, language, choice]);
+  useEffect(() => {
+    if (choice === 'accepted') track('page_view', { language });
+  }, [pathname, language, choice]);
   if (!FEATURES.analytics || choice) return null;
   const decide = (next: Exclude<Choice, null>) => {
-    try { window.localStorage.setItem(ANALYTICS_CONSENT_KEY, next); } catch { /* Apply for this page view. */ }
+    try {
+      window.localStorage.setItem(ANALYTICS_CONSENT_KEY, next);
+    } catch {
+      /* Apply for this page view. */
+    }
     setChoice(next);
-    if (next === 'accepted') queueMicrotask(() => track('page_view', { language }));
+    if (next === 'accepted')
+      queueMicrotask(() => track('page_view', { language }));
   };
-  return <aside className="privacy-banner" aria-label={language === 'es' ? 'Preferencias de analítica' : 'Analytics preferences'}>
-    <p>{language === 'es' ? 'Analítica privada y anónima para mejorar el sitio. No guardamos nombres, emails ni direcciones.' : 'Private, anonymous analytics help improve the site. We do not store names, emails or addresses.'}</p>
-    <div><button className="button button-red" onClick={() => decide('accepted')}>{language === 'es' ? 'Aceptar' : 'Accept'}</button><button className="button button-outline" onClick={() => decide('declined')}>{language === 'es' ? 'Rechazar' : 'Decline'}</button></div>
-  </aside>;
+  return (
+    <aside
+      className="privacy-banner"
+      aria-label={
+        language === 'es'
+          ? 'Preferencias de analítica'
+          : 'Analytics preferences'
+      }
+    >
+      <p>
+        {language === 'es'
+          ? 'Analítica anónima guardada solo en este navegador para mejorar el sitio. No se envía a un servidor.'
+          : 'Anonymous analytics saved only in this browser to improve the site. Nothing is sent to a server.'}
+      </p>
+      <div>
+        <button
+          className="button button-red"
+          onClick={() => decide('accepted')}
+        >
+          {language === 'es' ? 'Aceptar' : 'Accept'}
+        </button>
+        <button
+          className="button button-outline"
+          onClick={() => decide('declined')}
+        >
+          {language === 'es' ? 'Rechazar' : 'Decline'}
+        </button>
+      </div>
+    </aside>
+  );
 }

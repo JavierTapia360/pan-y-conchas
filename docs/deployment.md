@@ -1,9 +1,7 @@
 # Deployment
 
-Development, Preview and Production must use separate environment values. Never copy production payment or service-role credentials into Preview.
+No deployment is part of the current phase.
 
-Automated CI runs asset/content checks, lint, TypeScript, tests and build. Deployment should depend on that job. Sites applies generated D1 migrations before Worker upload. Keep each applied migration and matching metadata immutable.
+Before any future publish, run `npm run qa` and visually verify Home, Flower, every product detail, Wax, cart summary and `/admin` at desktop, tablet and mobile widths. Confirm static output contains no API calls or credentials.
 
-Production needs HTTPS, the chosen custom domain, `ADMIN_EMAILS`, database backups and approved legal/contact content. If email is enabled, configure sender-domain SPF/DKIM. If merch payments are enabled, verify provider webhooks and Apple Pay domain association in sandbox before live credentials.
-
-For custom DNS, follow the hosting provider’s generated A/CNAME records rather than guessing registrar-specific values.
+The current local Admin is not a production CMS and is not shared between devices. A future decision to add global editing or authentication would be a separate architecture change requiring explicit approval.

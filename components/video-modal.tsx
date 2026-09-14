@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom';
 import { useLanguage } from '@/components/language-provider';
 import { EditorialArrow } from '@/components/editorial-arrow';
 import { track } from '@/lib/analytics';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 
 export function VideoModal({
   src,
@@ -28,6 +29,7 @@ export function VideoModal({
   const trigger = useRef<HTMLButtonElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  useBodyScrollLock(open);
   useEffect(() => {
     if (!open) return;
     const triggerNode = trigger.current;
@@ -57,11 +59,9 @@ export function VideoModal({
       }
     };
     window.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
     return () => {
       window.cancelAnimationFrame(focusFrame);
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
       triggerNode?.focus();
     };
   }, [open]);

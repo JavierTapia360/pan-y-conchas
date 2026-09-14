@@ -60,7 +60,7 @@ export const en = {
     email: 'Email address',
     join: 'Join the list',
     consent: 'I agree to receive general CUATESFARMZ updates.',
-    thanks: 'You’re on the list.',
+    thanks: 'Email saved locally in this browser.',
   },
   flower: {
     kicker: 'Catalog / 01',
@@ -106,7 +106,7 @@ export const en = {
     select: 'Select a state',
     submit: 'Send message',
     success:
-      'Message received. Thanks for reaching out—we’ll get back to you as soon as possible.',
+      'Message saved locally in this browser. Nothing was sent to a server.',
     required: 'Please complete all required fields with a valid email.',
   },
   faq: {
@@ -169,13 +169,13 @@ export const en = {
     emptyBody:
       'Approved product photography, variants, inventory and pricing are still pending.',
     cart: 'Cart',
-    checkout: 'Checkout',
+    checkout: 'Summary',
     subtotal: 'Subtotal',
     remove: 'Remove',
     quantity: 'Quantity',
     continue: 'Continue shopping',
     checkoutPending:
-      'Checkout becomes available when approved merch inventory and sandbox payment credentials are configured.',
+      'Purchases are not enabled. This site processes no payments or orders.',
     regulatedGuard: 'Flower and Wax can never be added to this cart.',
   },
   cart: {

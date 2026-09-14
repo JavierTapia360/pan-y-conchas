@@ -1,3 +1,5 @@
+import { saveLocalAnalytics } from '@/lib/local-admin-store';
+
 export type AnalyticsEvent =
   | 'page_view'
   | 'language_switch'
@@ -11,8 +13,6 @@ export type AnalyticsEvent =
   | 'newsletter_signup'
   | 'view_item'
   | 'add_to_cart'
-  | 'begin_checkout'
-  | 'purchase'
   | 'selection_add'
   | 'selection_remove'
   | 'selection_open'
@@ -35,11 +35,10 @@ export function track(
   if (typeof window === 'undefined') return;
   if (!hasAnalyticsConsent()) return;
   const detail = { event, properties, path: window.location.pathname };
-  void fetch('/api/analytics', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    keepalive: true,
-    body: JSON.stringify(detail),
-  }).catch(() => {});
+  try {
+    saveLocalAnalytics(event, detail.path, properties);
+  } catch {
+    /* Analytics remains optional when browser storage is unavailable. */
+  }
   window.dispatchEvent(new CustomEvent('cuatesfarmz:analytics', { detail }));
 }

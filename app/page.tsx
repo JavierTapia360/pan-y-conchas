@@ -2,12 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { ProductCard } from '@/components/product-card';
@@ -15,7 +10,6 @@ import { SectionReveal } from '@/components/section-reveal';
 import { VideoModal } from '@/components/video-modal';
 import { NewsletterForm } from '@/components/newsletter-form';
 import { useLanguage } from '@/components/language-provider';
-import { products } from '@/data/products';
 import { assets } from '@/data/assets';
 import { useCatalog } from '@/hooks/use-catalog';
 import { RecentlyViewed } from '@/components/recently-viewed';
@@ -25,19 +19,20 @@ export default function Home() {
   const { copy } = useLanguage();
   const catalog = useCatalog();
   const reduceMotion = useReducedMotion();
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 900], [0, reduceMotion ? 0 : 54]);
   const featured = catalog
     .filter((product) => product.featured && !product.hidden)
     .slice(0, 4);
   const filmProduct =
-    catalog.find((product) => product.slug === 'skittles') || products[0];
+    catalog.find((product) => product.slug === 'skittles') || catalog[0];
+  const categoryProduct =
+    catalog.find((product) => !product.hidden && product.featured) ||
+    catalog[0];
   return (
     <>
       <SiteHeader />
       <main>
         <section className="hero" aria-labelledby="hero-title">
-          <motion.div className="hero-media" style={{ y: heroY }}>
+          <div className="hero-media">
             <picture>
               <source
                 media="(max-width: 680px)"
@@ -52,7 +47,7 @@ export default function Home() {
                 className="hero-image"
               />
             </picture>
-          </motion.div>
+          </div>
           <div className="hero-shade" />
           <motion.div
             className="hero-copy"
@@ -89,7 +84,9 @@ export default function Home() {
 
         <section className="category-strip" aria-label={copy.home.categories}>
           <Link prefetch={false} href="/flower">
-            <Image src={products[0].images[0]} alt="" fill sizes="50vw" />
+            {categoryProduct ? (
+              <Image src={categoryProduct.images[0]} alt="" fill sizes="50vw" />
+            ) : null}
             <span>01</span>
             <strong>FLOWER</strong>
             <b>
@@ -130,19 +127,23 @@ export default function Home() {
           <SectionReveal className="film-copy">
             <p className="section-kicker">{copy.home.filmKicker}</p>
             <h2>{copy.home.filmTitle}</h2>
-            <VideoModal
-              src={assets.skittles.video}
-              poster={assets.skittles.images[0]}
-              label={`CUATESFARMZ ${filmProduct.name} film`}
-            />
+            {filmProduct?.video ? (
+              <VideoModal
+                src={filmProduct.video}
+                poster={filmProduct.images[0]}
+                label={`CUATESFARMZ ${filmProduct.name} film`}
+              />
+            ) : null}
           </SectionReveal>
           <SectionReveal className="film-visual">
-            <Image
-              src={assets.skittles.images[1]}
-              alt={`${filmProduct.name} CUATESFARMZ campaign portrait`}
-              fill
-              sizes="(max-width: 800px) 100vw, 65vw"
-            />
+            {filmProduct ? (
+              <Image
+                src={filmProduct.images[1] || filmProduct.images[0]}
+                alt={`${filmProduct.name} CUATESFARMZ campaign portrait`}
+                fill
+                sizes="(max-width: 800px) 100vw, 65vw"
+              />
+            ) : null}
           </SectionReveal>
         </section>
 

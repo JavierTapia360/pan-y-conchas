@@ -7,6 +7,7 @@ import { track } from '@/lib/analytics';
 import { useSelection } from '@/components/selection-provider';
 import { EditorialArrow } from '@/components/editorial-arrow';
 import { Check } from 'lucide-react';
+import { saveLocalMessage } from '@/lib/local-admin-store';
 
 export function ContactForm() {
   const { copy, language } = useLanguage();
@@ -25,18 +26,24 @@ export function ContactForm() {
       return;
     }
     setState('busy');
-    const data = Object.fromEntries(new FormData(form));
+    const data = new FormData(form);
+    const value = (name: string) => {
+      const entry = data.get(name);
+      return typeof entry === 'string' ? entry : '';
+    };
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ ...data, language }),
+      saveLocalMessage({
+        name: value('name'),
+        email: value('email'),
+        phone: value('phone'),
+        state: value('state'),
+        subject: value('subject'),
+        message: value('message'),
+        language,
       });
-      setState(response.ok ? 'success' : 'error');
-      if (response.ok) {
-        track('contact_submit', { language });
-        form.reset();
-      }
+      setState('success');
+      track('contact_submit', { language });
+      form.reset();
     } catch {
       setState('error');
     }

@@ -20,6 +20,8 @@ import {
 import { RecentlyViewed } from '@/components/recently-viewed';
 import { CatalogAddButton } from '@/components/catalog-add-button';
 import { MobileCartBar } from '@/components/mobile-cart-bar';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
+import { EditorialArrow } from '@/components/editorial-arrow';
 
 export function ProductDetail({
   product: sourceProduct,
@@ -43,6 +45,7 @@ export function ProductDetail({
   const lightboxDialog = useRef<HTMLDialogElement>(null);
   const lightboxTrigger = useRef<HTMLButtonElement>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+  useBodyScrollLock(lightbox);
   const currentIndex = catalog.findIndex((item) => item.slug === product.slug);
   const related = catalog
     .filter((item) => item.slug !== product.slug)
@@ -51,6 +54,7 @@ export function ProductDetail({
   const selected = contains(selectionId);
   const compared = isCompared(selectionId);
   const selectionItem = productSelectionItem(product);
+  const activeIndex = active < product.images.length ? active : 0;
   useEffect(() => {
     if (liveProduct?.hidden) router.replace('/flower');
   }, [liveProduct?.hidden, router]);
@@ -103,11 +107,9 @@ export function ProductDetail({
       }
     };
     window.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
     return () => {
       window.cancelAnimationFrame(focusFrame);
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
       triggerNode?.focus();
     };
   }, [lightbox, product.images.length]);
@@ -173,19 +175,19 @@ export function ProductDetail({
                 setActive((active + 1) % product.images.length);
             }}
             style={{ viewTransitionName: `product-${product.slug}` }}
-            aria-label={`Open ${product.name} image ${active + 1}`}
+            aria-label={`Open ${product.name} image ${activeIndex + 1}`}
           >
             <picture>
-              {active === 0 && product.mobileImage && (
+              {activeIndex === 0 && product.mobileImage && (
                 <source
                   media="(max-width: 700px)"
                   srcSet={product.mobileImage}
                 />
               )}
               <Image
-                key={product.images[active]}
-                src={product.images[active]}
-                alt={`${product.name} image ${active + 1}`}
+                key={product.images[activeIndex]}
+                src={product.images[activeIndex]}
+                alt={`${product.name} image ${activeIndex + 1}`}
                 fill
                 priority
                 sizes="(max-width: 900px) 100vw, 58vw"
@@ -196,7 +198,7 @@ export function ProductDetail({
             {product.images.map((image, index) => (
               <button
                 key={image}
-                className={index === active ? 'active' : ''}
+                className={index === activeIndex ? 'active' : ''}
                 onClick={() => {
                   setActive(index);
                   track('gallery_interaction', {
@@ -304,7 +306,8 @@ export function ProductDetail({
                 prefetch={false}
                 href={`/flower/${catalog[currentIndex - 1].slug}`}
               >
-                ← {language === 'es' ? 'Anterior' : 'Previous'}
+                <EditorialArrow direction="left" />
+                {language === 'es' ? 'Anterior' : 'Previous'}
               </Link>
             )}
             {currentIndex >= 0 && currentIndex < catalog.length - 1 && (
@@ -312,7 +315,8 @@ export function ProductDetail({
                 prefetch={false}
                 href={`/flower/${catalog[currentIndex + 1].slug}`}
               >
-                {language === 'es' ? 'Siguiente' : 'Next'} →
+                {language === 'es' ? 'Siguiente' : 'Next'}
+                <EditorialArrow />
               </Link>
             )}
           </nav>
@@ -354,12 +358,12 @@ export function ProductDetail({
             }
             aria-label="Previous image"
           >
-            ←
+            <EditorialArrow direction="left" />
           </button>
           <div>
             <Image
-              src={product.images[active]}
-              alt={`${product.name} enlarged image ${active + 1}`}
+              src={product.images[activeIndex]}
+              alt={`${product.name} enlarged image ${activeIndex + 1}`}
               fill
               sizes="100vw"
             />
@@ -369,13 +373,13 @@ export function ProductDetail({
             onClick={() => setActive((active + 1) % product.images.length)}
             aria-label="Next image"
           >
-            →
+            <EditorialArrow />
           </button>
         </dialog>
       )}
       <nav className="mobile-product-nav" aria-label="Product shortcuts">
         <Link prefetch={false} href="/flower">
-          ← {copy.actions.backFlower}
+          <EditorialArrow direction="left" /> {copy.actions.backFlower}
         </Link>
         <a href="#top">{copy.product.gallery}</a>
         {product.video && (

@@ -1,9 +1,9 @@
 # Architecture
 
-Public routes render the brand narrative and catalog. `data/products.ts` and `data/assets.ts` provide audited fallback content; `/api/catalog` overlays D1 records so availability, ordering, featured state, descriptions and media update from Admin.
+The application is a static Vinext/Next.js storefront. It has no API routes, server authentication, database bindings or external persistence.
 
-Interactive providers are limited to language, age verification and merch cart. Videos are mounted only near interaction. Server routes own validation, persistence, admin authorization and commerce eligibility.
+`data/products.ts` is the canonical checked-in catalog. `CatalogProvider` applies validated overrides from `gf_catalog_local_v1` and exposes one catalog context to Home, Flower, product detail, selection, cart and Admin. The browser cannot add arbitrary products or change stable slugs.
 
-D1 schema is in `db/schema.ts`; immutable generated migrations are in `drizzle/`. Public read, admin write and merch checkout endpoints remain separate. Cloudflare-compatible Worker output is produced by Vinext.
+Cart data is client-side under `gf_cart_v1`. Reconciliation clamps each product/presentation quantity to current stock and removes hidden, invalid, unavailable or unpriced lines. Adding to the cart never decrements stock.
 
-Authentication relies on hosting-provided identity headers and a server-only administrator allowlist. Future OWNER/EDITOR RBAC should be stored server-side; editors may update product/content/media but never authorization.
+Messages, newsletter entries and consented anonymous metrics are browser-local conveniences, not submissions to a remote service. A real multi-user Admin would require a separate future backend project and is intentionally out of scope.

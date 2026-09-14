@@ -3,5 +3,10 @@ export const siteConfig = {
   defaultLocale: 'auto',
   supportedLocales: ['es', 'en'],
   ageGate: 21,
-  features: { admin: true, merch: true, cannabisCommerce: false, newsletter: true },
+  features: {
+    admin: true,
+    merch: true,
+    cannabisCommerce: false,
+    newsletter: true,
+  },
 } as const;

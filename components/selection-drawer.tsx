@@ -17,17 +17,20 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { track } from '@/lib/analytics';
-import { products } from '@/data/products';
 import { productSelectionItem } from '@/components/selection-provider';
 import { EditorialArrow } from '@/components/editorial-arrow';
+import { useCatalog } from '@/hooks/use-catalog';
 
 export function SelectionDrawer() {
   const { copy, language } = useLanguage();
   const { items, open, setOpen, add, remove, clear } = useSelection();
   const pathname = usePathname();
   const router = useRouter();
-  const suggestions = products
-    .filter((product) => !items.some((item) => item.slug === product.slug))
+  const suggestions = useCatalog()
+    .filter(
+      (product) =>
+        !product.hidden && !items.some((item) => item.slug === product.slug),
+    )
     .slice(0, 2);
 
   useEffect(() => setOpen(false), [pathname, setOpen]);

@@ -81,13 +81,9 @@ export function CartPage() {
                   currency: 'USD',
                 }).format(subtotal / 100)}
               </strong>
-              <Link
-                prefetch={false}
-                href="/merch/checkout"
-                className="button button-red"
-              >
-                {copy.merch.checkout}
-              </Link>
+              <p className="commerce-guard-note">
+                {copy.merch.checkoutPending}
+              </p>
             </div>
           </>
         )}

@@ -1,2 +1,4 @@
 import { UnsubscribePage } from '@/components/unsubscribe-page';
-export default function Page() { return <UnsubscribePage />; }
+export default function Page() {
+  return <UnsubscribePage />;
+}

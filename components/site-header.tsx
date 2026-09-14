@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/components/language-provider';
 import { SelectionDrawer } from '@/components/selection-drawer';
 import { CatalogCartDrawer } from '@/components/catalog-cart-drawer';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,6 +18,7 @@ export function SiteHeader() {
   const menuClose = useRef<HTMLButtonElement>(null);
   const { copy, language, setLanguage } = useLanguage();
   const pathname = usePathname();
+  useBodyScrollLock(menuOpen);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -52,14 +54,15 @@ export function SiteHeader() {
       }
     };
     window.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
     return () => {
       window.cancelAnimationFrame(focusFrame);
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
       window.requestAnimationFrame(() => trigger?.focus());
     };
   }, [menuOpen]);
+  useEffect(() => {
+    queueMicrotask(() => setMenuOpen(false));
+  }, [pathname]);
   const nav = [
     ['/', copy.nav.home],
     ['/flower', copy.nav.flower],

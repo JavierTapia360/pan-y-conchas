@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 const products = fs.readFileSync(
   new URL('../data/products.ts', import.meta.url),
   'utf8',
@@ -37,17 +38,64 @@ const oldNames = forbiddenNames.filter((name) =>
   products.toUpperCase().includes(name),
 );
 const videoCount = [...products.matchAll(/video: assets\./g)].length;
+const sourceRoots = ['app', 'components', 'data', 'features', 'hooks', 'lib'];
+const sourceFiles = sourceRoots.flatMap((root) =>
+  fs.existsSync(root)
+    ? fs
+        .readdirSync(root, { recursive: true })
+        .filter((entry) => /\.(?:ts|tsx)$/.test(String(entry)))
+        .map((entry) => path.join(root, String(entry)))
+    : [],
+);
+const sourceText = sourceFiles
+  .map((file) => `${file}\n${fs.readFileSync(file, 'utf8')}`)
+  .join('\n');
+const forbiddenArchitecture = [
+  "fetch('/api",
+  'drizzle-orm',
+  'D1Database',
+  'SUPABASE_URL',
+  'STRIPE_SECRET_KEY',
+  'PAYPAL_CLIENT_SECRET',
+];
+const architectureLeaks = forbiddenArchitecture.filter((token) =>
+  sourceText.includes(token),
+);
+const forbiddenComponentPrices = ['$520', '$470', '$450', '$200', '$180'];
+const visualSource = sourceFiles
+  .filter((file) => file.startsWith(`components${path.sep}`))
+  .map((file) => fs.readFileSync(file, 'utf8'))
+  .join('\n');
+const duplicatedPrices = forbiddenComponentPrices.filter((price) =>
+  visualSource.includes(price),
+);
+const apiRouteExists = sourceFiles.some((file) =>
+  file.startsWith(`app${path.sep}api${path.sep}`),
+);
 if (
   invalid.length ||
   duplicates.length ||
   missing.length ||
   absentNames.length ||
   oldNames.length ||
-  videoCount !== 4
+  videoCount !== 4 ||
+  apiRouteExists ||
+  architectureLeaks.length ||
+  duplicatedPrices.length
 ) {
   console.error(
     JSON.stringify(
-      { invalid, duplicates, missing, absentNames, oldNames, videoCount },
+      {
+        invalid,
+        duplicates,
+        missing,
+        absentNames,
+        oldNames,
+        videoCount,
+        apiRouteExists,
+        architectureLeaks,
+        duplicatedPrices,
+      },
       null,
       2,
     ),
@@ -55,5 +103,5 @@ if (
   process.exit(1);
 }
 console.log(
-  `Verified ${slugs.length} product slugs, definitive names, 4 videos and locale namespaces.`,
+  `Verified ${slugs.length} product slugs, definitive names, 4 videos, locale namespaces and static-only architecture.`,
 );

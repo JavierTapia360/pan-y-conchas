@@ -8,8 +8,8 @@ import { CatalogCartToast } from '@/components/catalog-cart-toast';
 import { SelectionProvider } from '@/components/selection-provider';
 import { SelectionToast } from '@/components/selection-toast';
 import { ComparisonTray } from '@/components/comparison-tray';
-import { WebMcpTools } from '@/components/webmcp-tools';
 import { AnalyticsProvider } from '@/components/analytics-provider';
+import { CatalogProvider } from '@/components/catalog-provider';
 import './globals.css';
 import './marketplace.css';
 
@@ -47,22 +47,23 @@ export default function RootLayout({
           <style>{`html body{opacity:1!important}`}</style>
         </noscript>
         <LanguageProvider>
-          <CartProvider>
-            <CatalogCartProvider>
-              <SelectionProvider>
-                <a className="skip-link" href="#page-content">
-                  Skip to content
-                </a>
-                <AgeGate />
-                <AnalyticsProvider />
-                <WebMcpTools />
-                <div id="page-content">{children}</div>
-                <SelectionToast />
-                <ComparisonTray />
-                <CatalogCartToast />
-              </SelectionProvider>
-            </CatalogCartProvider>
-          </CartProvider>
+          <CatalogProvider>
+            <CartProvider>
+              <CatalogCartProvider>
+                <SelectionProvider>
+                  <a className="skip-link" href="#page-content">
+                    Skip to content
+                  </a>
+                  <AgeGate />
+                  <AnalyticsProvider />
+                  <div id="page-content">{children}</div>
+                  <SelectionToast />
+                  <ComparisonTray />
+                  <CatalogCartToast />
+                </SelectionProvider>
+              </CatalogCartProvider>
+            </CartProvider>
+          </CatalogProvider>
         </LanguageProvider>
       </body>
     </html>

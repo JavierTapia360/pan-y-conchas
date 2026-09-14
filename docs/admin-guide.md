@@ -1,15 +1,11 @@
-# Admin guide
+# Local Admin guide
 
-Open `/admin` and sign in with the authorized account.
+Open `/admin`. There is no login because there is no server or shared database in this phase.
 
-Dashboard shows product totals and current states. For Flower products:
+The top notice explains that all changes are stored only in the current browser. Product editing supports name, bilingual descriptions, Featured/Hidden, prices and integer stock per presentation, gallery order, main image, mobile image and the product's official video.
 
-1. Choose Available, Sold out or Hidden.
-2. Toggle Featured.
-3. Open Edit to change bilingual descriptions, order and gallery order.
-4. Drag gallery thumbnails into position.
-5. Select Save changes.
+Choose **Edit**, make changes, then choose **Save changes**. Save success appears only after `localStorage` accepts the write. Cancel discards the draft. A stock value of zero marks only that presentation sold out; the product becomes generally sold out when all three presentations reach zero.
 
-Hidden removes a product publicly; Sold out keeps it visible with an intentional badge. Content publishes bilingual headline, about, contact, footer and announcement overrides. Messages shows general contact submissions. Preview site opens the public experience in a new tab.
+Messages and consented metrics are local views of browser-only data. **View site** opens the same storefront data in a new tab on the same device.
 
-No admin control can enable Flower/Wax purchasing. Configure `ADMIN_EMAILS` in each environment. Remove former staff immediately and review database backups periodically.
+Clearing site data resets the local edits to the defaults in `data/products.ts`.

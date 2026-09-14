@@ -14,6 +14,7 @@ import {
   type ProductPresentation,
 } from '@/data/products';
 import { useCatalog, type CatalogProduct } from '@/hooks/use-catalog';
+import { track } from '@/lib/analytics';
 
 export type CatalogCartItem = {
   slug: string;
@@ -78,7 +79,8 @@ export function reconcileCartItems(
         stock,
       };
     }
-    next.push(quantity === item.quantity ? item : { ...item, quantity });
+    if (quantity > 0)
+      next.push(quantity === item.quantity ? item : { ...item, quantity });
   }
   return { items: changed ? next : items, adjustment };
 }
@@ -213,6 +215,10 @@ export function CatalogCartProvider({
         id: Date.now(),
         kind: 'added',
         name: product.name,
+        presentation,
+      });
+      track('add_to_cart', {
+        slug: product.slug,
         presentation,
       });
       setOpen(true);

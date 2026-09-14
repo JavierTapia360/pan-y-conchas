@@ -12,6 +12,9 @@ export type Product = {
   mobileImage?: string;
   video?: string;
   description: { en: string; es: string };
+  featured: boolean;
+  hidden: boolean;
+  sortOrder: number;
 };
 
 export const productPresentationOrder = ['halfOz', 'oz', 'qp'] as const;
@@ -35,8 +38,7 @@ const initialStocks = (stock: number): ProductStocks => ({
   qp: stock,
 });
 
-// These are the launch fallbacks. Admin inventory rows override them without a code change.
-// Prices are launch fallbacks in cents. D1 inventory rows override them.
+// Single source of truth for the static storefront. Prices are stored in cents.
 export const products: Product[] = [
   {
     slug: 'skittles',
@@ -52,6 +54,9 @@ export const products: Product[] = [
       en: 'A color-forward CUATESFARMZ flower presentation with candy-pop energy and a bold editorial finish.',
       es: 'Una presentación floral CUATESFARMZ llena de color, energía candy-pop y un acabado editorial contundente.',
     },
+    featured: true,
+    hidden: false,
+    sortOrder: 0,
   },
   {
     slug: 'jelly-donut',
@@ -67,6 +72,9 @@ export const products: Product[] = [
       en: 'Glossy reds, deep pinks and a dessert-inspired visual world give JELLY DONUT its unmistakable identity.',
       es: 'Rojos brillantes, rosas intensos y un universo visual inspirado en postres le dan a JELLY DONUT una identidad inconfundible.',
     },
+    featured: true,
+    hidden: false,
+    sortOrder: 1,
   },
   {
     slug: 'frosted-fuel',
@@ -82,6 +90,9 @@ export const products: Product[] = [
       en: 'An ice-cold visual direction pairs crisp blue light with the powerful CUATESFARMZ graphic language.',
       es: 'Una dirección visual helada combina luz azul nítida con el lenguaje gráfico contundente de CUATESFARMZ.',
     },
+    featured: true,
+    hidden: false,
+    sortOrder: 2,
   },
   {
     slug: 'mac-1',
@@ -97,6 +108,9 @@ export const products: Product[] = [
       en: 'Electric green cuts through a black-and-red foundation for a sharp, high-energy product portrait.',
       es: 'El verde eléctrico atraviesa una base negra y roja para crear un retrato de producto preciso y lleno de energía.',
     },
+    featured: true,
+    hidden: false,
+    sortOrder: 3,
   },
 ];
 

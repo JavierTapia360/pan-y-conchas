@@ -55,36 +55,12 @@ export function detectLanguageFrom(
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('en');
-  const [settings, setSettings] = useState<SiteSettings>({});
+  const [settings] = useState<SiteSettings>({});
   useEffect(() => {
     const next = detectLanguage();
     queueMicrotask(() => setLanguageState(next));
     document.documentElement.lang = next;
     document.documentElement.dataset.languageReady = 'true';
-  }, []);
-  useEffect(() => {
-    fetch('/api/settings')
-      .then((response) =>
-        response.ok
-          ? (response.json() as Promise<{
-              settings: { key: string; value_es: string; value_en: string }[];
-            }>)
-          : null,
-      )
-      .then((data) => {
-        if (!data?.settings) return;
-        setSettings(
-          Object.fromEntries(
-            data.settings.map(
-              (row: { key: string; value_es: string; value_en: string }) => [
-                row.key,
-                { es: row.value_es, en: row.value_en },
-              ],
-            ),
-          ),
-        );
-      })
-      .catch(() => {});
   }, []);
   const value = useMemo(
     () => ({

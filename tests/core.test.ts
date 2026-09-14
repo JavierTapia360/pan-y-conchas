@@ -11,7 +11,7 @@ import {
   merchProductSchema,
   newsletterSchema,
 } from '@/lib/validation';
-import { isSameOriginMutation } from '@/lib/api-response';
+import { normalizeLocalProduct } from '@/lib/local-catalog';
 import {
   toggleComparisonItems,
   reconcileSelectionItems,
@@ -138,24 +138,6 @@ describe('core rules', () => {
       }).success,
     ).toBe(false);
   });
-  it('rejects cross-origin mutations', () => {
-    expect(
-      isSameOriginMutation(
-        new Request('https://example.com/api', {
-          method: 'POST',
-          headers: { origin: 'https://example.com' },
-        }),
-      ),
-    ).toBe(true);
-    expect(
-      isSameOriginMutation(
-        new Request('https://example.com/api', {
-          method: 'POST',
-          headers: { origin: 'https://evil.example' },
-        }),
-      ),
-    ).toBe(false);
-  });
   it('adds and removes catalog selections without quantities', () => {
     const item: SelectionItem = {
       id: 'flower:mac-1',
@@ -217,7 +199,7 @@ describe('core rules', () => {
       }).success,
     ).toBe(false);
   });
-  it('caps a saved cart to current stock and preserves sold-out lines at zero', () => {
+  it('caps a saved cart to current stock and removes sold-out lines', () => {
     const reconciled = reconcileCartItems(
       [
         { slug: 'skittles', presentation: 'qp', quantity: 4 },
@@ -228,23 +210,47 @@ describe('core rules', () => {
           slug: 'skittles',
           stocks: { halfOz: 5, oz: 3, qp: 2 },
           prices: { qp: 47000, oz: 18000, halfOz: 9000 },
+          hidden: false,
         },
         {
           slug: 'frosted-fuel',
           stocks: { halfOz: 0, oz: 2, qp: 1 },
           prices: { qp: 45000, oz: 17000, halfOz: 8000 },
+          hidden: false,
         },
       ],
     );
     expect(reconciled.items).toEqual([
       { slug: 'skittles', presentation: 'qp', quantity: 2 },
-      { slug: 'frosted-fuel', presentation: 'halfOz', quantity: 0 },
     ]);
     expect(reconciled.adjustment).toEqual({
       slug: 'skittles',
       presentation: 'qp',
       stock: 2,
     });
+  });
+  it('normalizes invalid local edits without accepting negative values', () => {
+    const fallback = products[0];
+    const normalized = normalizeLocalProduct(
+      {
+        ...fallback,
+        name: '  LOCAL NAME  ',
+        stocks: { halfOz: -2, oz: 3.4, qp: 2 },
+        prices: { halfOz: -100, oz: null, qp: 52000 },
+      },
+      fallback,
+    );
+    expect(normalized.name).toBe('LOCAL NAME');
+    expect(normalized.stocks).toEqual({
+      ...fallback.stocks,
+      qp: 2,
+    });
+    expect(normalized.prices).toEqual({
+      ...fallback.prices,
+      oz: null,
+      qp: 52000,
+    });
+    expect(normalized.available).toBe(true);
   });
   it('removes hidden products from a saved catalog cart', () => {
     expect(
@@ -292,6 +298,7 @@ describe('core rules', () => {
           slug: 'mac-1',
           stocks: { halfOz: 0, oz: 3, qp: 1 },
           prices: { qp: 52000, oz: 20000, halfOz: null },
+          hidden: false,
         },
       ],
     );
@@ -314,6 +321,7 @@ describe('core rules', () => {
             slug: 'mac-1',
             stocks: { halfOz: 12, oz: 12, qp: 12 },
             prices: { qp: 52000, oz: 20000, halfOz: null },
+            hidden: false,
           },
         ],
       ).items,

@@ -1,7 +1,7 @@
 # Commerce boundary
 
-`CATALOG_PRODUCTS` (Flower and Wax) are visual/informational only. They cannot create cart items, checkout sessions, orders, shipping labels or transactional handoffs.
+Flower products may be gathered in the browser-only `gf_cart_v1` cart by presentation. The experience supports quantities, current price, subtotal and stock limits, then ends at a visual order summary.
 
-`MERCH_PRODUCTS` are conventional goods with a separate type, table, inventory and cart. The server resolves every merch item from its own authority, ignores browser-submitted prices, checks active inventory and rejects unknown or regulated product types.
+No checkout session, order, payment, shipping request, inventory reservation or transactional handoff exists. Cart actions never decrement stock. The contact link opens the general contact page without transmitting cart contents.
 
-Payment adapters exist only for merch. Provider webhooks—not return-page query parameters—will become the authority for payment status and atomic inventory decrement. Card numbers are never stored. No live provider is enabled until real inventory, rates, sandbox verification and approved credentials exist.
+The separate merch placeholder is also non-transactional in this phase.
