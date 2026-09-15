@@ -12,6 +12,7 @@ import type { Product } from '@/data/products';
 import {
   LOCAL_CATALOG_EVENT,
   LOCAL_CATALOG_KEY,
+  getDefaultCatalog,
   readLocalCatalog,
   resetLocalCatalog,
   writeLocalCatalog,
@@ -26,11 +27,14 @@ type CatalogContextValue = {
 const CatalogContext = createContext<CatalogContextValue | null>(null);
 
 export function CatalogProvider({ children }: { children: React.ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(() => readLocalCatalog());
+  // The first browser render must match the static server HTML exactly.
+  // Browser-local edits are applied immediately after hydration.
+  const [products, setProducts] = useState<Product[]>(getDefaultCatalog);
 
   const refresh = useCallback(() => setProducts(readLocalCatalog()), []);
 
   useEffect(() => {
+    queueMicrotask(refresh);
     const onStorage = (event: StorageEvent) => {
       if (event.key === LOCAL_CATALOG_KEY) refresh();
     };

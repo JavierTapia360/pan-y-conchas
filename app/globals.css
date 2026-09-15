@@ -172,8 +172,10 @@ select:focus-visible {
   padding: 0;
   display: grid;
   grid-template-columns: 26px auto;
+  grid-template-rows: 2px 2px;
   align-content: center;
   column-gap: 11px;
+  row-gap: 8px;
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -182,10 +184,17 @@ select:focus-visible {
   letter-spacing: 0.1em;
 }
 .menu-button span {
+  grid-column: 1;
   width: 26px;
   height: 2px;
   background: #000;
   transition: transform 0.25s;
+}
+.menu-button span:first-child {
+  grid-row: 1;
+}
+.menu-button span:nth-child(2) {
+  grid-row: 2;
 }
 .menu-button b {
   grid-row: 1/3;

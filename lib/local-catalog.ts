@@ -8,7 +8,7 @@ import {
 export const LOCAL_CATALOG_KEY = 'gf_catalog_local_v1';
 export const LOCAL_CATALOG_EVENT = 'gf-catalog-local-change';
 
-const cloneDefaults = () =>
+export const getDefaultCatalog = () =>
   products.map((product) => ({
     ...product,
     stocks: { ...product.stocks },
@@ -102,7 +102,7 @@ export function normalizeLocalProduct(
 }
 
 export function readLocalCatalog(): Product[] {
-  const defaults = cloneDefaults();
+  const defaults = getDefaultCatalog();
   if (typeof window === 'undefined') return defaults;
   try {
     const stored = JSON.parse(
