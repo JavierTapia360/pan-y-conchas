@@ -1,26 +1,16 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  LanguageContext,
+  type Copy,
+  type SiteSettings,
+} from '@/components/language-context';
 import { en } from '@/locales/en';
 import { es } from '@/locales/es';
 import { track } from '@/lib/analytics';
+import { detectLanguageFrom, type Language } from '@/lib/language';
 
-export type Language = 'es' | 'en';
-type Widen<T> = T extends string
-  ? string
-  : T extends readonly (infer U)[]
-    ? ReadonlyArray<Widen<U>>
-    : T extends object
-      ? { -readonly [K in keyof T]: Widen<T[K]> }
-      : T;
-export type Copy = Widen<typeof en>;
-type SiteSettings = Record<string, { es: string; en: string }>;
-const LanguageContext = createContext<{
-  language: Language;
-  setLanguage: (language: Language) => void;
-  copy: Copy;
-  siteSettings: SiteSettings;
-} | null>(null);
 const LOCALE_KEY = 'gf_locale_v1';
 
 function detectLanguage(): Language {
@@ -41,16 +31,6 @@ function detectLanguage(): Language {
       ? [...window.navigator.languages]
       : [window.navigator.language],
   );
-}
-
-export function detectLanguageFrom(
-  saved: string | null,
-  languages: string[],
-): Language {
-  if (saved === 'es' || saved === 'en') return saved;
-  return languages.some((item) => item.toLowerCase().startsWith('es'))
-    ? 'es'
-    : 'en';
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
@@ -121,11 +101,4 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       {children}
     </LanguageContext.Provider>
   );
-}
-
-export function useLanguage() {
-  const context = useContext(LanguageContext);
-  if (!context)
-    throw new Error('useLanguage must be used inside LanguageProvider');
-  return context;
 }

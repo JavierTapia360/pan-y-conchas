@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { Check, ShoppingBag, X } from 'lucide-react';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { productPresentationLabels } from '@/data/products';
 
 export function CatalogCartToast() {

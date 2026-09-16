@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Check, Plus } from 'lucide-react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { useSelection } from '@/components/selection-provider';
 import { track } from '@/lib/analytics';
 import { useCatalog } from '@/hooks/use-catalog';

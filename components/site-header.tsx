@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { SelectionDrawer } from '@/components/selection-drawer';
 import { CatalogCartDrawer } from '@/components/catalog-cart-drawer';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';

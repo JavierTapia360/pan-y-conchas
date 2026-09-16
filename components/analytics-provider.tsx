@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { ANALYTICS_CONSENT_KEY, track } from '@/lib/analytics';
 import { FEATURES } from '@/features/features';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 
 type Choice = 'accepted' | 'declined' | null;
 

@@ -9,7 +9,7 @@ import { ProductCard } from '@/components/product-card';
 import { SectionReveal } from '@/components/section-reveal';
 import { VideoModal } from '@/components/video-modal';
 import { NewsletterForm } from '@/components/newsletter-form';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { assets } from '@/data/assets';
 import { useCatalog } from '@/hooks/use-catalog';
 import { RecentlyViewed } from '@/components/recently-viewed';

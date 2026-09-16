@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { assets } from '@/data/assets';
 import { Check, Plus, Scale } from 'lucide-react';
 import {

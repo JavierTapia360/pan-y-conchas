@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { EditorialArrow } from '@/components/editorial-arrow';
 
 export function CheckoutPage() {

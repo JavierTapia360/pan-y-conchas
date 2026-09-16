@@ -9,7 +9,7 @@ import {
   type ProductPresentation,
 } from '@/data/products';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 
 export function CatalogAddButton({
   product,

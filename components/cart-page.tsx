@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { cartItemKey, useCart } from '@/components/cart-provider';
 import { useMerch } from '@/hooks/use-merch';
 

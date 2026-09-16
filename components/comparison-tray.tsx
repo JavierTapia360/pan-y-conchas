@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Scale, X } from 'lucide-react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { EditorialArrow } from '@/components/editorial-arrow';
 import { useSelection } from '@/components/selection-provider';
 import {

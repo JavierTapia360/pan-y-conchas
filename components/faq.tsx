@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 
 export function Faq() {
   const { copy } = useLanguage();

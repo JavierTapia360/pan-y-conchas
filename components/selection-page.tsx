@@ -14,7 +14,7 @@ import {
   ShoppingBag,
   Trash2,
 } from 'lucide-react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { useSelection } from '@/components/selection-provider';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 
 export function LegalPage({ type }: { type: 'privacy' | 'terms' | 'age' }) {
   const { copy } = useLanguage();

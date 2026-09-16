@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import type { Product } from '@/data/products';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { CatalogAddButton } from '@/components/catalog-add-button';
 
 export function MobileCartBar({ product }: { product: Product }) {

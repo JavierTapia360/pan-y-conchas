@@ -1,7 +1,7 @@
 'use client';
 
 import { type SyntheticEvent, useState } from 'react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { siteConfig } from '@/data/site';
 import { track } from '@/lib/analytics';
 import { useSelection } from '@/components/selection-provider';

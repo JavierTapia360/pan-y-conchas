@@ -7,7 +7,7 @@ import { EditorialArrow } from '@/components/editorial-arrow';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { productPresentationLabels } from '@/data/products';
 import { buildTelegramOrderUrl } from '@/lib/telegram';
 import { track } from '@/lib/analytics';

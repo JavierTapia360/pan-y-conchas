@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import { createPortal } from 'react-dom';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { EditorialArrow } from '@/components/editorial-arrow';
 import { track } from '@/lib/analytics';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';

@@ -1,7 +1,7 @@
-import type { Language } from '@/components/language-provider';
 import type { ProductPresentation } from '@/data/products';
 import { productPresentationLabels } from '@/data/products';
 import { siteConfig } from '@/data/site';
+import type { Language } from '@/lib/language';
 
 export type TelegramOrderLine = {
   name: string;

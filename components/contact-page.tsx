@@ -3,7 +3,7 @@
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { ContactForm } from '@/components/contact-form';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { EditorialArrow } from '@/components/editorial-arrow';
 import { siteConfig } from '@/data/site';
 

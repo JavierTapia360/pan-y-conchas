@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { EditorialArrow } from '@/components/editorial-arrow';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { useMerch } from '@/hooks/use-merch';
 import { useCart } from '@/components/cart-provider';
 import { track } from '@/lib/analytics';

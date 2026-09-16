@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { detectLanguageFrom } from '@/components/language-provider';
+import { detectLanguageFrom } from '@/lib/language';
 import { statusToAvailability } from '@/lib/availability';
 import { assertMerchProduct } from '@/lib/commerce-guard';
 import { products } from '@/data/products';

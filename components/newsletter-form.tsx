@@ -1,7 +1,7 @@
 'use client';
 
 import { type SyntheticEvent, useState } from 'react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { track } from '@/lib/analytics';
 import { saveLocalSubscriber } from '@/lib/local-admin-store';
 

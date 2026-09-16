@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/data/products';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { Check, Plus, Scale } from 'lucide-react';
 import {
   productSelectionItem,

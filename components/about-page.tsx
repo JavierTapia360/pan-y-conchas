@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { assets } from '@/data/assets';
 
 export function AboutPage() {

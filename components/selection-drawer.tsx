@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Plus, ShoppingBag, Trash2, X } from 'lucide-react';
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { useSelection } from '@/components/selection-provider';
 import {
   Sheet,

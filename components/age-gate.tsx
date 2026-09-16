@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 
 const STORAGE_KEY = 'age_verified_v1';

@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
 import { productPresentationLabels } from '@/data/products';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { EditorialArrow } from '@/components/editorial-arrow';
 import {
   Sheet,

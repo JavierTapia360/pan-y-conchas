@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Check, Plus, ShoppingBag } from 'lucide-react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import {
   type SelectionItem,
   useSelection,

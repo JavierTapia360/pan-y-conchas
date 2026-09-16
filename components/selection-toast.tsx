@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Check, Scale, ShoppingBag, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { useLanguage } from '@/components/language-provider';
+import { useLanguage } from '@/components/language-context';
 import { useSelection } from '@/components/selection-provider';
 
 export function SelectionToast() {
