@@ -23,9 +23,17 @@ export default defineConfig(async () => {
 
   return {
     css: { postcss: { plugins: [tailwindcss()] } },
-    server: isCodexSeatbeltSandbox
-      ? { watch: { useFsEvents: false, usePolling: true } }
-      : undefined,
+    server: {
+      // Vite 8 enables browser-console forwarding automatically for agent
+      // sessions. Its client can try to forward a message before the HMR
+      // socket connects, producing a false "send was called before connect"
+      // rejection and overlay. Browser errors remain visible in DevTools and
+      // the regular Vite error overlay stays enabled.
+      forwardConsole: false,
+      ...(isCodexSeatbeltSandbox
+        ? { watch: { useFsEvents: false, usePolling: true } }
+        : {}),
+    },
     plugins: [
       vinext(),
       sites(),
