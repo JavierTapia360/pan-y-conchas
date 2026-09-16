@@ -2,18 +2,21 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { type SyntheticEvent, useState } from 'react';
+import { type SyntheticEvent, useRef, useState } from 'react';
 import { EditorialArrow } from '@/components/editorial-arrow';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
 import { useLanguage } from '@/components/language-provider';
 import { productPresentationLabels } from '@/data/products';
+import { buildTelegramOrderUrl } from '@/lib/telegram';
+import { track } from '@/lib/analytics';
 
 export function CatalogCartPage() {
   const { copy, language } = useLanguage();
   const { items, products, subtotalCents } = useCatalogCart();
   const [reviewed, setReviewed] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   const currency = new Intl.NumberFormat(
     language === 'es' ? 'es-US' : 'en-US',
     { style: 'currency', currency: 'USD' },
@@ -30,6 +33,43 @@ export function CatalogCartPage() {
       return;
     }
     setReviewed(true);
+  }
+
+  function requestOrder() {
+    const form = formRef.current;
+    if (!form) return;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      setReviewed(false);
+      return;
+    }
+    const data = new FormData(form);
+    const value = (key: string) => {
+      const entry = data.get(key);
+      return typeof entry === 'string' ? entry.trim() : '';
+    };
+    const url = buildTelegramOrderUrl({
+      language,
+      lines: lines.map(({ product, presentation, quantity }) => ({
+        name: product.name,
+        presentation,
+        quantity,
+        unitPriceCents: product.prices[presentation] || 0,
+      })),
+      subtotalCents,
+      customer: {
+        name: value('name'),
+        address: value('address'),
+        city: value('city'),
+        state: value('state'),
+        zip: value('zip'),
+        phone: value('phone'),
+      },
+    });
+    track('order_request', { language, channel: 'telegram' });
+    const opened = window.open(url, '_blank');
+    if (opened) opened.opener = null;
+    else window.location.assign(url);
   }
 
   return (
@@ -97,7 +137,12 @@ export function CatalogCartPage() {
               </p>
             </section>
 
-            <form className="catalog-demo-form" onSubmit={review}>
+            <form
+              ref={formRef}
+              className="catalog-demo-form"
+              onSubmit={review}
+              onChange={() => setReviewed(false)}
+            >
               <p className="section-kicker">{copy.cart.demoDetails}</p>
               <div>
                 <label>
@@ -131,13 +176,26 @@ export function CatalogCartPage() {
               </div>
               <p>{copy.cart.demoOnly}</p>
               {reviewed ? (
-                <output className="catalog-demo-success">
-                  {copy.cart.demoReviewed}
-                </output>
-              ) : null}
-              <button className="button button-dark" type="submit">
-                {copy.cart.demoReview} <EditorialArrow />
-              </button>
+                <>
+                  <output className="catalog-demo-success">
+                    {copy.cart.demoReviewed}
+                  </output>
+                  <p className="catalog-telegram-note">
+                    {copy.cart.telegramReady}
+                  </p>
+                  <button
+                    className="button button-red catalog-request-order"
+                    type="button"
+                    onClick={requestOrder}
+                  >
+                    {copy.cart.requestOrder} <EditorialArrow />
+                  </button>
+                </>
+              ) : (
+                <button className="button button-dark" type="submit">
+                  {copy.cart.demoReview} <EditorialArrow />
+                </button>
+              )}
             </form>
           </div>
         )}

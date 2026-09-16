@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { ContactPage } from '@/components/contact-page';
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'General contact for CUATESFARMZ. This form is not for orders.',
+  description:
+    'Contact CUATESFARMZ through the local form or the official Telegram channel.',
   alternates: { canonical: '/contact' },
 };
 export default function Page() {

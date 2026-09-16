@@ -58,6 +58,13 @@ export function SiteFooter() {
         </div>
         <div>
           <b>{copy.footer.social}</b>
+          <a
+            href={siteConfig.socials.telegram}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Telegram
+          </a>
           {instagram ? (
             <a href={instagram} rel="noreferrer">
               Instagram
@@ -71,7 +78,7 @@ export function SiteFooter() {
           {contactEmail ? (
             <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
           ) : null}
-          {!instagram && !x && !contactEmail ? (
+          {!siteConfig.socials.telegram && !instagram && !x && !contactEmail ? (
             <span>{copy.footer.socialPending}</span>
           ) : null}
         </div>

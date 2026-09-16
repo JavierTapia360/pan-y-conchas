@@ -35,6 +35,10 @@ export const en = {
     close: 'Close video',
     closeGallery: 'Close gallery',
   },
+  telegram: {
+    contact: 'Contact on Telegram',
+    official: 'Official Telegram',
+  },
   home: {
     eyebrow: 'FLOWER & WAX / 2026',
     title: 'PLANT CULTURE. TURNED ALL THE WAY UP.',
@@ -123,7 +127,7 @@ export const en = {
       },
       {
         q: 'Can I place an order here?',
-        a: 'No. This is a non-transactional catalog and does not process orders or payments.',
+        a: 'The website processes no payments or stored orders. You can review the cart here and explicitly hand an order request off to the official Telegram chat.',
       },
       {
         q: 'Can I change the website language?',
@@ -204,7 +208,7 @@ export const en = {
     price: 'Price',
     lineSubtotal: 'Subtotal',
     manualStock: 'Stock continues to be managed manually from /admin.',
-    demoDetails: 'Delivery details / Demo',
+    demoDetails: 'Delivery details',
     demoName: 'Name',
     demoAddress: 'Address',
     demoCity: 'City',
@@ -212,16 +216,19 @@ export const en = {
     demoZip: 'ZIP',
     demoPhone: 'Phone',
     demoOnly:
-      'Browser-only demo form. These details do not create an order or modify inventory.',
+      'Your details remain in this browser until you choose to open Telegram. No payment is made and inventory is not modified.',
     demoReview: 'Review details',
     demoReviewed: 'Details reviewed on this screen.',
+    requestOrder: 'Request order',
+    telegramReady:
+      'Telegram will open with your order and delivery details ready to send. Review the message before sending it.',
     continue: 'Continue shopping',
     soldOut: 'This product is sold out.',
     onlyAvailable: 'Only {stock} available.',
     adjusted: 'Inventory changed. Quantity adjusted to {stock} available.',
     pricePending: 'Price pending configuration',
     boundary:
-      'Visual summary only. This cart creates no orders, payments or reservations.',
+      'No payment, reservation or order is created on this site. An order request can be handed off to Telegram.',
     clearTitle: 'Clear your cart?',
     clearBody: 'All products saved on this device will be removed.',
     clearConfirm: 'Yes, clear it',

@@ -13,6 +13,7 @@ export type AnalyticsEvent =
   | 'newsletter_signup'
   | 'view_item'
   | 'add_to_cart'
+  | 'order_request'
   | 'selection_add'
   | 'selection_remove'
   | 'selection_open'

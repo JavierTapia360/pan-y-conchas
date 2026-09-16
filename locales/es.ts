@@ -37,6 +37,10 @@ export const es = {
     close: 'Cerrar video',
     closeGallery: 'Cerrar galería',
   },
+  telegram: {
+    contact: 'Contactar por Telegram',
+    official: 'Telegram oficial',
+  },
   home: {
     eyebrow: 'FLORES Y WAX / 2026',
     title: 'CULTURA DE LA PLANTA. A TODO VOLUMEN.',
@@ -126,7 +130,7 @@ export const es = {
       },
       {
         q: '¿Puedo hacer un pedido aquí?',
-        a: 'No. Es un catálogo no transaccional y no procesa pedidos ni pagos.',
+        a: 'La web no procesa pagos ni guarda pedidos. Puedes revisar el carrito aquí y transferir explícitamente una solicitud al Telegram oficial.',
       },
       {
         q: '¿Puedo cambiar el idioma?',
@@ -208,7 +212,7 @@ export const es = {
     lineSubtotal: 'Subtotal',
     manualStock:
       'El stock continúa siendo administrado manualmente desde /admin.',
-    demoDetails: 'Datos de entrega / Demo',
+    demoDetails: 'Datos de entrega',
     demoName: 'Nombre',
     demoAddress: 'Dirección',
     demoCity: 'Ciudad',
@@ -216,9 +220,12 @@ export const es = {
     demoZip: 'ZIP',
     demoPhone: 'Teléfono',
     demoOnly:
-      'Formulario demostrativo dentro del navegador. Estos datos no crean un pedido ni modifican el inventario.',
+      'Tus datos permanecen en este navegador hasta que elijas abrir Telegram. No se realiza ningún pago ni se modifica el inventario.',
     demoReview: 'Revisar datos',
     demoReviewed: 'Datos revisados en esta pantalla.',
+    requestOrder: 'Solicitar pedido',
+    telegramReady:
+      'Telegram se abrirá con tu pedido y datos de entrega listos para enviar. Revisa el mensaje antes de enviarlo.',
     continue: 'Seguir comprando',
     soldOut: 'Este producto está agotado.',
     onlyAvailable: 'Solo quedan {stock} disponibles.',
@@ -226,7 +233,7 @@ export const es = {
       'El inventario cambió. La cantidad se ajustó a {stock} disponibles.',
     pricePending: 'Precio pendiente de configuración',
     boundary:
-      'Resumen visual únicamente. Este carrito no crea pedidos, pagos ni reservas.',
+      'Esta web no crea pagos, reservas ni pedidos. La solicitud puede transferirse a Telegram.',
     clearTitle: '¿Vaciar el carrito?',
     clearBody:
       'Se eliminarán todos los productos guardados en este dispositivo.',

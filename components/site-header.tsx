@@ -9,6 +9,8 @@ import { useLanguage } from '@/components/language-provider';
 import { SelectionDrawer } from '@/components/selection-drawer';
 import { CatalogCartDrawer } from '@/components/catalog-cart-drawer';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
+import { EditorialArrow } from '@/components/editorial-arrow';
+import { siteConfig } from '@/data/site';
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -175,6 +177,22 @@ export function SiteHeader() {
                   </Link>
                 </motion.div>
               ))}
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.49 }}
+              >
+                <a
+                  className="menu-telegram-link"
+                  href={siteConfig.socials.telegram}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span>06</span>
+                  {copy.telegram.contact}
+                  <EditorialArrow />
+                </a>
+              </motion.div>
             </nav>
             <div className="menu-bottom">
               <p>{copy.announcement}</p>

@@ -4,6 +4,7 @@ export const siteConfig = {
   socials: {
     instagram: '', // TODO: Add approved URL.
     x: '', // TODO: Add approved URL.
+    telegram: 'https://t.me/cuatesfarmzpayments',
   },
   legalNotice: {
     en: 'Availability subject to applicable law.',

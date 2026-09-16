@@ -1176,6 +1176,15 @@
   width: 100%;
   min-height: 50px;
 }
+.catalog-cart-telegram {
+  justify-content: space-between;
+  border-color: #229ed9 !important;
+  color: #126f9b !important;
+}
+.catalog-cart-telegram:hover {
+  background: #229ed9 !important;
+  color: #fff !important;
+}
 .catalog-cart-summary {
   padding-bottom: 8px;
   display: flex;

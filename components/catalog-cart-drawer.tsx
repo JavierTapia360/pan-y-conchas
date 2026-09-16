@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { siteConfig } from '@/data/site';
 
 export function CatalogCartDrawer() {
   const { copy, language } = useLanguage();
@@ -231,6 +232,14 @@ export function CatalogCartDrawer() {
           >
             {copy.actions.contact} <EditorialArrow />
           </SheetClose>
+          <a
+            className="button button-outline catalog-cart-telegram"
+            href={siteConfig.socials.telegram}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {copy.telegram.contact} <EditorialArrow />
+          </a>
         </SheetFooter>
       </SheetContent>
     </Sheet>

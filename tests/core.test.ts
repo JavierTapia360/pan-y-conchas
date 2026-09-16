@@ -19,6 +19,7 @@ import {
   type SelectionItem,
 } from '@/components/selection-provider';
 import { reconcileCartItems } from '@/components/catalog-cart-provider';
+import { buildTelegramOrderText, buildTelegramOrderUrl } from '@/lib/telegram';
 
 describe('core rules', () => {
   it('manual locale wins over browser locale', () =>
@@ -326,5 +327,35 @@ describe('core rules', () => {
         ],
       ).items,
     ).toEqual([]);
+  });
+  it('builds an encoded Telegram order handoff with cart and customer data', () => {
+    const order = {
+      language: 'es' as const,
+      lines: [
+        {
+          name: 'MAC 1',
+          presentation: 'oz' as const,
+          quantity: 2,
+          unitPriceCents: 20000,
+        },
+      ],
+      subtotalCents: 40000,
+      customer: {
+        name: 'Ana Pérez',
+        address: '123 Main St',
+        city: 'Los Angeles',
+        state: 'California',
+        zip: '90001',
+        phone: '+1 555 0100',
+      },
+    };
+    const text = buildTelegramOrderText(order);
+    expect(text).toContain('MAC 1 / Oz');
+    expect(text).toContain('Cantidad: 2');
+    expect(text).toContain('SUBTOTAL: $400.00');
+    expect(text).toContain('Nombre: Ana Pérez');
+    const url = buildTelegramOrderUrl(order);
+    expect(url).toMatch(/^https:\/\/t\.me\/cuatesfarmzpayments\?text=/);
+    expect(decodeURIComponent(url.split('?text=')[1])).toBe(text);
   });
 });
