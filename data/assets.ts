@@ -4,7 +4,7 @@ export const assets = {
   extras: {
     desktopHero: `${root}/elementos extra/cuatesfarmz-flores-wax-desktop.webp`,
     mobileHero: `${root}/elementos extra/cuatesfarmz-flores-wax-mobile.webp`,
-    logo: `${root}/cuatesfarmz-logo-c.webp`,
+    logo: `${root}/cuatesfarmz-logo-c.png`,
   },
   skittles: {
     images: [

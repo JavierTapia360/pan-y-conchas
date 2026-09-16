@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <main className="not-found">
       <Image
-        src="/assets/cuatesfarmz-logo-c.webp"
+        src="/assets/cuatesfarmz-logo-c.png"
         alt="CUATESFARMZ"
         width={360}
         height={120}

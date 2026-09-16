@@ -95,7 +95,7 @@ export function SiteHeader() {
           aria-label="CUATESFARMZ home"
         >
           <Image
-            src="/assets/cuatesfarmz-logo-c.webp"
+            src="/assets/cuatesfarmz-logo-c.png"
             alt="CUATESFARMZ"
             width={260}
             height={87}
@@ -140,7 +140,7 @@ export function SiteHeader() {
           >
             <div className="menu-top">
               <Image
-                src="/assets/cuatesfarmz-logo-c.webp"
+                src="/assets/cuatesfarmz-logo-c.png"
                 alt="CUATESFARMZ"
                 width={260}
                 height={87}

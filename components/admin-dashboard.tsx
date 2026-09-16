@@ -171,7 +171,7 @@ export function AdminDashboard() {
       <aside className="admin-sidebar">
         <div>
           <Image
-            src="/assets/cuatesfarmz-logo-c.webp"
+            src="/assets/cuatesfarmz-logo-c.png"
             alt="CUATESFARMZ"
             width={220}
             height={74}

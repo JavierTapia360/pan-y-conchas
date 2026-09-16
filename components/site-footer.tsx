@@ -15,7 +15,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-top">
         <Image
-          src="/assets/cuatesfarmz-logo-c.webp"
+          src="/assets/cuatesfarmz-logo-c.png"
           alt="CUATESFARMZ"
           width={420}
           height={140}

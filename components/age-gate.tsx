@@ -81,7 +81,7 @@ export function AgeGate() {
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
             <Image
-              src="/assets/cuatesfarmz-logo-c.webp"
+              src="/assets/cuatesfarmz-logo-c.png"
               alt="CUATESFARMZ"
               width={390}
               height={130}

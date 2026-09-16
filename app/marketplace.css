@@ -671,6 +671,8 @@
   gap: 8px;
 }
 .contact-selection-context {
+  width: 100%;
+  min-width: 0;
   grid-column: 1 / -1;
   padding: 18px;
   display: grid;
@@ -678,12 +680,16 @@
   gap: 12px;
   border-left: 4px solid var(--red);
   background: #f1f1ee;
+  overflow: visible;
+  content-visibility: visible;
+  contain: none;
 }
 .contact-selection-context > svg {
   width: 20px;
   color: var(--red);
 }
 .contact-selection-context strong {
+  display: block;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -695,9 +701,16 @@
   line-height: 1.55;
 }
 .contact-selection-context span {
+  display: block;
   font-family: var(--font-display);
   font-size: 1.35rem;
+  line-height: 1.05;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.contact-selection-context > div {
+  min-width: 0;
 }
 
 @media (max-width: 900px) {
@@ -721,6 +734,18 @@
 }
 
 @media (max-width: 700px) {
+  .contact-selection-context {
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 10px;
+    padding: 18px 16px;
+  }
+  .contact-selection-context > svg {
+    width: 18px;
+    height: 18px;
+  }
+  .contact-selection-context span {
+    font-size: 1.2rem;
+  }
   .mobile-selection-bar {
     position: fixed;
     left: 0;
