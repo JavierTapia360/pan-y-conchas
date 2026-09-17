@@ -11,7 +11,12 @@ import {
   X,
 } from 'lucide-react';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
-import { productPresentationLabels } from '@/data/products';
+import {
+  getCatalogPresentationLabel,
+  getCatalogPrice,
+  getCatalogStockLimit,
+  isCatalogPresentationAvailable,
+} from '@/data/catalog-cart';
 import { useLanguage } from '@/components/language-context';
 import {
   Sheet,
@@ -96,29 +101,37 @@ export function CatalogCartDrawer() {
         ) : (
           <div className="catalog-cart-lines" aria-label={copy.cart.title}>
             {lines.map(({ product, presentation, quantity }) => {
-              const stock = product.stocks[presentation];
+              const stock = getCatalogStockLimit(product, presentation);
+              const available = isCatalogPresentationAvailable(
+                product,
+                presentation,
+              );
+              const price = getCatalogPrice(product, presentation);
+              const presentationLabel = getCatalogPresentationLabel(
+                presentation,
+                language,
+              );
               return (
                 <article key={`${product.slug}:${presentation}`}>
                   <Link
                     prefetch={false}
-                    href={`/flower/${product.slug}`}
+                    href={product.href}
                     onClick={() => setOpen(false)}
                   >
                     <Image src={product.images[0]} alt="" fill sizes="112px" />
                   </Link>
                   <div>
                     <p>
-                      {stock > 0 ? copy.status.available : copy.status.soldOut}
+                      {available ? copy.status.available : copy.status.soldOut}
                     </p>
                     <h3>{product.name}</h3>
                     <span className="catalog-cart-presentation">
-                      {copy.cart.presentation}:{' '}
-                      <b>{productPresentationLabels[presentation]}</b>
+                      {copy.cart.presentation}: <b>{presentationLabel}</b>
                     </span>
                     <strong>
-                      {product.prices[presentation] == null
+                      {price == null
                         ? copy.cart.pricePending
-                        : currency.format(product.prices[presentation] / 100)}
+                        : currency.format(price / 100)}
                     </strong>
                     <div className="catalog-cart-quantity">
                       <button
@@ -137,13 +150,15 @@ export function CatalogCartDrawer() {
                         onClick={() =>
                           setQuantity(product.slug, presentation, quantity + 1)
                         }
-                        disabled={stock <= 0 || quantity >= stock}
-                        aria-label={`${copy.cart.increase} ${product.name} ${productPresentationLabels[presentation]}`}
+                        disabled={
+                          !available || (stock !== null && quantity >= stock)
+                        }
+                        aria-label={`${copy.cart.increase} ${product.name} ${presentationLabel}`}
                       >
                         <Plus aria-hidden="true" />
                       </button>
                     </div>
-                    {quantity >= stock && (
+                    {stock !== null && quantity >= stock && (
                       <small>
                         {copy.cart.onlyAvailable.replace(
                           '{stock}',

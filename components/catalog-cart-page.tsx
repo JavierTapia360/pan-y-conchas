@@ -8,7 +8,10 @@ import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
 import { useLanguage } from '@/components/language-context';
-import { productPresentationLabels } from '@/data/products';
+import {
+  getCatalogPresentationLabel,
+  getCatalogPrice,
+} from '@/data/catalog-cart';
 import { buildTelegramOrderUrl } from '@/lib/telegram';
 import { track } from '@/lib/analytics';
 
@@ -16,6 +19,9 @@ export function CatalogCartPage() {
   const { copy, language } = useLanguage();
   const { items, products, subtotalCents } = useCatalogCart();
   const [reviewed, setReviewed] = useState(false);
+  const [residenceType, setResidenceType] = useState<
+    '' | 'house' | 'apartment'
+  >('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const formRef = useRef<HTMLFormElement>(null);
   const currency = new Intl.NumberFormat(
@@ -74,12 +80,15 @@ export function CatalogCartPage() {
         name: product.name,
         presentation,
         quantity,
-        unitPriceCents: product.prices[presentation] || 0,
+        unitPriceCents: getCatalogPrice(product, presentation) || 0,
       })),
       subtotalCents,
       customer: {
         name: value('name'),
         address: value('address'),
+        residenceType: value('residenceType') as 'house' | 'apartment',
+        apartmentNumber: value('apartmentNumber'),
+        buildingTower: value('buildingTower'),
         city: value('city'),
         state: value('state'),
         zip: value('zip'),
@@ -122,10 +131,10 @@ export function CatalogCartPage() {
                 <span>{copy.cart.lineSubtotal}</span>
               </div>
               {lines.map(({ product, presentation, quantity }) => {
-                const price = product.prices[presentation] || 0;
+                const price = getCatalogPrice(product, presentation) || 0;
                 return (
                   <article key={`${product.slug}:${presentation}`}>
-                    <Link href={`/flower/${product.slug}`} prefetch={false}>
+                    <Link href={product.href} prefetch={false}>
                       <span className="catalog-summary-image">
                         <Image
                           src={product.images[0]}
@@ -137,7 +146,7 @@ export function CatalogCartPage() {
                       <strong>{product.name}</strong>
                     </Link>
                     <span data-label={copy.cart.presentation}>
-                      {productPresentationLabels[presentation]}
+                      {getCatalogPresentationLabel(presentation, language)}
                     </span>
                     <span data-label={copy.cart.quantity}>{quantity}</span>
                     <span data-label={copy.cart.price}>
@@ -209,6 +218,74 @@ export function CatalogCartPage() {
                     </small>
                   ) : null}
                 </label>
+                <fieldset
+                  className="catalog-residence-type wide"
+                  aria-invalid={Boolean(errors.residenceType)}
+                  aria-describedby="delivery-residence-error"
+                >
+                  <legend>{copy.cart.residenceType} *</legend>
+                  <div>
+                    <label>
+                      <input
+                        type="radio"
+                        name="residenceType"
+                        value="house"
+                        required
+                        checked={residenceType === 'house'}
+                        onChange={() => setResidenceType('house')}
+                        onBlur={handleFieldBlur}
+                      />
+                      <span>{copy.cart.house}</span>
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="residenceType"
+                        value="apartment"
+                        required
+                        checked={residenceType === 'apartment'}
+                        onChange={() => setResidenceType('apartment')}
+                        onBlur={handleFieldBlur}
+                      />
+                      <span>{copy.cart.apartment}</span>
+                    </label>
+                  </div>
+                  {errors.residenceType ? (
+                    <small id="delivery-residence-error" role="alert">
+                      {errors.residenceType}
+                    </small>
+                  ) : null}
+                </fieldset>
+                {residenceType === 'apartment' ? (
+                  <>
+                    <label>
+                      {copy.cart.apartmentNumber} *
+                      <input
+                        name="apartmentNumber"
+                        autoComplete="address-line2"
+                        required
+                        aria-invalid={Boolean(errors.apartmentNumber)}
+                        aria-describedby="delivery-apartment-number-error"
+                        onBlur={handleFieldBlur}
+                      />
+                      {errors.apartmentNumber ? (
+                        <small
+                          id="delivery-apartment-number-error"
+                          role="alert"
+                        >
+                          {errors.apartmentNumber}
+                        </small>
+                      ) : null}
+                    </label>
+                    <label>
+                      {copy.cart.buildingTower}
+                      <input
+                        name="buildingTower"
+                        autoComplete="address-line3"
+                      />
+                    </label>
+                  </>
+                ) : null}
                 <label>
                   {copy.cart.demoCity} *
                   <input

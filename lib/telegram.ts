@@ -1,11 +1,13 @@
-import type { ProductPresentation } from '@/data/products';
-import { productPresentationLabels } from '@/data/products';
+import {
+  getCatalogPresentationLabel,
+  type CatalogPresentation,
+} from '@/data/catalog-cart';
 import { siteConfig } from '@/data/site';
 import type { Language } from '@/lib/language';
 
 export type TelegramOrderLine = {
   name: string;
-  presentation: ProductPresentation;
+  presentation: CatalogPresentation;
   quantity: number;
   unitPriceCents: number;
 };
@@ -17,6 +19,9 @@ export type TelegramCustomerDetails = {
   state: string;
   zip: string;
   phone: string;
+  residenceType: 'house' | 'apartment';
+  apartmentNumber?: string;
+  buildingTower?: string;
   notes?: string;
 };
 
@@ -37,7 +42,7 @@ export function buildTelegramOrderText({
 }: TelegramOrder) {
   const es = language === 'es';
   const productLines = lines.flatMap((line) => [
-    `• ${line.name} / ${productPresentationLabels[line.presentation]}`,
+    `• ${line.name} / ${getCatalogPresentationLabel(line.presentation, language)}`,
     `  ${es ? 'Cantidad' : 'Quantity'}: ${line.quantity}`,
     `  ${es ? 'Precio' : 'Price'}: ${money(line.unitPriceCents)}`,
     `  Subtotal: ${money(line.unitPriceCents * line.quantity)}`,
@@ -53,6 +58,25 @@ export function buildTelegramOrderText({
     es ? 'DATOS DE ENTREGA' : 'DELIVERY DETAILS',
     `${es ? 'Nombre' : 'Name'}: ${customer.name}`,
     `${es ? 'Dirección' : 'Address'}: ${customer.address}`,
+    `${es ? 'Tipo de vivienda' : 'Residence type'}: ${
+      customer.residenceType === 'apartment'
+        ? es
+          ? 'Departamento'
+          : 'Apartment'
+        : es
+          ? 'Casa'
+          : 'House'
+    }`,
+    ...(customer.residenceType === 'apartment'
+      ? [
+          `${es ? 'Número de departamento' : 'Apartment number'}: ${customer.apartmentNumber || ''}`,
+          ...(customer.buildingTower
+            ? [
+                `${es ? 'Edificio / Torre' : 'Building / Tower'}: ${customer.buildingTower}`,
+              ]
+            : []),
+        ]
+      : []),
     `${es ? 'Ciudad' : 'City'}: ${customer.city}`,
     `${es ? 'Estado' : 'State'}: ${customer.state}`,
     `ZIP: ${customer.zip}`,

@@ -4,11 +4,11 @@ import { AnimatePresence, motion } from 'motion/react';
 import { Check, ShoppingBag, X } from 'lucide-react';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
 import { useLanguage } from '@/components/language-context';
-import { productPresentationLabels } from '@/data/products';
+import { getCatalogPresentationLabel } from '@/data/catalog-cart';
 
 export function CatalogCartToast() {
   const { notice, dismissNotice } = useCatalogCart();
-  const { copy } = useLanguage();
+  const { copy, language } = useLanguage();
   return (
     <AnimatePresence>
       {notice && (
@@ -26,7 +26,7 @@ export function CatalogCartToast() {
             <strong>
               {notice.name}
               {notice.presentation
-                ? ` · ${productPresentationLabels[notice.presentation]}`
+                ? ` · ${getCatalogPresentationLabel(notice.presentation, language)}`
                 : ''}
             </strong>
             <p>

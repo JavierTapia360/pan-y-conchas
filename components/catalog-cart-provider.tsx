@@ -8,60 +8,75 @@ import {
   useMemo,
   useState,
 } from 'react';
+import type { Product } from '@/data/products';
 import {
-  productPresentationOrder,
-  type Product,
-  type ProductPresentation,
-} from '@/data/products';
-import { useCatalog, type CatalogProduct } from '@/hooks/use-catalog';
+  getCatalogPrice,
+  getCatalogStockLimit,
+  isCatalogPresentation,
+  isCatalogPresentationAvailable,
+  toCatalogCartProduct,
+  type CatalogCartProduct,
+  type CatalogPresentation,
+} from '@/data/catalog-cart';
+import { waxProduct } from '@/data/wax';
+import { useCatalog } from '@/hooks/use-catalog';
 import { track } from '@/lib/analytics';
 
 export type CatalogCartItem = {
   slug: string;
-  presentation: ProductPresentation;
+  presentation: CatalogPresentation;
   quantity: number;
 };
 export type CatalogCartNotice = {
   id: number;
   kind: 'added' | 'limit' | 'adjusted' | 'sold-out' | 'price';
   name: string;
-  presentation?: ProductPresentation;
+  presentation?: CatalogPresentation;
   stock?: number;
 };
 
 const CART_KEY = 'gf_cart_v1';
-const isPresentation = (value: unknown): value is ProductPresentation =>
-  productPresentationOrder.includes(value as ProductPresentation);
 export const catalogCartItemKey = (
   item: Pick<CatalogCartItem, 'slug' | 'presentation'>,
 ) => `${item.slug}:${item.presentation}`;
 
 export function reconcileCartItems(
   items: CatalogCartItem[],
-  products: Pick<CatalogProduct, 'slug' | 'stocks' | 'prices' | 'hidden'>[],
+  products: Array<
+    Pick<CatalogCartProduct, 'slug' | 'stocks' | 'prices' | 'hidden'> &
+      Partial<Pick<CatalogCartProduct, 'available' | 'inventoryMode'>>
+  >,
 ) {
   const productBySlug = new Map(products.map((item) => [item.slug, item]));
   const seen = new Set<string>();
   let changed = false;
   let adjustment: {
     slug: string;
-    presentation: ProductPresentation;
+    presentation: CatalogPresentation;
     stock: number;
   } | null = null;
   const next: CatalogCartItem[] = [];
 
   for (const item of items) {
-    const product = productBySlug.get(item.slug);
-    const key = isPresentation(item.presentation)
+    const candidate = productBySlug.get(item.slug);
+    const product = candidate
+      ? {
+          ...candidate,
+          available: candidate.available ?? true,
+          inventoryMode: candidate.inventoryMode ?? 'numeric',
+        }
+      : undefined;
+    const key = isCatalogPresentation(item.presentation)
       ? catalogCartItemKey(item)
       : '';
     const valid =
       typeof item.slug === 'string' &&
-      isPresentation(item.presentation) &&
+      isCatalogPresentation(item.presentation) &&
       Number.isInteger(item.quantity) &&
-      item.quantity >= 0 &&
+      item.quantity > 0 &&
       product != null &&
-      product.prices[item.presentation] != null &&
+      getCatalogPrice(product, item.presentation) != null &&
+      isCatalogPresentationAvailable(product, item.presentation) &&
       !product.hidden &&
       !seen.has(key);
     if (!valid) {
@@ -69,14 +84,15 @@ export function reconcileCartItems(
       continue;
     }
     seen.add(key);
-    const stock = Math.max(0, product.stocks[item.presentation]);
-    const quantity = Math.min(item.quantity, stock);
+    const stock = getCatalogStockLimit(product, item.presentation);
+    const quantity =
+      stock === null ? item.quantity : Math.min(item.quantity, stock);
     if (quantity !== item.quantity) {
       changed = true;
       adjustment ||= {
         slug: item.slug,
         presentation: item.presentation,
-        stock,
+        stock: stock || 0,
       };
     }
     if (quantity > 0)
@@ -87,17 +103,20 @@ export function reconcileCartItems(
 
 const CatalogCartContext = createContext<{
   items: CatalogCartItem[];
-  products: CatalogProduct[];
+  products: CatalogCartProduct[];
   count: number;
   subtotalCents: number;
   open: boolean;
   notice: CatalogCartNotice | null;
   setOpen: (open: boolean) => void;
-  add: (product: Product, presentation: ProductPresentation) => void;
-  remove: (slug: string, presentation: ProductPresentation) => void;
+  add: (
+    product: Product | CatalogCartProduct,
+    presentation: CatalogPresentation,
+  ) => void;
+  remove: (slug: string, presentation: CatalogPresentation) => void;
   setQuantity: (
     slug: string,
-    presentation: ProductPresentation,
+    presentation: CatalogPresentation,
     quantity: number,
   ) => void;
   clear: () => void;
@@ -109,7 +128,11 @@ export function CatalogCartProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const products = useCatalog();
+  const catalogProducts = useCatalog();
+  const products = useMemo<CatalogCartProduct[]>(
+    () => [...catalogProducts.map(toCatalogCartProduct), { ...waxProduct }],
+    [catalogProducts],
+  );
   const [items, setItems] = useState<CatalogCartItem[]>([]);
   const [open, setOpen] = useState(false);
   const [notice, setNotice] = useState<CatalogCartNotice | null>(null);
@@ -173,11 +196,19 @@ export function CatalogCartProvider({
   }, [notice]);
 
   const add = useCallback(
-    (requested: Product, presentation: ProductPresentation) => {
+    (
+      requested: Product | CatalogCartProduct,
+      presentation: CatalogPresentation,
+    ) => {
+      const normalizedRequested =
+        'inventoryMode' in requested
+          ? requested
+          : toCatalogCartProduct(requested);
       const product =
-        products.find((item) => item.slug === requested.slug) || requested;
-      const stock = product.stocks[presentation];
-      if (stock <= 0) {
+        products.find((item) => item.slug === requested.slug) ||
+        normalizedRequested;
+      const stock = getCatalogStockLimit(product, presentation);
+      if (!isCatalogPresentationAvailable(product, presentation)) {
         setNotice({
           id: Date.now(),
           kind: 'sold-out',
@@ -186,13 +217,13 @@ export function CatalogCartProvider({
         });
         return;
       }
-      if (product.prices[presentation] == null) {
+      if (getCatalogPrice(product, presentation) == null) {
         setNotice({ id: Date.now(), kind: 'price', name: product.name });
         return;
       }
       const key = catalogCartItemKey({ slug: product.slug, presentation });
       const existing = items.find((item) => catalogCartItemKey(item) === key);
-      if ((existing?.quantity || 0) >= stock) {
+      if (stock !== null && (existing?.quantity || 0) >= stock) {
         setNotice({
           id: Date.now(),
           kind: 'limit',
@@ -229,7 +260,7 @@ export function CatalogCartProvider({
   const setQuantity = useCallback(
     (
       slug: string,
-      presentation: ProductPresentation,
+      presentation: CatalogPresentation,
       requestedQuantity: number,
     ) => {
       const product = products.find((item) => item.slug === slug);
@@ -243,8 +274,8 @@ export function CatalogCartProvider({
         return;
       }
       setItems((current) => {
-        const maximum = Math.max(0, product.stocks[presentation]);
-        if (quantity > maximum) {
+        const maximum = getCatalogStockLimit(product, presentation);
+        if (maximum !== null && quantity > maximum) {
           setNotice({
             id: Date.now(),
             kind: 'limit',
@@ -255,7 +286,11 @@ export function CatalogCartProvider({
         }
         return current.map((item) =>
           catalogCartItemKey(item) === key
-            ? { ...item, quantity: Math.min(quantity, maximum) }
+            ? {
+                ...item,
+                quantity:
+                  maximum === null ? quantity : Math.min(quantity, maximum),
+              }
             : item,
         );
       });
@@ -267,7 +302,11 @@ export function CatalogCartProvider({
     const count = items.reduce((sum, item) => sum + item.quantity, 0);
     const subtotalCents = items.reduce((sum, item) => {
       const product = products.find((entry) => entry.slug === item.slug);
-      return sum + (product?.prices[item.presentation] || 0) * item.quantity;
+      return (
+        sum +
+        (product ? getCatalogPrice(product, item.presentation) || 0 : 0) *
+          item.quantity
+      );
     }, 0);
     return {
       items,
@@ -278,7 +317,7 @@ export function CatalogCartProvider({
       notice,
       setOpen,
       add,
-      remove(slug: string, presentation: ProductPresentation) {
+      remove(slug: string, presentation: CatalogPresentation) {
         const key = catalogCartItemKey({ slug, presentation });
         setItems((current) =>
           current.filter((item) => catalogCartItemKey(item) !== key),

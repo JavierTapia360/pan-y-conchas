@@ -5,6 +5,11 @@ import { assertMerchProduct } from '@/lib/commerce-guard';
 import { hasAvailablePresentation, products } from '@/data/products';
 import { assets } from '@/data/assets';
 import {
+  getCatalogPresentationLabel,
+  getCatalogPrice,
+} from '@/data/catalog-cart';
+import { waxProduct } from '@/data/wax';
+import {
   contactSchema,
   adminProductSchema,
   inventorySchema,
@@ -70,6 +75,28 @@ describe('core rules', () => {
       products.every((product) => product.images[0].endsWith('/principal.png')),
     ).toBe(true);
     expect(new Set(galleryImages).size).toBe(20);
+  });
+  it('keeps WAX on binary availability with the definitive pack prices', () => {
+    expect(waxProduct).toMatchObject({
+      slug: 'wax',
+      available: true,
+      inventoryMode: 'availability',
+      prices: { pieces5: 10000, pieces10: 19000, pieces25: 35000 },
+      perPiecePrices: { pieces5: 2000, pieces10: 1900, pieces25: 1400 },
+    });
+    expect('stocks' in waxProduct).toBe(false);
+    expect(getCatalogPresentationLabel('pieces5', 'es')).toBe('5 PIEZAS');
+    expect(getCatalogPresentationLabel('pieces5', 'en')).toBe('5 PIECES');
+    expect(getCatalogPrice(waxProduct, 'pieces25')).toBe(35000);
+  });
+  it('keeps WAX cart quantities without inventing a numeric stock limit', () => {
+    const items = [
+      { slug: 'wax', presentation: 'pieces10' as const, quantity: 3 },
+    ];
+    expect(reconcileCartItems(items, [waxProduct]).items).toEqual(items);
+    expect(
+      reconcileCartItems(items, [{ ...waxProduct, available: false }]).items,
+    ).toEqual([]);
   });
   it('derives the simple product status from presentation availability', () => {
     expect(hasAvailablePresentation({ halfOz: 0, oz: 1, qp: 0 })).toBe(true);
@@ -314,6 +341,9 @@ describe('core rules', () => {
       customer: {
         name: 'Ana Pérez',
         address: '123 Main St',
+        residenceType: 'apartment' as const,
+        apartmentNumber: '4B',
+        buildingTower: 'Torre Norte',
         city: 'Los Angeles',
         state: 'California',
         zip: '90001',
@@ -326,9 +356,39 @@ describe('core rules', () => {
     expect(text).toContain('Cantidad: 2');
     expect(text).toContain('SUBTOTAL: $400.00');
     expect(text).toContain('Nombre: Ana Pérez');
+    expect(text).toContain('Tipo de vivienda: Departamento');
+    expect(text).toContain('Número de departamento: 4B');
+    expect(text).toContain('Edificio / Torre: Torre Norte');
     expect(text).toContain('Notas de entrega: Tocar el timbre una vez.');
     const url = buildTelegramOrderUrl(order);
     expect(url).toMatch(/^https:\/\/t\.me\/Cuatesfarmzzz\?text=/);
     expect(decodeURIComponent(url.split('?text=')[1])).toBe(text);
+  });
+  it('translates WAX packs and residence details in the English order text', () => {
+    const text = buildTelegramOrderText({
+      language: 'en',
+      lines: [
+        {
+          name: 'WAX',
+          presentation: 'pieces25',
+          quantity: 2,
+          unitPriceCents: 35000,
+        },
+      ],
+      subtotalCents: 70000,
+      customer: {
+        name: 'Alex',
+        address: '10 Market St',
+        residenceType: 'house',
+        city: 'San Diego',
+        state: 'California',
+        zip: '92101',
+        phone: '+1 555 0200',
+      },
+    });
+    expect(text).toContain('WAX / 25 PIECES');
+    expect(text).toContain('Quantity: 2');
+    expect(text).toContain('SUBTOTAL: $700.00');
+    expect(text).toContain('Residence type: House');
   });
 });
