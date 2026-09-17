@@ -85,8 +85,8 @@ export const products: Product[] = [
   {
     slug: 'frosted-fuel',
     name: 'FROSTED FUEL',
-    stocks: initialStocks(0),
-    available: false,
+    stocks: initialStocks(8),
+    available: true,
     updatedAt: null,
     prices: { halfOz: 8000, oz: 17000, qp: 45000 },
     accent: 'ice',

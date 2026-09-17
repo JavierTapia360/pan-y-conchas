@@ -1,10 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/static-link';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import type { Product } from '@/data/products';
 import { useLanguage } from '@/components/language-context';
 import { SiteHeader } from '@/components/site-header';
@@ -21,7 +20,6 @@ export function ProductDetail({
 }: {
   product: Product;
 }) {
-  const router = useRouter();
   const liveCatalog = useCatalog();
   const liveProduct = liveCatalog.find(
     (item) => item.slug === sourceProduct.slug,
@@ -38,8 +36,8 @@ export function ProductDetail({
   const activeIndex = active < product.images.length ? active : 0;
 
   useEffect(() => {
-    if (liveProduct?.hidden) router.replace('/flower');
-  }, [liveProduct?.hidden, router]);
+    if (liveProduct?.hidden) window.location.replace('/flower');
+  }, [liveProduct?.hidden]);
 
   useEffect(() => {
     const deviceType = window.matchMedia('(max-width: 700px)').matches

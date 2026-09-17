@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/static-link';
 import { type SyntheticEvent, useRef, useState } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { SiteFooter } from '@/components/site-footer';

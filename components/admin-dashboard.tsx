@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/static-link';
 import { useEffect, useMemo, useState } from 'react';
 import { AdminProductEditor } from '@/components/admin-product-editor';
 import { useCatalogStore } from '@/components/catalog-provider';

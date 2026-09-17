@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/static-link';
 import { useLanguage } from '@/components/language-context';
 export default function NotFound() {
   const { copy } = useLanguage();

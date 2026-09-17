@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/static-link';
 import type { Product } from '@/data/products';
 import { useLanguage } from '@/components/language-context';
 import { CatalogAddButton } from '@/components/catalog-add-button';

@@ -57,6 +57,8 @@ const forbiddenArchitecture = [
   'SUPABASE_URL',
   'STRIPE_SECRET_KEY',
   'PAYPAL_CLIENT_SECRET',
+  "from 'next/link'",
+  'useRouter(',
 ];
 const architectureLeaks = forbiddenArchitecture.filter((token) =>
   sourceText.includes(token),

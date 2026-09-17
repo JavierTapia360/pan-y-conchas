@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/static-link';
 import {
   Minus,
   Plus,
@@ -206,45 +206,33 @@ export function CatalogCartDrawer() {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-              <SheetClose
-                nativeButton={false}
-                render={
-                  <Link
-                    prefetch={false}
-                    className="button button-dark"
-                    href="/cart"
-                  />
-                }
+              <Link
+                prefetch={false}
+                className="button button-dark"
+                href="/cart"
+                onClick={() => setOpen(false)}
               >
                 {copy.cart.proceed}
-              </SheetClose>
-              <SheetClose
-                nativeButton={false}
-                render={
-                  <Link
-                    prefetch={false}
-                    className="button button-outline"
-                    href="/flower"
-                  />
-                }
+              </Link>
+              <Link
+                prefetch={false}
+                className="button button-outline"
+                href="/flower"
+                onClick={() => setOpen(false)}
               >
                 <ShoppingCart aria-hidden="true" />
                 {copy.cart.addMore}
-              </SheetClose>
+              </Link>
             </>
           ) : (
-            <SheetClose
-              nativeButton={false}
-              render={
-                <Link
-                  prefetch={false}
-                  className="button button-red"
-                  href="/flower"
-                />
-              }
+            <Link
+              prefetch={false}
+              className="button button-red"
+              href="/flower"
+              onClick={() => setOpen(false)}
             >
               {copy.cart.emptyContinue}
-            </SheetClose>
+            </Link>
           )}
         </SheetFooter>
       </SheetContent>

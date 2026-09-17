@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/static-link';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { SiteHeader } from '@/components/site-header';
