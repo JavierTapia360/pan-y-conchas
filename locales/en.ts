@@ -9,7 +9,14 @@ export const en = {
     close: 'Close menu',
   },
   announcement: '21+ ONLY • U.S. AVAILABILITY SUBJECT TO APPLICABLE LAW',
-  language: { label: 'Language', es: 'ES', en: 'EN' },
+  language: {
+    label: 'Language',
+    select: 'Select language',
+    spanish: 'Español',
+    english: 'English',
+    es: 'ES',
+    en: 'EN',
+  },
   gate: {
     eyebrow: 'CUATESFARMZ • 21+',
     title: 'Are you 21 or older?',

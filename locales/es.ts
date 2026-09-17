@@ -10,7 +10,14 @@ export const es = {
   },
   announcement:
     'SOLO 21+ • DISPONIBILIDAD EN EE. UU. SUJETA A LA LEGISLACIÓN APLICABLE',
-  language: { label: 'Idioma', es: 'ES', en: 'EN' },
+  language: {
+    label: 'Idioma',
+    select: 'Seleccionar idioma',
+    spanish: 'Español',
+    english: 'English',
+    es: 'ES',
+    en: 'EN',
+  },
   gate: {
     eyebrow: 'CUATESFARMZ • 21+',
     title: '¿Tienes 21 años o más?',

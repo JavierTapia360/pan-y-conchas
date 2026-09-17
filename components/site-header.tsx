@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/components/language-context';
 import { CatalogCartDrawer } from '@/components/catalog-cart-drawer';
+import { HeaderLanguageSwitcher } from '@/components/header-language-switcher';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 
 export function SiteHeader() {
@@ -15,7 +16,7 @@ export function SiteHeader() {
   const menuPanel = useRef<HTMLDialogElement>(null);
   const menuTrigger = useRef<HTMLButtonElement>(null);
   const menuClose = useRef<HTMLButtonElement>(null);
-  const { copy, language, setLanguage } = useLanguage();
+  const { copy, setLanguage } = useLanguage();
   const pathname = usePathname();
   useBodyScrollLock(menuOpen);
   useEffect(() => {
@@ -101,20 +102,7 @@ export function SiteHeader() {
         </Link>
         <div className="header-actions">
           <CatalogCartDrawer />
-          <div className="language-switcher" aria-label={copy.language.label}>
-            <button
-              className={language === 'es' ? 'active' : ''}
-              onClick={() => setLanguage('es')}
-            >
-              🇲🇽 ES
-            </button>
-            <button
-              className={language === 'en' ? 'active' : ''}
-              onClick={() => setLanguage('en')}
-            >
-              🇺🇸 EN
-            </button>
-          </div>
+          <HeaderLanguageSwitcher />
           <Link prefetch={false} className="contact-link" href="/contact">
             {copy.nav.contact}
           </Link>
