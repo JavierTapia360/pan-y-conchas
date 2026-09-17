@@ -17,6 +17,7 @@ export type TelegramCustomerDetails = {
   state: string;
   zip: string;
   phone: string;
+  notes?: string;
 };
 
 type TelegramOrder = {
@@ -56,6 +57,9 @@ export function buildTelegramOrderText({
     `${es ? 'Estado' : 'State'}: ${customer.state}`,
     `ZIP: ${customer.zip}`,
     `${es ? 'Teléfono' : 'Phone'}: ${customer.phone}`,
+    ...(customer.notes
+      ? [`${es ? 'Notas de entrega' : 'Delivery notes'}: ${customer.notes}`]
+      : []),
     '',
     es
       ? 'Quiero solicitar este pedido. Entiendo que el stock se confirma manualmente y que no se realizó ningún pago en la web.'

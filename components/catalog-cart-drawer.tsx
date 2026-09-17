@@ -13,7 +13,6 @@ import {
 import { useCatalogCart } from '@/components/catalog-cart-provider';
 import { productPresentationLabels } from '@/data/products';
 import { useLanguage } from '@/components/language-context';
-import { EditorialArrow } from '@/components/editorial-arrow';
 import {
   Sheet,
   SheetClose,
@@ -35,7 +34,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { siteConfig } from '@/data/site';
 
 export function CatalogCartDrawer() {
   const { copy, language } = useLanguage();
@@ -63,7 +61,7 @@ export function CatalogCartDrawer() {
   });
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={setOpen} modal="trap-focus">
       <SheetTrigger
         className="catalog-cart-trigger"
         aria-label={copy.cart.open}
@@ -168,13 +166,12 @@ export function CatalogCartDrawer() {
         )}
 
         <SheetFooter>
-          {lines.length > 0 && (
+          {lines.length > 0 ? (
             <>
               <div className="catalog-cart-summary">
                 <span>{copy.cart.subtotal}</span>
                 <strong>{currency.format(subtotalCents / 100)}</strong>
               </div>
-              <p className="catalog-cart-boundary">{copy.cart.boundary}</p>
               <AlertDialog>
                 <AlertDialogTrigger className="catalog-cart-clear">
                   {copy.cart.clear}
@@ -204,42 +201,36 @@ export function CatalogCartDrawer() {
                   />
                 }
               >
-                {copy.cart.viewSummary} <EditorialArrow />
+                {copy.cart.proceed}
+              </SheetClose>
+              <SheetClose
+                nativeButton={false}
+                render={
+                  <Link
+                    prefetch={false}
+                    className="button button-outline"
+                    href="/flower"
+                  />
+                }
+              >
+                <ShoppingCart aria-hidden="true" />
+                {copy.cart.addMore}
               </SheetClose>
             </>
+          ) : (
+            <SheetClose
+              nativeButton={false}
+              render={
+                <Link
+                  prefetch={false}
+                  className="button button-red"
+                  href="/flower"
+                />
+              }
+            >
+              {copy.cart.emptyContinue}
+            </SheetClose>
           )}
-          <SheetClose
-            nativeButton={false}
-            render={
-              <Link
-                prefetch={false}
-                className="button button-red"
-                href="/flower"
-              />
-            }
-          >
-            {copy.cart.continue} <EditorialArrow />
-          </SheetClose>
-          <SheetClose
-            nativeButton={false}
-            render={
-              <Link
-                prefetch={false}
-                className="button button-outline"
-                href="/contact"
-              />
-            }
-          >
-            {copy.actions.contact} <EditorialArrow />
-          </SheetClose>
-          <a
-            className="button button-outline catalog-cart-telegram"
-            href={siteConfig.socials.telegram}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {copy.telegram.contact} <EditorialArrow />
-          </a>
         </SheetFooter>
       </SheetContent>
     </Sheet>

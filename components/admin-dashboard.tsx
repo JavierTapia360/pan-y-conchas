@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { AdminProductEditor } from '@/components/admin-product-editor';
-import { EditorialArrow } from '@/components/editorial-arrow';
 import { useCatalogStore } from '@/components/catalog-provider';
 import {
   adminPresentationOrder,
@@ -194,7 +193,7 @@ export function AdminDashboard() {
           ))}
         </nav>
         <Link prefetch={false} href="/" target="_blank">
-          Ver sitio <EditorialArrow />
+          Ver sitio
         </Link>
       </aside>
 
@@ -267,7 +266,6 @@ export function AdminDashboard() {
                         {adminPresentationOrder.map((presentation) => (
                           <span key={presentation}>
                             <b>{productPresentationLabels[presentation]}</b>{' '}
-                            {product.stocks[presentation]} ·{' '}
                             {product.prices[presentation] === null
                               ? '—'
                               : `$${(product.prices[presentation]! / 100).toFixed(0)}`}
@@ -288,6 +286,7 @@ export function AdminDashboard() {
             </div>
             {editing ? (
               <AdminProductEditor
+                key={editing.slug}
                 product={editing}
                 media={mediaLibrary}
                 saving={saveState === 'saving'}

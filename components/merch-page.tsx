@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { EditorialArrow } from '@/components/editorial-arrow';
 import { useLanguage } from '@/components/language-context';
 import { useMerch } from '@/hooks/use-merch';
 import { useCart } from '@/components/cart-provider';
@@ -29,7 +28,7 @@ export function MerchPage() {
           <h1>{copy.merch.title}</h1>
           <p>{copy.merch.intro}</p>
           <Link prefetch={false} href="/merch/cart" className="text-link">
-            {copy.merch.cart} ({count}) <EditorialArrow />
+            {copy.merch.cart} ({count})
           </Link>
         </header>
         {loading ? (

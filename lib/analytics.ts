@@ -13,11 +13,7 @@ export type AnalyticsEvent =
   | 'newsletter_signup'
   | 'view_item'
   | 'add_to_cart'
-  | 'order_request'
-  | 'selection_add'
-  | 'selection_remove'
-  | 'selection_open'
-  | 'selection_share';
+  | 'order_request';
 export const ANALYTICS_CONSENT_KEY = 'gf_analytics_consent_v1';
 
 export function hasAnalyticsConsent() {

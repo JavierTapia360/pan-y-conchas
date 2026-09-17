@@ -7,19 +7,15 @@ import {
   ChevronRight,
   Film,
   ImagePlus,
-  Minus,
-  Plus,
   Smartphone,
   Star,
   Trash2,
 } from 'lucide-react';
-import { useMemo } from 'react';
-import { EditorialArrow } from '@/components/editorial-arrow';
+import { useMemo, useRef } from 'react';
 import {
   productPresentationLabels,
   productPresentationOrder,
   type Product,
-  type ProductPresentation,
 } from '@/data/products';
 import type { MediaLibraryItem } from '@/lib/media-library';
 
@@ -55,19 +51,29 @@ export function AdminProductEditor({
       ),
     [media, product.slug],
   );
-  const videos = useMemo(
-    () =>
-      media.filter(
-        (item) => item.kind === 'video' && item.product === product.slug,
-      ),
-    [media, product.slug],
-  );
   const selected = new Set(product.images);
+  const available = Object.values(product.stocks).some((stock) => stock > 0);
+  const availableStocks = useRef(
+    available ? { ...product.stocks } : { halfOz: 1, oz: 1, qp: 1 },
+  );
 
-  function updateStock(presentation: ProductPresentation, value: string) {
-    const parsed = Number(value);
-    const stock = Number.isFinite(parsed) ? Math.max(0, Math.trunc(parsed)) : 0;
-    onPatch({ stocks: { ...product.stocks, [presentation]: stock } });
+  function setAvailability(nextAvailable: boolean) {
+    if (nextAvailable) {
+      const restored = { ...availableStocks.current };
+      if (!Object.values(restored).some((stock) => stock > 0)) {
+        restored.halfOz = 1;
+        restored.oz = 1;
+        restored.qp = 1;
+      }
+      onPatch({ stocks: restored, available: true });
+      return;
+    }
+
+    if (available) availableStocks.current = { ...product.stocks };
+    onPatch({
+      stocks: { halfOz: 0, oz: 0, qp: 0 },
+      available: false,
+    });
   }
 
   function moveImage(index: number, direction: -1 | 1) {
@@ -92,7 +98,7 @@ export function AdminProductEditor({
           <h2>{product.name}</h2>
         </div>
         <Link href={`/flower/${product.slug}`} target="_blank" prefetch={false}>
-          Ver producto <EditorialArrow />
+          Ver producto
         </Link>
       </header>
 
@@ -172,12 +178,31 @@ export function AdminProductEditor({
         <div className="admin-section-title">
           <span>B</span>
           <div>
-            <p>PRECIO Y STOCK</p>
-            <h3>Inventario por presentación</h3>
+            <p>ESTADO Y PRECIOS</p>
+            <h3>Disponibilidad simple</h3>
           </div>
         </div>
+        <fieldset className="admin-availability-control">
+          <legend>Estado del producto</legend>
+          <button
+            type="button"
+            className={available ? 'active available' : ''}
+            aria-pressed={available}
+            onClick={() => setAvailability(true)}
+          >
+            AVAILABLE
+          </button>
+          <button
+            type="button"
+            className={!available ? 'active sold-out' : ''}
+            aria-pressed={!available}
+            onClick={() => setAvailability(false)}
+          >
+            SOLD OUT
+          </button>
+        </fieldset>
         <fieldset className="admin-variant-table">
-          <legend className="sr-only">Precio y stock</legend>
+          <legend className="sr-only">Precios por presentación</legend>
           <div className="admin-variant-head" aria-hidden="true">
             <span />
             {productPresentationOrder.map((presentation) => (
@@ -217,63 +242,6 @@ export function AdminProductEditor({
                     })
                   }
                 />
-              </label>
-            ))}
-          </div>
-          <div className="admin-variant-row">
-            <b>Stock</b>
-            {productPresentationOrder.map((presentation) => (
-              <label
-                key={presentation}
-                data-presentation={productPresentationLabels[presentation]}
-              >
-                <span className="sr-only">
-                  Stock {productPresentationLabels[presentation]}
-                </span>
-                <div className="admin-stock-control">
-                  <button
-                    type="button"
-                    disabled={product.stocks[presentation] <= 0}
-                    aria-label={`Reducir stock ${productPresentationLabels[presentation]}`}
-                    onClick={() =>
-                      updateStock(
-                        presentation,
-                        String(product.stocks[presentation] - 1),
-                      )
-                    }
-                  >
-                    <Minus aria-hidden="true" />
-                  </button>
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
-                    inputMode="numeric"
-                    value={product.stocks[presentation]}
-                    onChange={(event) =>
-                      updateStock(presentation, event.target.value)
-                    }
-                  />
-                  <button
-                    type="button"
-                    aria-label={`Aumentar stock ${productPresentationLabels[presentation]}`}
-                    onClick={() =>
-                      updateStock(
-                        presentation,
-                        String(product.stocks[presentation] + 1),
-                      )
-                    }
-                  >
-                    <Plus aria-hidden="true" />
-                  </button>
-                </div>
-                <small
-                  className={
-                    product.stocks[presentation] > 0 ? 'available' : 'sold-out'
-                  }
-                >
-                  {product.stocks[presentation] > 0 ? 'AVAILABLE' : 'SOLD OUT'}
-                </small>
               </label>
             ))}
           </div>
@@ -406,26 +374,19 @@ export function AdminProductEditor({
               ))}
             </select>
           </label>
-          <label>
+          <div className="admin-video-lock">
             <span>Video oficial</span>
-            <select
-              value={product.video || ''}
-              onChange={(event) =>
-                onPatch({ video: event.target.value || undefined })
-              }
-            >
-              <option value="">Sin video</option>
-              {videos.map((item) => (
-                <option key={item.url} value={item.url}>
-                  {item.url.split('/').at(-1)}
-                </option>
-              ))}
-            </select>
-          </label>
+            <strong>
+              {product.video ? 'ASIGNADO · SIN CAMBIOS' : 'SIN VIDEO'}
+            </strong>
+            <small>
+              El video y su poster permanecen intactos en esta fase.
+            </small>
+          </div>
           {product.video ? (
             <video
               src={product.video}
-              poster={product.images[0]}
+              poster={product.videoPoster || product.images[0]}
               controls
               muted
               playsInline

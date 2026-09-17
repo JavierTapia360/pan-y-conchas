@@ -4,7 +4,6 @@ import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { ContactForm } from '@/components/contact-form';
 import { useLanguage } from '@/components/language-context';
-import { EditorialArrow } from '@/components/editorial-arrow';
 import { siteConfig } from '@/data/site';
 
 export function ContactPage() {
@@ -20,7 +19,7 @@ export function ContactPage() {
           <p>{copy.contact.intro}</p>
           {contactEmail ? (
             <a className="text-link" href={`mailto:${contactEmail}`}>
-              {contactEmail} <EditorialArrow />
+              {contactEmail}
             </a>
           ) : null}
           <a
@@ -29,7 +28,7 @@ export function ContactPage() {
             target="_blank"
             rel="noreferrer"
           >
-            {copy.telegram.contact} <EditorialArrow />
+            {copy.telegram.contact}
           </a>
         </header>
         <ContactForm />

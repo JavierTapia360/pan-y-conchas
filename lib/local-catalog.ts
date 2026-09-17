@@ -74,6 +74,8 @@ export function normalizeLocalProduct(
       typeof candidate.video === 'string' && candidate.video
         ? candidate.video
         : undefined,
+    videoPoster: fallback.videoPoster,
+    campaignImage: fallback.campaignImage,
     description: {
       es:
         typeof candidate.description?.es === 'string' &&

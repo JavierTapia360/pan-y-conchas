@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { detectLanguageFrom } from '@/lib/language';
 import { statusToAvailability } from '@/lib/availability';
 import { assertMerchProduct } from '@/lib/commerce-guard';
-import { products } from '@/data/products';
+import { hasAvailablePresentation, products } from '@/data/products';
 import { assets } from '@/data/assets';
 import {
   contactSchema,
@@ -12,12 +12,6 @@ import {
   newsletterSchema,
 } from '@/lib/validation';
 import { normalizeLocalProduct } from '@/lib/local-catalog';
-import {
-  toggleComparisonItems,
-  reconcileSelectionItems,
-  toggleSelectionItems,
-  type SelectionItem,
-} from '@/components/selection-provider';
 import { reconcileCartItems } from '@/components/catalog-cart-provider';
 import { buildTelegramOrderText, buildTelegramOrderUrl } from '@/lib/telegram';
 
@@ -61,7 +55,25 @@ describe('core rules', () => {
     const videos = products.map((product) => product.video);
     expect(videos.every(Boolean)).toBe(true);
     expect(new Set(videos).size).toBe(4);
+    expect(
+      products.every(
+        (product) =>
+          product.videoPoster && !product.images.includes(product.videoPoster),
+      ),
+    ).toBe(true);
     expect('video' in assets.wax).toBe(false);
+  });
+  it('keeps five unique square-gallery sources per Flower product', () => {
+    const galleryImages = products.flatMap((product) => product.images);
+    expect(products.every((product) => product.images.length === 5)).toBe(true);
+    expect(
+      products.every((product) => product.images[0].endsWith('/principal.png')),
+    ).toBe(true);
+    expect(new Set(galleryImages).size).toBe(20);
+  });
+  it('derives the simple product status from presentation availability', () => {
+    expect(hasAvailablePresentation({ halfOz: 0, oz: 1, qp: 0 })).toBe(true);
+    expect(hasAvailablePresentation({ halfOz: 0, oz: 0, qp: 0 })).toBe(false);
   });
   it('rejects regulated catalog products from merch commerce', () => {
     expect(() =>
@@ -138,47 +150,6 @@ describe('core rules', () => {
         productType: 'catalog',
       }).success,
     ).toBe(false);
-  });
-  it('adds and removes catalog selections without quantities', () => {
-    const item: SelectionItem = {
-      id: 'flower:mac-1',
-      kind: 'flower',
-      slug: 'mac-1',
-      name: 'MAC 1',
-      image: '/mac.webp',
-    };
-    const added = toggleSelectionItems([], item);
-    expect(added).toEqual([item]);
-    expect(toggleSelectionItems(added, item)).toEqual([]);
-  });
-  it('refreshes saved selection names from the central catalog', () => {
-    const product = products.find((item) => item.slug === 'skittles')!;
-    expect(
-      reconcileSelectionItems(
-        [
-          {
-            id: 'flower:skittles',
-            kind: 'flower',
-            slug: 'skittles',
-            name: 'Outdated catalog name',
-            image: '/old.webp',
-          },
-        ],
-        [{ ...product, featured: true, hidden: false }],
-      ),
-    ).toEqual([expect.objectContaining({ name: 'SKITTLES' })]);
-  });
-  it('limits visual comparison to three catalog items', () => {
-    const entries: SelectionItem[] = ['one', 'two', 'three', 'four'].map(
-      (id) => ({ id, kind: 'flower', name: id, image: `/${id}.webp` }),
-    );
-    const compared = entries
-      .slice(0, 3)
-      .reduce(toggleComparisonItems, [] as SelectionItem[]);
-    expect(toggleComparisonItems(compared, entries[3])).toHaveLength(3);
-    expect(
-      toggleComparisonItems(compared, entries[1]).map((item) => item.id),
-    ).toEqual(['one', 'three']);
   });
   it('validates inventory without accepting negative or fractional stock', () => {
     expect(
@@ -347,6 +318,7 @@ describe('core rules', () => {
         state: 'California',
         zip: '90001',
         phone: '+1 555 0100',
+        notes: 'Tocar el timbre una vez.',
       },
     };
     const text = buildTelegramOrderText(order);
@@ -354,8 +326,9 @@ describe('core rules', () => {
     expect(text).toContain('Cantidad: 2');
     expect(text).toContain('SUBTOTAL: $400.00');
     expect(text).toContain('Nombre: Ana Pérez');
+    expect(text).toContain('Notas de entrega: Tocar el timbre una vez.');
     const url = buildTelegramOrderUrl(order);
-    expect(url).toMatch(/^https:\/\/t\.me\/cuatesfarmzpayments\?text=/);
+    expect(url).toMatch(/^https:\/\/t\.me\/Cuatesfarmzzz\?text=/);
     expect(decodeURIComponent(url.split('?text=')[1])).toBe(text);
   });
 });

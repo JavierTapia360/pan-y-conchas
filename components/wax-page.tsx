@@ -1,31 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { useLanguage } from '@/components/language-context';
 import { assets } from '@/data/assets';
-import { Check, Plus, Scale } from 'lucide-react';
-import {
-  useSelection,
-  waxSelectionItem,
-} from '@/components/selection-provider';
-import { track } from '@/lib/analytics';
-import { MobileSelectionBar } from '@/components/mobile-selection-bar';
-import { useEffect } from 'react';
 
 export function WaxPage() {
   const { copy, language, siteSettings } = useLanguage();
   const [active, setActive] = useState(0);
-  const { add, remove, contains, toggleCompare, isCompared, recordView } =
-    useSelection();
-  const selected = contains('wax:device');
-  const compared = isCompared('wax:device');
-  const selectionItem = useMemo(
-    () => waxSelectionItem(copy.selection.waxName),
-    [copy.selection.waxName],
-  );
   const getSetting = (key: string, fallback: string) =>
     siteSettings[key]?.[language] || fallback;
   const configuredHero = siteSettings.waxHero?.[language];
@@ -35,9 +19,6 @@ export function WaxPage() {
         ...assets.wax.images.filter((image) => image !== configuredHero),
       ]
     : [...assets.wax.images];
-  useEffect(() => {
-    recordView(selectionItem);
-  }, [recordView, selectionItem]);
   return (
     <div className="wax-page">
       <SiteHeader />
@@ -48,44 +29,6 @@ export function WaxPage() {
             <h1>{copy.wax.title}</h1>
             <h2>{getSetting('waxHeadline', copy.wax.subtitle)}</h2>
             <p>{getSetting('waxBody', copy.wax.body)}</p>
-            <button
-              className={
-                selected
-                  ? 'button wax-selection-button selected'
-                  : 'button wax-selection-button'
-              }
-              aria-pressed={selected}
-              onClick={() => {
-                if (selected) {
-                  remove('wax:device');
-                  track('selection_remove', { slug: 'wax', language });
-                } else {
-                  add({ ...selectionItem, image: waxImages[0] });
-                  track('selection_add', { slug: 'wax', language });
-                }
-              }}
-            >
-              {selected ? (
-                <Check aria-hidden="true" />
-              ) : (
-                <Plus aria-hidden="true" />
-              )}
-              {selected ? copy.selection.added : copy.selection.add}
-            </button>
-            <button
-              className={
-                compared
-                  ? 'button wax-compare-button selected'
-                  : 'button wax-compare-button'
-              }
-              aria-pressed={compared}
-              onClick={() =>
-                toggleCompare({ ...selectionItem, image: waxImages[0] })
-              }
-            >
-              <Scale aria-hidden="true" />
-              {compared ? copy.selection.comparing : copy.selection.addCompare}
-            </button>
           </div>
           <div className="wax-hero-image">
             <Image
@@ -128,7 +71,6 @@ export function WaxPage() {
           </div>
         </section>
       </main>
-      <MobileSelectionBar item={{ ...selectionItem, image: waxImages[0] }} />
       <SiteFooter />
     </div>
   );

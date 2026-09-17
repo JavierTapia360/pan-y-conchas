@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { useLanguage } from '@/components/language-context';
-import { EditorialArrow } from '@/components/editorial-arrow';
 
 export function CheckoutPage() {
   const { copy } = useLanguage();
@@ -20,7 +19,6 @@ export function CheckoutPage() {
           <p>{copy.merch.regulatedGuard}</p>
           <Link className="button button-dark" href="/merch/cart">
             {copy.merch.cart}
-            <EditorialArrow />
           </Link>
         </div>
       </main>

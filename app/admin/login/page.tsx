@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { EditorialArrow } from '@/components/editorial-arrow';
 
 export default function Page() {
   return (
@@ -11,7 +10,7 @@ export default function Page() {
         autenticación ni backend.
       </p>
       <Link className="button button-red" href="/admin">
-        Abrir Admin <EditorialArrow />
+        Abrir Admin
       </Link>
     </main>
   );

@@ -5,7 +5,6 @@ import { SiteFooter } from '@/components/site-footer';
 import { ProductCard } from '@/components/product-card';
 import { useLanguage } from '@/components/language-context';
 import { useCatalog } from '@/hooks/use-catalog';
-import { RecentlyViewed } from '@/components/recently-viewed';
 
 export function CatalogPage() {
   const { copy } = useLanguage();
@@ -20,11 +19,10 @@ export function CatalogPage() {
           <p>{copy.flower.intro}</p>
         </header>
         <section className="catalog-grid">
-          {visible.map((product, index) => (
-            <ProductCard key={product.slug} product={product} index={index} />
+          {visible.map((product) => (
+            <ProductCard key={product.slug} product={product} />
           ))}
         </section>
-        <RecentlyViewed />
       </main>
       <SiteFooter />
     </>

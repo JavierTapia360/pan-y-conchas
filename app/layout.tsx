@@ -5,9 +5,6 @@ import { AgeGate } from '@/components/age-gate';
 import { CartProvider } from '@/components/cart-provider';
 import { CatalogCartProvider } from '@/components/catalog-cart-provider';
 import { CatalogCartToast } from '@/components/catalog-cart-toast';
-import { SelectionProvider } from '@/components/selection-provider';
-import { SelectionToast } from '@/components/selection-toast';
-import { ComparisonTray } from '@/components/comparison-tray';
 import { AnalyticsProvider } from '@/components/analytics-provider';
 import { CatalogProvider } from '@/components/catalog-provider';
 import './globals.css';
@@ -50,17 +47,13 @@ export default function RootLayout({
           <CatalogProvider>
             <CartProvider>
               <CatalogCartProvider>
-                <SelectionProvider>
-                  <a className="skip-link" href="#page-content">
-                    Skip to content
-                  </a>
-                  <AgeGate />
-                  <AnalyticsProvider />
-                  <div id="page-content">{children}</div>
-                  <SelectionToast />
-                  <ComparisonTray />
-                  <CatalogCartToast />
-                </SelectionProvider>
+                <a className="skip-link" href="#page-content">
+                  Skip to content
+                </a>
+                <AgeGate />
+                <AnalyticsProvider />
+                <div id="page-content">{children}</div>
+                <CatalogCartToast />
               </CatalogCartProvider>
             </CartProvider>
           </CatalogProvider>

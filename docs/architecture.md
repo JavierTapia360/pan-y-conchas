@@ -2,7 +2,7 @@
 
 The application is a static Vinext/Next.js storefront. It has no API routes, server authentication, database bindings or external persistence.
 
-`data/products.ts` is the canonical checked-in catalog. `CatalogProvider` applies validated overrides from `gf_catalog_local_v1` and exposes one catalog context to Home, Flower, product detail, selection, cart and Admin. The browser cannot add arbitrary products or change stable slugs.
+`data/products.ts` is the canonical checked-in catalog. `CatalogProvider` applies validated overrides from `gf_catalog_local_v1` and exposes one catalog context to Home, Flower, product detail, cart and Admin. The browser cannot add arbitrary products or change stable slugs.
 
 Cart data is client-side under `gf_cart_v1`. Reconciliation clamps each product/presentation quantity to current stock and removes hidden, invalid, unavailable or unpriced lines. Adding to the cart never decrements stock.
 

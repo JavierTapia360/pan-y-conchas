@@ -4,17 +4,11 @@ import { type SyntheticEvent, useState } from 'react';
 import { useLanguage } from '@/components/language-context';
 import { siteConfig } from '@/data/site';
 import { track } from '@/lib/analytics';
-import { useSelection } from '@/components/selection-provider';
-import { EditorialArrow } from '@/components/editorial-arrow';
-import { Check } from 'lucide-react';
 import { saveLocalMessage } from '@/lib/local-admin-store';
 
 export function ContactForm() {
   const { copy, language } = useLanguage();
-  const { items, region, setRegion } = useSelection();
-  const selectionNames = items.map((item) =>
-    item.kind === 'wax' ? copy.selection.waxName : item.name,
-  );
+  const [region, setRegion] = useState('');
   const [state, setState] = useState<'idle' | 'busy' | 'success' | 'error'>(
     'idle',
   );
@@ -57,16 +51,6 @@ export function ContactForm() {
     );
   return (
     <form className="contact-form" onSubmit={submit} noValidate>
-      {selectionNames.length > 0 && (
-        <aside className="contact-selection-context">
-          <Check aria-hidden="true" />
-          <div>
-            <strong>{copy.selection.summaryTitle}</strong>
-            <p>{copy.selection.contactContext}</p>
-            <span>{selectionNames.join(' · ')}</span>
-          </div>
-        </aside>
-      )}
       <div className="field">
         <label htmlFor="name">{copy.contact.name}</label>
         <input
@@ -112,15 +96,7 @@ export function ContactForm() {
       </div>
       <div className="field full">
         <label htmlFor="subject">{copy.contact.subject}</label>
-        <input
-          id="subject"
-          name="subject"
-          required
-          minLength={2}
-          defaultValue={
-            selectionNames.length ? copy.selection.contactSubject : ''
-          }
-        />
+        <input id="subject" name="subject" required minLength={2} />
       </div>
       <div className="field full">
         <label htmlFor="message">{copy.contact.message}</label>
@@ -130,11 +106,6 @@ export function ContactForm() {
           required
           minLength={10}
           rows={6}
-          defaultValue={
-            selectionNames.length
-              ? `${copy.selection.contactMessage}\n${selectionNames.map((name) => `• ${name}`).join('\n')}`
-              : ''
-          }
         />
       </div>
       <input
@@ -151,7 +122,6 @@ export function ContactForm() {
       )}
       <button className="button button-red" disabled={state === 'busy'}>
         {copy.contact.submit}
-        <EditorialArrow />
       </button>
     </form>
   );

@@ -12,8 +12,6 @@ import { NewsletterForm } from '@/components/newsletter-form';
 import { useLanguage } from '@/components/language-context';
 import { assets } from '@/data/assets';
 import { useCatalog } from '@/hooks/use-catalog';
-import { RecentlyViewed } from '@/components/recently-viewed';
-import { EditorialArrow } from '@/components/editorial-arrow';
 
 export default function Home() {
   const { copy } = useLanguage();
@@ -65,7 +63,6 @@ export default function Home() {
                 className="button button-red"
               >
                 {copy.home.flowerCta}
-                <EditorialArrow />
               </Link>
               <Link
                 prefetch={false}
@@ -73,13 +70,9 @@ export default function Home() {
                 className="button button-ghost"
               >
                 {copy.home.waxCta}
-                <EditorialArrow />
               </Link>
             </div>
           </motion.div>
-          <span className="hero-index" aria-hidden="true">
-            CF / 001
-          </span>
         </section>
 
         <section className="category-strip" aria-label={copy.home.categories}>
@@ -87,19 +80,11 @@ export default function Home() {
             {categoryProduct ? (
               <Image src={categoryProduct.images[0]} alt="" fill sizes="50vw" />
             ) : null}
-            <span>01</span>
             <strong>FLOWER</strong>
-            <b>
-              <EditorialArrow />
-            </b>
           </Link>
           <Link prefetch={false} href="/wax">
             <Image src={assets.wax.images[0]} alt="" fill sizes="50vw" />
-            <span>02</span>
             <strong>WAX</strong>
-            <b>
-              <EditorialArrow />
-            </b>
           </Link>
         </section>
 
@@ -112,16 +97,14 @@ export default function Home() {
             <p>{copy.home.featuredBody}</p>
           </SectionReveal>
           <div className="product-grid product-swipe">
-            {featured.map((product, index) => (
-              <ProductCard key={product.slug} product={product} index={index} />
+            {featured.map((product) => (
+              <ProductCard key={product.slug} product={product} />
             ))}
           </div>
           <div className="swipe-indicator" aria-hidden="true">
             <span />
           </div>
         </section>
-
-        <RecentlyViewed />
 
         <section className="film-section">
           <SectionReveal className="film-copy">
@@ -130,7 +113,7 @@ export default function Home() {
             {filmProduct?.video ? (
               <VideoModal
                 src={filmProduct.video}
-                poster={filmProduct.images[0]}
+                poster={filmProduct.videoPoster || filmProduct.images[0]}
                 label={`CUATESFARMZ ${filmProduct.name} film`}
               />
             ) : null}
@@ -138,7 +121,7 @@ export default function Home() {
           <SectionReveal className="film-visual">
             {filmProduct ? (
               <Image
-                src={filmProduct.images[1] || filmProduct.images[0]}
+                src={filmProduct.campaignImage || filmProduct.images[0]}
                 alt={`${filmProduct.name} CUATESFARMZ campaign portrait`}
                 fill
                 sizes="(max-width: 800px) 100vw, 65vw"
@@ -162,7 +145,6 @@ export default function Home() {
             <p>{copy.home.waxBody}</p>
             <Link prefetch={false} href="/wax" className="text-link">
               {copy.home.waxCta}
-              <EditorialArrow />
             </Link>
           </SectionReveal>
         </section>
@@ -178,13 +160,6 @@ export default function Home() {
             <p>{copy.home.brandBody}</p>
           </SectionReveal>
         </section>
-
-        <div className="brand-marquee">
-          <div>
-            CUATESFARMZ — GOOD PLANTS BETTER DAYS — CUATESFARMZ — GOOD PLANTS
-            BETTER DAYS —
-          </div>
-        </div>
 
         <section className="newsletter-section">
           <div>

@@ -11,6 +11,8 @@ export type Product = {
   images: readonly string[];
   mobileImage?: string;
   video?: string;
+  videoPoster?: string;
+  campaignImage?: string;
   description: { en: string; es: string };
   featured: boolean;
   hidden: boolean;
@@ -50,6 +52,8 @@ export const products: Product[] = [
     accent: 'candy',
     images: assets.skittles.images,
     video: assets.skittles.video,
+    videoPoster: assets.skittles.videoPoster,
+    campaignImage: assets.skittles.campaignImage,
     description: {
       en: 'A color-forward CUATESFARMZ flower presentation with candy-pop energy and a bold editorial finish.',
       es: 'Una presentación floral CUATESFARMZ llena de color, energía candy-pop y un acabado editorial contundente.',
@@ -68,6 +72,8 @@ export const products: Product[] = [
     accent: 'pink',
     images: assets.jellyDonut.images,
     video: assets.jellyDonut.video,
+    videoPoster: assets.jellyDonut.videoPoster,
+    campaignImage: assets.jellyDonut.campaignImage,
     description: {
       en: 'Glossy reds, deep pinks and a dessert-inspired visual world give JELLY DONUT its unmistakable identity.',
       es: 'Rojos brillantes, rosas intensos y un universo visual inspirado en postres le dan a JELLY DONUT una identidad inconfundible.',
@@ -86,6 +92,8 @@ export const products: Product[] = [
     accent: 'ice',
     images: assets.frostedFuel.images,
     video: assets.frostedFuel.video,
+    videoPoster: assets.frostedFuel.videoPoster,
+    campaignImage: assets.frostedFuel.campaignImage,
     description: {
       en: 'An ice-cold visual direction pairs crisp blue light with the powerful CUATESFARMZ graphic language.',
       es: 'Una dirección visual helada combina luz azul nítida con el lenguaje gráfico contundente de CUATESFARMZ.',
@@ -104,6 +112,8 @@ export const products: Product[] = [
     accent: 'green',
     images: assets.mac1.images,
     video: assets.mac1.video,
+    videoPoster: assets.mac1.videoPoster,
+    campaignImage: assets.mac1.campaignImage,
     description: {
       en: 'Electric green cuts through a black-and-red foundation for a sharp, high-energy product portrait.',
       es: 'El verde eléctrico atraviesa una base negra y roja para crear un retrato de producto preciso y lleno de energía.',
