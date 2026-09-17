@@ -251,6 +251,42 @@ describe('core rules', () => {
     });
     expect(normalized.available).toBe(true);
   });
+  it('migrates the untouched former FROSTED FUEL sold-out default', () => {
+    const fallback = products.find(
+      (product) => product.slug === 'frosted-fuel',
+    )!;
+    const normalized = normalizeLocalProduct(
+      {
+        ...fallback,
+        stocks: { halfOz: 0, oz: 0, qp: 0 },
+        available: false,
+        updatedAt: null,
+      },
+      fallback,
+    );
+
+    expect(normalized.stocks).toEqual(fallback.stocks);
+    expect(normalized.available).toBe(true);
+  });
+  it('preserves an explicit Admin sold-out edit for FROSTED FUEL', () => {
+    const fallback = products.find(
+      (product) => product.slug === 'frosted-fuel',
+    )!;
+    const updatedAt = '2026-09-17T06:00:00.000Z';
+    const normalized = normalizeLocalProduct(
+      {
+        ...fallback,
+        stocks: { halfOz: 0, oz: 0, qp: 0 },
+        available: false,
+        updatedAt,
+      },
+      fallback,
+    );
+
+    expect(normalized.stocks).toEqual({ halfOz: 0, oz: 0, qp: 0 });
+    expect(normalized.available).toBe(false);
+    expect(normalized.updatedAt).toBe(updatedAt);
+  });
   it('removes hidden products from a saved catalog cart', () => {
     expect(
       reconcileCartItems(

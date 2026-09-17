@@ -23,9 +23,19 @@ export function normalizeLocalProduct(
 ): Product {
   if (!value || typeof value !== 'object') return fallback;
   const candidate = value as Partial<Product>;
+  // Complete catalog snapshots are stored in the browser. Migrate the former
+  // untouched FROSTED FUEL default (all zeroes) to the current source value,
+  // while preserving any explicit Admin edit identified by its timestamp.
+  const isFormerFrostedFuelDefault =
+    fallback.slug === 'frosted-fuel' &&
+    typeof candidate.updatedAt !== 'string' &&
+    productPresentationOrder.every((key) => candidate.stocks?.[key] === 0);
+  const candidateStocks = isFormerFrostedFuelDefault
+    ? fallback.stocks
+    : candidate.stocks;
   const stocks = Object.fromEntries(
     productPresentationOrder.map((key) => {
-      const value = candidate.stocks?.[key];
+      const value = candidateStocks?.[key];
       return [
         key,
         Number.isInteger(value) && Number(value) >= 0
