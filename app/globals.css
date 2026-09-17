@@ -2172,6 +2172,45 @@ body {
   color: #b9b2b2;
   line-height: 1.7;
 }
+.wax-hero-image {
+  position: relative;
+  min-height: 760px;
+  overflow: hidden;
+}
+.wax-hero-image img {
+  object-fit: cover;
+}
+.wax-gallery {
+  padding: var(--section-space) clamp(20px, 5vw, 80px);
+}
+.wax-gallery .section-heading {
+  max-width: 1440px;
+  margin-inline: auto;
+}
+.wax-main {
+  position: relative;
+  max-width: 1120px;
+  margin: auto;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #160808;
+}
+.wax-main img {
+  object-fit: cover;
+  animation: image-in 0.35s var(--ease);
+}
+.wax-thumbs {
+  max-width: 1120px;
+  margin: 14px auto 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 130px;
+  gap: 10px;
+  overflow-x: auto;
+}
+.wax-thumbs button.active {
+  border-color: #d6aa48;
+}
 /* About, contact, FAQ, legal, merch */
 .about-page header,
 .contact-page > header,
