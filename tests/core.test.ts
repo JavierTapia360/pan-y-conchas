@@ -17,6 +17,7 @@ import {
   newsletterSchema,
 } from '@/lib/validation';
 import { normalizeLocalProduct } from '@/lib/local-catalog';
+import { normalizeLocalWaxSettings } from '@/lib/local-wax';
 import { reconcileCartItems } from '@/components/catalog-cart-provider';
 import { buildTelegramOrderText, buildTelegramOrderUrl } from '@/lib/telegram';
 
@@ -68,13 +69,20 @@ describe('core rules', () => {
     ).toBe(true);
     expect('video' in assets.wax).toBe(false);
   });
-  it('keeps five unique square-gallery sources per Flower product', () => {
+  it('keeps every Flower principal first and every gallery source unique', () => {
     const galleryImages = products.flatMap((product) => product.images);
-    expect(products.every((product) => product.images.length === 5)).toBe(true);
+    expect(
+      products.find((product) => product.slug === 'skittles')?.images,
+    ).toHaveLength(6);
+    expect(
+      products
+        .filter((product) => product.slug !== 'skittles')
+        .every((product) => product.images.length === 5),
+    ).toBe(true);
     expect(
       products.every((product) => product.images[0].endsWith('/principal.png')),
     ).toBe(true);
-    expect(new Set(galleryImages).size).toBe(20);
+    expect(new Set(galleryImages).size).toBe(21);
   });
   it('keeps WAX on binary availability with the definitive pack prices', () => {
     expect(waxProduct).toMatchObject({
@@ -88,6 +96,16 @@ describe('core rules', () => {
     expect(getCatalogPresentationLabel('pieces5', 'es')).toBe('5 PIEZAS');
     expect(getCatalogPresentationLabel('pieces5', 'en')).toBe('5 PIECES');
     expect(getCatalogPrice(waxProduct, 'pieces25')).toBe(35000);
+  });
+  it('normalizes local WAX availability without inventing stock', () => {
+    expect(normalizeLocalWaxSettings({ available: false })).toEqual({
+      available: false,
+      updatedAt: null,
+    });
+    expect(normalizeLocalWaxSettings({ available: 'no' })).toEqual({
+      available: true,
+      updatedAt: null,
+    });
   });
   it('keeps WAX cart quantities without inventing a numeric stock limit', () => {
     const items = [
@@ -397,7 +415,7 @@ describe('core rules', () => {
     expect(text).toContain('Edificio / Torre: Torre Norte');
     expect(text).toContain('Notas de entrega: Tocar el timbre una vez.');
     const url = buildTelegramOrderUrl(order);
-    expect(url).toMatch(/^https:\/\/t\.me\/Cuatesfarmzzz\?text=/);
+    expect(url).toMatch(/^https:\/\/t\.me\/cuatesfarmzpayments\?text=/);
     expect(decodeURIComponent(url.split('?text=')[1])).toBe(text);
   });
   it('translates WAX packs and residence details in the English order text', () => {

@@ -48,8 +48,8 @@ export const en = {
   },
   home: {
     eyebrow: 'FLOWER & WAX / 2026',
-    title: 'PLANT CULTURE. TURNED ALL THE WAY UP.',
-    subtitle: 'Premium culture. Built around the plant.',
+    title: 'EXOTIC CANNABIS',
+    subtitle: 'QUALITY OVER QUANTITY',
     flowerCta: 'Explore flower',
     waxCta: 'Explore wax',
     heroAlt: 'CUATESFARMZ Flower & Wax campaign',
@@ -74,7 +74,7 @@ export const en = {
     thanks: 'Email saved locally in this browser.',
   },
   flower: {
-    kicker: 'Catalog / 01',
+    kicker: 'Flower catalog',
     title: 'Flower',
     intro:
       'A focused collection of CUATESFARMZ flower presentations. Select a variety to enter its visual world.',
@@ -87,7 +87,7 @@ export const en = {
     note: 'Catalog information only. No purchases or orders are processed on this site.',
   },
   wax: {
-    kicker: 'Concentrates / 02',
+    kicker: 'Concentrates',
     title: 'WAX',
     subtitle: 'Black shell. Golden reservoir.',
     body: 'A restrained product study of the existing device—its exact form, finish and physical mark remain the focus.',
@@ -97,7 +97,7 @@ export const en = {
     disclaimer: 'Manually managed availability. No payments on this website.',
   },
   about: {
-    kicker: 'Brand story / 03',
+    kicker: 'Brand story',
     title: 'Built around the plant.',
     lead: 'CUATESFARMZ brings premium product imagery together with a street-level graphic voice.',
     blockOne:
@@ -107,7 +107,7 @@ export const en = {
     note: 'GOOD PLANTS. BETTER DAYS.',
   },
   contact: {
-    kicker: 'Contact / 04',
+    kicker: 'Contact',
     title: 'Say what’s up.',
     intro: 'General questions only. This form is not for placing orders.',
     name: 'Name',

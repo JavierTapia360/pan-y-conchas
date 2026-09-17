@@ -231,6 +231,7 @@ export function CatalogCartDrawer() {
               href="/flower"
               onClick={() => setOpen(false)}
             >
+              <ShoppingBag aria-hidden="true" />
               {copy.cart.emptyContinue}
             </Link>
           )}

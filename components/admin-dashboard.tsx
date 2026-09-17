@@ -10,6 +10,9 @@ import {
   productPresentationLabels,
   type Product,
 } from '@/data/products';
+import { waxPresentationOrder } from '@/data/wax';
+import { getCatalogPresentationLabel } from '@/data/catalog-cart';
+import { useWaxProduct } from '@/hooks/use-wax-product';
 import { mediaLibrary } from '@/lib/media-library';
 import {
   LOCAL_ADMIN_EVENT,
@@ -21,13 +24,15 @@ import {
   type LocalAnalyticsEntry,
   type LocalMessage,
 } from '@/lib/local-admin-store';
+import { writeLocalWaxAvailability } from '@/lib/local-wax';
 
-type Tab = 'products' | 'messages' | 'metrics';
+type Tab = 'products' | 'wax' | 'messages' | 'metrics';
 type SaveState = 'idle' | 'dirty' | 'saving' | 'saved' | 'error';
 const tabs: { id: Tab; label: string }[] = [
-  { id: 'products', label: 'Productos' },
+  { id: 'products', label: 'Catálogo Flower' },
+  { id: 'wax', label: 'Wax' },
   { id: 'messages', label: 'Mensajes' },
-  { id: 'metrics', label: 'Métricas' },
+  { id: 'metrics', label: 'Analytics' },
 ];
 const cloneProduct = (product: Product): Product =>
   JSON.parse(JSON.stringify(product)) as Product;
@@ -45,6 +50,7 @@ function summarize(entries: LocalAnalyticsEntry[], key: 'event' | 'path') {
 
 export function AdminDashboard() {
   const { products, saveProduct } = useCatalogStore();
+  const waxProduct = useWaxProduct();
   const [tab, setTab] = useState<Tab>('products');
   const [query, setQuery] = useState('');
   const [editing, setEditing] = useState<Product | null>(null);
@@ -165,6 +171,19 @@ export function AdminDashboard() {
     }
   }
 
+  function setWaxAvailability(available: boolean) {
+    try {
+      writeLocalWaxAvailability(available);
+      setSaveState('saved');
+      setNotice(
+        `WAX marcado como ${available ? 'AVAILABLE' : 'SOLD OUT'} en este navegador.`,
+      );
+    } catch {
+      setSaveState('error');
+      setNotice('No se pudo guardar la disponibilidad local de WAX.');
+    }
+  }
+
   return (
     <main className="admin-shell">
       <aside className="admin-sidebar">
@@ -212,7 +231,7 @@ export function AdminDashboard() {
             >
               {notice}
             </output>
-            {tab !== 'metrics' ? (
+            {tab === 'products' || tab === 'messages' ? (
               <input
                 type="search"
                 value={query}
@@ -305,6 +324,66 @@ export function AdminDashboard() {
                 }}
               />
             ) : null}
+          </section>
+        ) : null}
+
+        {tab === 'wax' ? (
+          <section className="admin-wax-view">
+            <div className="admin-wax-card">
+              <header>
+                <div>
+                  <p className="section-kicker">PRODUCTO / WAX</p>
+                  <h2>Disponibilidad manual</h2>
+                </div>
+                <strong
+                  className={`admin-stock-status ${waxProduct.available ? 'available' : 'sold-out'}`}
+                >
+                  {waxProduct.available ? 'AVAILABLE' : 'SOLD OUT'}
+                </strong>
+              </header>
+              <p>
+                WAX no usa stock numérico. Este estado se guarda únicamente en
+                este navegador y actualiza la página, el carrito y el resumen.
+              </p>
+              <fieldset className="admin-availability-control">
+                <legend>Estado</legend>
+                <button
+                  type="button"
+                  className={waxProduct.available ? 'active available' : ''}
+                  aria-pressed={waxProduct.available}
+                  onClick={() => setWaxAvailability(true)}
+                >
+                  AVAILABLE
+                </button>
+                <button
+                  type="button"
+                  className={!waxProduct.available ? 'active sold-out' : ''}
+                  aria-pressed={!waxProduct.available}
+                  onClick={() => setWaxAvailability(false)}
+                >
+                  SOLD OUT
+                </button>
+              </fieldset>
+              <div className="admin-wax-packages">
+                {waxPresentationOrder.map((presentation) => (
+                  <article key={presentation}>
+                    <span>
+                      {getCatalogPresentationLabel(presentation, 'es')}
+                    </span>
+                    <strong>
+                      ${(waxProduct.prices[presentation] / 100).toFixed(0)}
+                    </strong>
+                    <small>
+                      $
+                      {(waxProduct.perPiecePrices[presentation] / 100).toFixed(
+                        0,
+                      )}{' '}
+                      por pieza
+                    </small>
+                  </article>
+                ))}
+              </div>
+            </div>
           </section>
         ) : null}
 

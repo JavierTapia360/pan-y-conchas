@@ -4,15 +4,13 @@ import { useState } from 'react';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
 import { useLanguage } from '@/components/language-context';
 import { getCatalogPresentationLabel } from '@/data/catalog-cart';
-import {
-  waxPresentationOrder,
-  waxProduct,
-  type WaxPresentation,
-} from '@/data/wax';
+import { waxPresentationOrder, type WaxPresentation } from '@/data/wax';
+import { useWaxProduct } from '@/hooks/use-wax-product';
 
 export function WaxPurchaseControl() {
   const { add } = useCatalogCart();
   const { copy, language } = useLanguage();
+  const waxProduct = useWaxProduct();
   const [presentation, setPresentation] = useState<WaxPresentation>('pieces5');
   const currency = new Intl.NumberFormat(
     language === 'es' ? 'es-US' : 'en-US',

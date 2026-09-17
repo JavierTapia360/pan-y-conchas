@@ -18,8 +18,8 @@ import {
   type CatalogCartProduct,
   type CatalogPresentation,
 } from '@/data/catalog-cart';
-import { waxProduct } from '@/data/wax';
 import { useCatalog } from '@/hooks/use-catalog';
+import { useWaxProduct } from '@/hooks/use-wax-product';
 import { track } from '@/lib/analytics';
 
 export type CatalogCartItem = {
@@ -129,9 +129,10 @@ export function CatalogCartProvider({
   children: React.ReactNode;
 }) {
   const catalogProducts = useCatalog();
+  const waxProduct = useWaxProduct();
   const products = useMemo<CatalogCartProduct[]>(
     () => [...catalogProducts.map(toCatalogCartProduct), { ...waxProduct }],
-    [catalogProducts],
+    [catalogProducts, waxProduct],
   );
   const [items, setItems] = useState<CatalogCartItem[]>([]);
   const [open, setOpen] = useState(false);

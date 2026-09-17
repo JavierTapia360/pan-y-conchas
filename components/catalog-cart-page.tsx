@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from '@/components/static-link';
 import { type SyntheticEvent, useRef, useState } from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingBag, ShoppingCart } from 'lucide-react';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
@@ -117,6 +117,7 @@ export function CatalogCartPage() {
             <h2>{copy.cart.empty}</h2>
             <p>{copy.cart.emptyBody}</p>
             <Link className="button button-red" href="/flower" prefetch={false}>
+              <ShoppingBag aria-hidden="true" />
               {copy.cart.emptyContinue}
             </Link>
           </section>

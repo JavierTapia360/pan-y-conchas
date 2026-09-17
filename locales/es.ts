@@ -50,8 +50,8 @@ export const es = {
   },
   home: {
     eyebrow: 'FLORES Y WAX / 2026',
-    title: 'CULTURA DE LA PLANTA. A TODO VOLUMEN.',
-    subtitle: 'Cultura premium. Construida alrededor de la planta.',
+    title: 'CANNABIS EXÓTICO',
+    subtitle: 'CALIDAD ANTES QUE CANTIDAD',
     flowerCta: 'Ver flores',
     waxCta: 'Ver wax',
     heroAlt: 'Campaña de flores y wax de CUATESFARMZ',
@@ -76,7 +76,7 @@ export const es = {
     thanks: 'Email guardado localmente en este navegador.',
   },
   flower: {
-    kicker: 'Catálogo / 01',
+    kicker: 'Catálogo Flower',
     title: 'Flores',
     intro:
       'Una colección enfocada de presentaciones florales CUATESFARMZ. Elige una variedad y entra en su universo visual.',
@@ -89,7 +89,7 @@ export const es = {
     note: 'Información de catálogo únicamente. Este sitio no procesa compras ni pedidos.',
   },
   wax: {
-    kicker: 'Concentrados / 02',
+    kicker: 'Concentrados',
     title: 'WAX',
     subtitle: 'Carcasa negra. Depósito dorado.',
     body: 'Un estudio de producto sobrio del dispositivo existente: su forma, acabado y marca física exactos son los protagonistas.',
@@ -99,7 +99,7 @@ export const es = {
     disclaimer: 'Disponibilidad manual. Sin pagos dentro de esta web.',
   },
   about: {
-    kicker: 'Historia de marca / 03',
+    kicker: 'Historia de marca',
     title: 'Construida alrededor de la planta.',
     lead: 'CUATESFARMZ une fotografía premium de producto con una voz gráfica nacida en la calle.',
     blockOne:
@@ -109,7 +109,7 @@ export const es = {
     note: 'BUENAS PLANTAS. MEJORES DÍAS.',
   },
   contact: {
-    kicker: 'Contacto / 04',
+    kicker: 'Contacto',
     title: 'Hablemos.',
     intro:
       'Solo consultas generales. Este formulario no sirve para realizar pedidos.',

@@ -31,15 +31,17 @@ const invalidFlowerDimensions = flowerImages.flatMap((item) => {
   const buffer = fs.readFileSync(file);
   const width = buffer.readUInt32BE(16);
   const height = buffer.readUInt32BE(20);
-  return width === 1254 && height === 1254
-    ? []
-    : [`${item}: ${width}x${height}`];
+  const isPrincipal = item.endsWith('/principal.png');
+  const valid = isPrincipal
+    ? width === 1254 && height === 1254
+    : width >= 1000 && height >= 1000;
+  return valid ? [] : [`${item}: ${width}x${height}`];
 });
 if (
   missing.length ||
   unsupported.length ||
   duplicates.length ||
-  flowerImages.length !== 20 ||
+  flowerImages.length !== 21 ||
   invalidFlowerDimensions.length
 ) {
   console.error(
@@ -58,5 +60,5 @@ if (
   process.exit(1);
 }
 console.log(
-  `Verified ${paths.length} asset references, including 20 square Flower images at 1254x1254.`,
+  `Verified ${paths.length} asset references, including 21 high-resolution Flower images and four 1254x1254 principals.`,
 );

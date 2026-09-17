@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: '%s — CUATESFARMZ',
   },
   description:
-    'Premium flower and wax culture. Availability subject to applicable law.',
+    'Exotic flower and wax culture. Quality over quantity. Availability subject to applicable law.',
   manifest: '/manifest.webmanifest',
   icons: { icon: '/favicon.svg', apple: '/apple-touch-icon.png' },
 };
