@@ -415,7 +415,7 @@ describe('core rules', () => {
     expect(text).toContain('Edificio / Torre: Torre Norte');
     expect(text).toContain('Notas de entrega: Tocar el timbre una vez.');
     const url = buildTelegramOrderUrl(order);
-    expect(url).toMatch(/^https:\/\/t\.me\/cuatesfarmzpayments\?text=/);
+    expect(url).toMatch(/^https:\/\/t\.me\/Cuatesfarmzzz\?text=/);
     expect(decodeURIComponent(url.split('?text=')[1])).toBe(text);
   });
   it('translates WAX packs and residence details in the English order text', () => {
