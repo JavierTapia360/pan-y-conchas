@@ -2,8 +2,8 @@ const root = '/assets';
 
 export const assets = {
   extras: {
-    desktopHero: `${root}/elementos extra/cuatesfarmz-flores-wax-desktop.webp`,
-    mobileHero: `${root}/elementos extra/cuatesfarmz-flores-wax-mobile.webp`,
+    desktopHero: `${root}/elementos extra/cuatesfarmz-flores-wax-desktop-2026-09-17.webp`,
+    mobileHero: `${root}/elementos extra/cuatesfarmz-flores-wax-mobile-2026-09-17.webp`,
     logo: `${root}/cuatesfarmz-logo-c.png`,
   },
   skittles: {
