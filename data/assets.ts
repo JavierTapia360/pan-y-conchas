@@ -12,8 +12,6 @@ export const assets = {
       `${root}/flower/skittles/product-1.png`,
       `${root}/flower/skittles/product-2.png`,
       `${root}/flower/skittles/product-3.png`,
-      `${root}/flower/skittles/product-4.png`,
-      `${root}/flower/skittles/product-5.png`,
     ],
     video: `${root}/skittles/Official Skittles HD.mp4`,
     videoPoster: `${root}/skittles/ChatGPT Image 8 sept 2026, 04_09_42 a.m..webp`,

@@ -73,7 +73,7 @@ describe('core rules', () => {
     const galleryImages = products.flatMap((product) => product.images);
     expect(
       products.find((product) => product.slug === 'skittles')?.images,
-    ).toHaveLength(6);
+    ).toHaveLength(4);
     expect(
       products
         .filter((product) => product.slug !== 'skittles')
@@ -82,7 +82,7 @@ describe('core rules', () => {
     expect(
       products.every((product) => product.images[0].endsWith('/principal.png')),
     ).toBe(true);
-    expect(new Set(galleryImages).size).toBe(21);
+    expect(new Set(galleryImages).size).toBe(19);
   });
   it('keeps WAX on binary availability with the definitive pack prices', () => {
     expect(waxProduct).toMatchObject({

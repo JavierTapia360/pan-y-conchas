@@ -41,7 +41,7 @@ if (
   missing.length ||
   unsupported.length ||
   duplicates.length ||
-  flowerImages.length !== 21 ||
+  flowerImages.length !== 19 ||
   invalidFlowerDimensions.length
 ) {
   console.error(
@@ -60,5 +60,5 @@ if (
   process.exit(1);
 }
 console.log(
-  `Verified ${paths.length} asset references, including 21 high-resolution Flower images and four 1254x1254 principals.`,
+  `Verified ${paths.length} asset references, including 19 high-resolution Flower images and four 1254x1254 principals.`,
 );
