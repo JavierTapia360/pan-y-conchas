@@ -151,6 +151,14 @@ export function ProductDetail({
           </Link>
           <h1>{product.name}</h1>
           <p className="detail-description">{product.description[language]}</p>
+          <ul
+            className="product-attributes"
+            aria-label={copy.product.attributes}
+          >
+            {product.attributes[language].map((attribute) => (
+              <li key={attribute}>{attribute}</li>
+            ))}
+          </ul>
           <div className="availability">
             <span>{copy.product.availability}</span>
             <strong>

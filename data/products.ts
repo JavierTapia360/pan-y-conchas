@@ -14,6 +14,7 @@ export type Product = {
   videoPoster?: string;
   campaignImage?: string;
   description: { en: string; es: string };
+  attributes: { en: readonly string[]; es: readonly string[] };
   featured: boolean;
   hidden: boolean;
   sortOrder: number;
@@ -58,6 +59,10 @@ export const products: Product[] = [
       en: 'A color-forward CUATESFARMZ flower presentation with candy-pop energy and a bold editorial finish.',
       es: 'Una presentación floral CUATESFARMZ llena de color, energía candy-pop y un acabado editorial contundente.',
     },
+    attributes: {
+      en: ['INDICA', 'SWEET', 'RELAXING', 'HAPPY'],
+      es: ['ÍNDICA', 'DULCE', 'RELAJANTE', 'ALEGRE'],
+    },
     featured: true,
     hidden: false,
     sortOrder: 0,
@@ -77,6 +82,10 @@ export const products: Product[] = [
     description: {
       en: 'Glossy reds, deep pinks and a dessert-inspired visual world give JELLY DONUT its unmistakable identity.',
       es: 'Rojos brillantes, rosas intensos y un universo visual inspirado en postres le dan a JELLY DONUT una identidad inconfundible.',
+    },
+    attributes: {
+      en: ['HYBRID', 'CANDY', 'JOYFUL', 'RELAXING'],
+      es: ['HÍBRIDA', 'CANDY', 'ALEGRÍA', 'RELAJANTE'],
     },
     featured: true,
     hidden: false,
@@ -98,6 +107,10 @@ export const products: Product[] = [
       en: 'An ice-cold visual direction pairs crisp blue light with the powerful CUATESFARMZ graphic language.',
       es: 'Una dirección visual helada combina luz azul nítida con el lenguaje gráfico contundente de CUATESFARMZ.',
     },
+    attributes: {
+      en: ['HYBRID', 'SWEET', 'EUPHORIA', 'RELAXATION', 'CREATIVITY'],
+      es: ['HÍBRIDA', 'DULCE', 'EUFORIA', 'RELAJACIÓN', 'CREATIVIDAD'],
+    },
     featured: true,
     hidden: false,
     sortOrder: 2,
@@ -117,6 +130,10 @@ export const products: Product[] = [
     description: {
       en: 'Electric green cuts through a black-and-red foundation for a sharp, high-energy product portrait.',
       es: 'El verde eléctrico atraviesa una base negra y roja para crear un retrato de producto preciso y lleno de energía.',
+    },
+    attributes: {
+      en: ['HYBRID', 'GAS / CANDY', 'EUPHORIA', 'HAPPY', 'CREATIVITY'],
+      es: ['HÍBRIDA', 'GAS / CANDY', 'EUFORIA', 'ALEGRE', 'CREATIVIDAD'],
     },
     featured: true,
     hidden: false,

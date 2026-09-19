@@ -15,6 +15,10 @@ export const getDefaultCatalog = () =>
     prices: { ...product.prices },
     images: [...product.images],
     description: { ...product.description },
+    attributes: {
+      en: [...product.attributes.en],
+      es: [...product.attributes.es],
+    },
   }));
 
 export function normalizeLocalProduct(

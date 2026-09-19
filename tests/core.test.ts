@@ -20,6 +20,8 @@ import { normalizeLocalProduct } from '@/lib/local-catalog';
 import { normalizeLocalWaxSettings } from '@/lib/local-wax';
 import { reconcileCartItems } from '@/components/catalog-cart-provider';
 import { buildTelegramOrderText, buildTelegramOrderUrl } from '@/lib/telegram';
+import { en } from '@/locales/en';
+import { es } from '@/locales/es';
 
 describe('core rules', () => {
   it('manual locale wins over browser locale', () =>
@@ -68,6 +70,33 @@ describe('core rules', () => {
       ),
     ).toBe(true);
     expect('video' in assets.wax).toBe(false);
+  });
+  it('uses the final bilingual slogan and product attributes without THC', () => {
+    expect(es.about.title).toBe(
+      'CULTIVANDO SUEÑOS, COSECHANDO LO EXTRAORDINARIO',
+    );
+    expect(en.about.title).toBe(
+      'CULTIVATING DREAMS, HARVESTING THE EXTRAORDINARY',
+    );
+
+    const bySlug = new Map(products.map((product) => [product.slug, product]));
+    expect(bySlug.get('mac-1')?.attributes).toEqual({
+      en: ['HYBRID', 'GAS / CANDY', 'EUPHORIA', 'HAPPY', 'CREATIVITY'],
+      es: ['HÍBRIDA', 'GAS / CANDY', 'EUFORIA', 'ALEGRE', 'CREATIVIDAD'],
+    });
+    expect(bySlug.get('jelly-donut')?.attributes).toEqual({
+      en: ['HYBRID', 'CANDY', 'JOYFUL', 'RELAXING'],
+      es: ['HÍBRIDA', 'CANDY', 'ALEGRÍA', 'RELAJANTE'],
+    });
+    expect(bySlug.get('skittles')?.attributes).toEqual({
+      en: ['INDICA', 'SWEET', 'RELAXING', 'HAPPY'],
+      es: ['ÍNDICA', 'DULCE', 'RELAJANTE', 'ALEGRE'],
+    });
+    expect(bySlug.get('frosted-fuel')?.attributes).toEqual({
+      en: ['HYBRID', 'SWEET', 'EUPHORIA', 'RELAXATION', 'CREATIVITY'],
+      es: ['HÍBRIDA', 'DULCE', 'EUFORIA', 'RELAJACIÓN', 'CREATIVIDAD'],
+    });
+    expect(JSON.stringify(products)).not.toMatch(/THC/i);
   });
   it('keeps every Flower principal first and every gallery source unique', () => {
     const galleryImages = products.flatMap((product) => product.images);

@@ -83,6 +83,7 @@ export const en = {
     gallery: 'Gallery',
     video: 'Film',
     details: 'Product details',
+    attributes: 'Product attributes',
     availability: 'Availability',
     note: 'Catalog information only. No purchases or orders are processed on this site.',
   },
@@ -98,7 +99,7 @@ export const en = {
   },
   about: {
     kicker: 'Brand story',
-    title: 'Built around the plant.',
+    title: 'CULTIVATING DREAMS, HARVESTING THE EXTRAORDINARY',
     lead: 'CUATESFARMZ brings premium product imagery together with a street-level graphic voice.',
     blockOne:
       'The visual language is direct: white space, hard black type and red marks that move the eye.',

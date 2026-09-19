@@ -8,13 +8,18 @@ import { assets } from '@/data/assets';
 
 export function AboutPage() {
   const { copy } = useLanguage();
+  const [titleLead, titleTail] = copy.about.title.split(', ');
   return (
     <>
       <SiteHeader />
       <main className="about-page">
         <header>
           <p className="section-kicker">{copy.about.kicker}</p>
-          <h1>{copy.about.title}</h1>
+          <h1>
+            {titleLead},
+            <br />
+            {titleTail}
+          </h1>
           <p>{copy.about.lead}</p>
         </header>
         <div className="about-image">

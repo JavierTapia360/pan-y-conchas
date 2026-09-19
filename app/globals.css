@@ -2046,6 +2046,28 @@ body {
   font-size: 18px;
   line-height: 1.7;
 }
+.product-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin: -18px 0 42px;
+  padding: 0;
+  list-style: none;
+}
+.product-attributes li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.product-attributes li::before {
+  content: '•';
+  color: var(--product-accent, var(--red));
+}
 .availability {
   padding-block: 18px;
   display: flex;
@@ -2443,7 +2465,8 @@ body {
 }
 .about-page header h1 {
   max-width: 1250px;
-  font-size: clamp(5rem, 13vw, 14rem);
+  font-size: clamp(4.5rem, 9vw, 9rem);
+  line-height: 0.84;
 }
 .about-page header > p:last-child,
 .contact-page header > p:not(.section-kicker),
@@ -4141,6 +4164,10 @@ body {
   .contact-page h1,
   .merch-page h1 {
     font-size: clamp(4.6rem, 23vw, 7rem);
+  }
+  .about-page header h1 {
+    font-size: clamp(2.9rem, 13vw, 4.5rem);
+    line-height: 0.94;
   }
   .empty-drop {
     padding: 48px 28px;

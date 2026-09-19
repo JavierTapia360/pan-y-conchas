@@ -85,6 +85,7 @@ export const es = {
     gallery: 'Galería',
     video: 'Video',
     details: 'Detalles del producto',
+    attributes: 'Características del producto',
     availability: 'Disponibilidad',
     note: 'Información de catálogo únicamente. Este sitio no procesa compras ni pedidos.',
   },
@@ -100,7 +101,7 @@ export const es = {
   },
   about: {
     kicker: 'Historia de marca',
-    title: 'Construida alrededor de la planta.',
+    title: 'CULTIVANDO SUEÑOS, COSECHANDO LO EXTRAORDINARIO',
     lead: 'CUATESFARMZ une fotografía premium de producto con una voz gráfica nacida en la calle.',
     blockOne:
       'El lenguaje visual es directo: espacio blanco, tipografía negra contundente y marcas rojas que guían la mirada.',
