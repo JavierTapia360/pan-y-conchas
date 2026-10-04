@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from '@/components/static-link';
 import { useLanguage } from '@/components/language-context';
 import { siteConfig } from '@/data/site';
+import { assets } from '@/data/assets';
 
 export function SiteFooter() {
   const { copy, language, setLanguage, siteSettings } = useLanguage();
@@ -15,10 +16,10 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-top">
         <Image
-          src="/assets/cuatesfarmz-logo-c.png"
+          src={assets.extras.logo}
           alt="CUATESFARMZ"
-          width={420}
-          height={140}
+          width={1254}
+          height={1254}
         />
         <p>
           {siteConfig.legalNotice.en}
@@ -30,7 +31,7 @@ export function SiteFooter() {
         <div>
           <b>{copy.footer.catalog}</b>
           <Link prefetch={false} href="/flower">
-            Flower
+            {copy.nav.flower}
           </Link>
           <Link prefetch={false} href="/wax">
             Wax

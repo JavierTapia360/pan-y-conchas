@@ -25,11 +25,11 @@ const body = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://cuatesfarmz.estradajokabet380.chatgpt.site'),
   title: {
-    default: 'CUATESFARMZ — Flower & Wax',
+    default: 'CUATESFARMZ — Exclusive Drop & Wax',
     template: '%s — CUATESFARMZ',
   },
   description:
-    'Exotic flower and wax culture. Quality over quantity. Availability subject to applicable law.',
+    'Exotic CUATESFARMZ culture. Quality over quantity. Availability subject to applicable law.',
   manifest: '/manifest.webmanifest',
   icons: { icon: '/favicon.svg', apple: '/apple-touch-icon.png' },
 };

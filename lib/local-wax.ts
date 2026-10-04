@@ -7,7 +7,7 @@ export type LocalWaxSettings = {
 };
 
 export const defaultLocalWaxSettings: LocalWaxSettings = {
-  available: true,
+  available: false,
   updatedAt: null,
 };
 

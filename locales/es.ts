@@ -1,15 +1,14 @@
 export const es = {
   nav: {
     home: 'Inicio',
-    flower: 'Flores',
+    flower: 'Exclusive Drop',
     wax: 'Wax',
     about: 'Marca',
     contact: 'Contacto',
     menu: 'Abrir menú',
     close: 'Cerrar menú',
   },
-  announcement:
-    'SOLO 21+ • DISPONIBILIDAD EN EE. UU. SUJETA A LA LEGISLACIÓN APLICABLE',
+  announcement: 'PEDIDOS DE MÁS DE $150 TIENEN ENVÍO GRATIS',
   language: {
     label: 'Idioma',
     select: 'Seleccionar idioma',
@@ -28,11 +27,12 @@ export const es = {
   status: {
     available: 'Disponible',
     soldOut: 'Agotado',
+    comingSoon: 'Coming soon',
     inquire: 'Consultar disponibilidad',
   },
   actions: {
     view: 'Ver',
-    backFlower: 'Volver a flores',
+    backFlower: 'Volver a Exclusive Drop',
     contact: 'Contacto',
     play: 'Reproducir video',
     pause: 'Pausa',
@@ -49,22 +49,24 @@ export const es = {
     official: 'Telegram oficial',
   },
   home: {
-    eyebrow: 'FLORES Y WAX / 2026',
+    eyebrow: 'EXCLUSIVE DROP Y WAX / 2026',
     title: 'CANNABIS EXÓTICO',
     subtitle: 'CALIDAD ANTES QUE CANTIDAD',
-    flowerCta: 'Ver flores',
+    flowerCta: 'Ver Exclusive Drop',
     waxCta: 'Ver wax',
-    heroAlt: 'Campaña de flores y wax de CUATESFARMZ',
+    heroAlt: 'Campaña Exclusive Drop y Wax de CUATESFARMZ',
     categories: 'Explora la cultura',
     featuredKicker: 'Rotación actual',
-    featured: 'Flores destacadas',
+    featured: 'Exclusive Drop',
     featuredBody: 'Cuatro universos visuales. Un punto de vista inconfundible.',
     filmKicker: 'En movimiento',
     filmTitle: 'La planta toma el centro.',
-    waxKicker: 'Wax / Dispositivo',
+    waxKicker: 'Wax / Coming Soon',
     waxTitle: 'Acabado oscuro. Núcleo dorado.',
     waxBody: 'Un estudio preciso del dispositivo en negro, rojo y dorado.',
     brandLine: 'MISMAS PLANTAS. GENTE MÁS ALTA.',
+    planeLine: 'EN EL AVIÓN LA VIDA ES MEJOR',
+    cloudLine: 'VOLANDO POR LAS NUBES SIEMPRE NOS LA LLEVAMOS',
     brandBody:
       'CUATESFARMZ es un universo visual construido alrededor de la planta: audaz, abierto, expresivo y siempre en movimiento.',
     newsletterTitle: 'Mantente bien informado.',
@@ -76,10 +78,10 @@ export const es = {
     thanks: 'Email guardado localmente en este navegador.',
   },
   flower: {
-    kicker: 'Catálogo Flower',
-    title: 'Flores',
+    kicker: 'Catálogo CUATESFARMZ',
+    title: 'Exclusive Drop',
     intro:
-      'Una colección enfocada de presentaciones florales CUATESFARMZ. Elige una variedad y entra en su universo visual.',
+      'Una colección enfocada de variedades CUATESFARMZ. Elige una y entra en su universo visual.',
   },
   product: {
     gallery: 'Galería',
@@ -95,9 +97,12 @@ export const es = {
     subtitle: 'Carcasa negra. Depósito dorado.',
     body: 'Un estudio de producto sobrio del dispositivo existente: su forma, acabado y marca física exactos son los protagonistas.',
     purchase: 'Comprar WAX',
+    comingSoon: 'Coming soon',
+    comingSoonBody:
+      'WAX se está preparando para un próximo drop. Explora el estudio actual del dispositivo mientras llega.',
     perPiece: 'por pieza',
     gallery: 'Estudio del dispositivo',
-    disclaimer: 'Disponibilidad manual. Sin pagos dentro de esta web.',
+    disclaimer: 'Vista previa. WAX estará disponible próximamente.',
   },
   about: {
     kicker: 'Historia de marca',
@@ -193,7 +198,8 @@ export const es = {
     continue: 'Seguir explorando',
     checkoutPending:
       'Las compras no están habilitadas. Este sitio no procesa pagos ni pedidos.',
-    regulatedGuard: 'Flores y Wax nunca pueden añadirse a este carrito.',
+    regulatedGuard:
+      'Exclusive Drop y Wax nunca pueden añadirse a este carrito.',
   },
   cart: {
     short: 'Carrito',
@@ -206,7 +212,7 @@ export const es = {
     presentation: 'Presentación',
     added: 'Añadido al carrito',
     empty: 'Tu carrito está vacío.',
-    emptyBody: 'Añade productos disponibles desde Flower o Wax.',
+    emptyBody: 'Añade productos disponibles desde Exclusive Drop.',
     quantity: 'Cantidad',
     increase: 'Aumentar cantidad de',
     decrease: 'Disminuir cantidad de',
@@ -219,7 +225,7 @@ export const es = {
     viewSummary: 'Ver resumen',
     proceed: 'Continuar',
     addMore: 'Agregar más productos',
-    emptyContinue: 'Seguir viendo flores',
+    emptyContinue: 'Seguir viendo Exclusive Drop',
     product: 'Producto',
     price: 'Precio',
     lineSubtotal: 'Subtotal',

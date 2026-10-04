@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useLanguage } from '@/components/language-context';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
+import { assets } from '@/data/assets';
 
 const STORAGE_KEY = 'age_verified_v1';
 const ALTERNATE_STORAGE_KEY = 'gf_age_v1';
@@ -81,10 +82,10 @@ export function AgeGate() {
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
             <Image
-              src="/assets/cuatesfarmz-logo-c.png"
+              src={assets.extras.logo}
               alt="CUATESFARMZ"
-              width={390}
-              height={130}
+              width={1254}
+              height={1254}
               priority
             />
             <p className="eyebrow">{copy.gate.eyebrow}</p>

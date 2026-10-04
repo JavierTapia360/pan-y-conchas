@@ -98,25 +98,52 @@ describe('core rules', () => {
     });
     expect(JSON.stringify(products)).not.toMatch(/THC/i);
   });
+  it('uses the approved bilingual client copy and official brand assets', () => {
+    expect(en.announcement).toBe('ORDERS OVER $150 GET FREE SHIPPING');
+    expect(es.announcement).toBe('PEDIDOS DE MÁS DE $150 TIENEN ENVÍO GRATIS');
+    expect(en.nav.flower).toBe('Exclusive Drop');
+    expect(es.nav.flower).toBe('Exclusive Drop');
+    expect(en.home.planeLine).toBe('LIFE IS BETTER ON THE PLANE');
+    expect(es.home.planeLine).toBe('EN EL AVIÓN LA VIDA ES MEJOR');
+    expect(en.home.cloudLine).toBe(
+      'FLYING THROUGH THE CLOUDS, WE ALWAYS BRING IT WITH US',
+    );
+    expect(es.home.cloudLine).toBe(
+      'VOLANDO POR LAS NUBES SIEMPRE NOS LA LLEVAMOS',
+    );
+    expect(assets.extras).toMatchObject({
+      logo: '/assets/brand/logo-circular-oficial-cuatesfarmz.jpg',
+      planeDecoration: '/assets/brand/decoracion-avion-envios-personajes.jpg',
+      chaseDecoration:
+        '/assets/brand/decoracion-persecucion-policia-personajes.jpg',
+    });
+  });
   it('keeps every Flower principal first and every gallery source unique', () => {
     const galleryImages = products.flatMap((product) => product.images);
-    expect(
-      products.find((product) => product.slug === 'skittles')?.images,
-    ).toHaveLength(4);
-    expect(
-      products
-        .filter((product) => product.slug !== 'skittles')
-        .every((product) => product.images.length === 5),
-    ).toBe(true);
+    const bySlug = new Map(products.map((product) => [product.slug, product]));
+    expect(bySlug.get('mac-1')?.images).toEqual([
+      '/assets/flower/mac-1/principal.png',
+      '/assets/flower/mac-1/mac1_secundaria_01.jpg',
+      '/assets/flower/mac-1/mac1_secundaria_02.jpg',
+      '/assets/flower/mac-1/mac1_secundaria_03.jpg',
+    ]);
+    expect(bySlug.get('jelly-donut')?.images).toHaveLength(5);
+    expect(bySlug.get('skittles')?.images).toHaveLength(4);
+    expect(bySlug.get('frosted-fuel')?.images).toHaveLength(5);
     expect(
       products.every((product) => product.images[0].endsWith('/principal.png')),
     ).toBe(true);
-    expect(new Set(galleryImages).size).toBe(19);
+    expect(new Set(galleryImages).size).toBe(18);
+    expect(assets.mac1.video).toBe('/assets/Mac 1/Official MAC 1 HD.mp4');
+    expect(assets.mac1.videoPoster).toBe(
+      '/assets/Mac 1/ChatGPT Image 8 sept 2026, 04_12_58 a.m..webp',
+    );
   });
-  it('keeps WAX on binary availability with the definitive pack prices', () => {
+  it('keeps WAX coming soon with the definitive pack prices preserved', () => {
     expect(waxProduct).toMatchObject({
       slug: 'wax',
-      available: true,
+      status: 'COMING_SOON',
+      available: false,
       inventoryMode: 'availability',
       prices: { pieces5: 10000, pieces10: 19000, pieces25: 35000 },
       perPiecePrices: { pieces5: 2000, pieces10: 1900, pieces25: 1400 },
@@ -132,18 +159,15 @@ describe('core rules', () => {
       updatedAt: null,
     });
     expect(normalizeLocalWaxSettings({ available: 'no' })).toEqual({
-      available: true,
+      available: false,
       updatedAt: null,
     });
   });
-  it('keeps WAX cart quantities without inventing a numeric stock limit', () => {
+  it('removes legacy WAX lines while it is coming soon', () => {
     const items = [
       { slug: 'wax', presentation: 'pieces10' as const, quantity: 3 },
     ];
-    expect(reconcileCartItems(items, [waxProduct]).items).toEqual(items);
-    expect(
-      reconcileCartItems(items, [{ ...waxProduct, available: false }]).items,
-    ).toEqual([]);
+    expect(reconcileCartItems(items, [waxProduct]).items).toEqual([]);
   });
   it('derives the simple product status from presentation availability', () => {
     expect(hasAvailablePresentation({ halfOz: 0, oz: 1, qp: 0 })).toBe(true);
@@ -297,6 +321,22 @@ describe('core rules', () => {
       qp: 52000,
     });
     expect(normalized.available).toBe(true);
+  });
+  it('migrates an untouched retired gallery to the approved secondary set', () => {
+    const fallback = products.find((product) => product.slug === 'mac-1')!;
+    const normalized = normalizeLocalProduct(
+      {
+        ...fallback,
+        images: [
+          fallback.images[0],
+          '/assets/flower/mac-1/product-1.png',
+          '/assets/flower/mac-1/product-2.png',
+        ],
+      },
+      fallback,
+    );
+
+    expect(normalized.images).toEqual(fallback.images);
   });
   it('migrates the untouched former FROSTED FUEL sold-out default', () => {
     const fallback = products.find(

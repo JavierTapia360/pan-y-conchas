@@ -3,7 +3,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'CUATESFARMZ',
     short_name: 'CUATES',
-    description: 'Flower & Wax visual catalog.',
+    description: 'Exclusive Drop & Wax visual catalog.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

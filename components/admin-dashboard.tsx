@@ -24,12 +24,11 @@ import {
   type LocalAnalyticsEntry,
   type LocalMessage,
 } from '@/lib/local-admin-store';
-import { writeLocalWaxAvailability } from '@/lib/local-wax';
 
 type Tab = 'products' | 'wax' | 'messages' | 'metrics';
 type SaveState = 'idle' | 'dirty' | 'saving' | 'saved' | 'error';
 const tabs: { id: Tab; label: string }[] = [
-  { id: 'products', label: 'Catálogo Flower' },
+  { id: 'products', label: 'Catálogo Exclusive Drop' },
   { id: 'wax', label: 'Wax' },
   { id: 'messages', label: 'Mensajes' },
   { id: 'metrics', label: 'Analytics' },
@@ -171,28 +170,15 @@ export function AdminDashboard() {
     }
   }
 
-  function setWaxAvailability(available: boolean) {
-    try {
-      writeLocalWaxAvailability(available);
-      setSaveState('saved');
-      setNotice(
-        `WAX marcado como ${available ? 'AVAILABLE' : 'SOLD OUT'} en este navegador.`,
-      );
-    } catch {
-      setSaveState('error');
-      setNotice('No se pudo guardar la disponibilidad local de WAX.');
-    }
-  }
-
   return (
     <main className="admin-shell">
       <aside className="admin-sidebar">
         <div>
           <Image
-            src="/assets/cuatesfarmz-logo-c.png"
+            src="/assets/brand/logo-circular-oficial-cuatesfarmz.jpg"
             alt="CUATESFARMZ"
-            width={220}
-            height={74}
+            width={1254}
+            height={1254}
             priority
           />
           <b>ADMIN / LOCAL</b>
@@ -335,35 +321,15 @@ export function AdminDashboard() {
                   <p className="section-kicker">PRODUCTO / WAX</p>
                   <h2>Disponibilidad manual</h2>
                 </div>
-                <strong
-                  className={`admin-stock-status ${waxProduct.available ? 'available' : 'sold-out'}`}
-                >
-                  {waxProduct.available ? 'AVAILABLE' : 'SOLD OUT'}
+                <strong className="admin-stock-status coming-soon">
+                  COMING SOON
                 </strong>
               </header>
               <p>
-                WAX no usa stock numérico. Este estado se guarda únicamente en
-                este navegador y actualiza la página, el carrito y el resumen.
+                WAX está fijado como COMING SOON en esta versión. No se muestra
+                una acción pública de compra y cualquier línea antigua se retira
+                del carrito automáticamente.
               </p>
-              <fieldset className="admin-availability-control">
-                <legend>Estado</legend>
-                <button
-                  type="button"
-                  className={waxProduct.available ? 'active available' : ''}
-                  aria-pressed={waxProduct.available}
-                  onClick={() => setWaxAvailability(true)}
-                >
-                  AVAILABLE
-                </button>
-                <button
-                  type="button"
-                  className={!waxProduct.available ? 'active sold-out' : ''}
-                  aria-pressed={!waxProduct.available}
-                  onClick={() => setWaxAvailability(false)}
-                >
-                  SOLD OUT
-                </button>
-              </fieldset>
               <div className="admin-wax-packages">
                 {waxPresentationOrder.map((presentation) => (
                   <article key={presentation}>

@@ -3,7 +3,7 @@ import { CatalogCartPage } from '@/components/catalog-cart-page';
 
 export const metadata: Metadata = {
   title: 'Order Summary',
-  description: 'Review your CUATESFARMZ Flower cart in this browser.',
+  description: 'Review your CUATESFARMZ Exclusive Drop cart in this browser.',
   alternates: { canonical: '/cart' },
 };
 

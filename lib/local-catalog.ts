@@ -59,11 +59,18 @@ export function normalizeLocalProduct(
       ];
     }),
   ) as Product['prices'];
-  const images = Array.isArray(candidate.images)
+  const candidateImages = Array.isArray(candidate.images)
     ? candidate.images.filter(
         (item): item is string => typeof item === 'string' && item.length > 0,
       )
     : [...fallback.images];
+  const usesRetiredDefaultGallery =
+    candidateImages[0] === fallback.images[0] &&
+    candidateImages.length > 1 &&
+    candidateImages.slice(1).every((item) => /\/product-\d+\.png$/.test(item));
+  const images = usesRetiredDefaultGallery
+    ? [...fallback.images]
+    : candidateImages;
 
   return {
     ...fallback,

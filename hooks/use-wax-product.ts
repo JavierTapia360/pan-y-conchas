@@ -28,5 +28,11 @@ export function useWaxProduct() {
     };
   }, [refresh]);
 
-  return useMemo(() => ({ ...waxProduct, available }), [available]);
+  return useMemo(
+    () => ({
+      ...waxProduct,
+      available: waxProduct.status === 'COMING_SOON' ? false : available,
+    }),
+    [available],
+  );
 }

@@ -9,6 +9,30 @@ import { useLanguage } from '@/components/language-context';
 import { CatalogCartDrawer } from '@/components/catalog-cart-drawer';
 import { HeaderLanguageSwitcher } from '@/components/header-language-switcher';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
+import { assets } from '@/data/assets';
+
+const announcementCopies = Array.from({ length: 6 });
+
+function AnnouncementTicker({ message }: { message: string }) {
+  return (
+    <div className="announcement">
+      <span className="sr-only" aria-live="polite">
+        {message}
+      </span>
+      <div className="announcement-track" key={message} aria-hidden="true">
+        {[0, 1].map((group) => (
+          <div className="announcement-group" key={group}>
+            {announcementCopies.map((_, index) => (
+              <span className="announcement-item" key={index}>
+                {message}
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -72,7 +96,7 @@ export function SiteHeader() {
   ];
   return (
     <>
-      <p className="announcement">{copy.announcement}</p>
+      <AnnouncementTicker message={copy.announcement} />
       <header className={scrolled ? 'site-header is-scrolled' : 'site-header'}>
         <button
           ref={menuTrigger}
@@ -93,10 +117,10 @@ export function SiteHeader() {
           aria-label="CUATESFARMZ home"
         >
           <Image
-            src="/assets/cuatesfarmz-logo-c.png"
+            src={assets.extras.logo}
             alt="CUATESFARMZ"
-            width={260}
-            height={87}
+            width={1254}
+            height={1254}
             priority
           />
         </Link>
@@ -124,10 +148,10 @@ export function SiteHeader() {
           >
             <div className="menu-top">
               <Image
-                src="/assets/cuatesfarmz-logo-c.png"
+                src={assets.extras.logo}
                 alt="CUATESFARMZ"
-                width={260}
-                height={87}
+                width={1254}
+                height={1254}
               />
               <button
                 ref={menuClose}

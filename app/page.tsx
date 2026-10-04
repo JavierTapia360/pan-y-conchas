@@ -80,10 +80,11 @@ export default function Home() {
             {categoryProduct ? (
               <Image src={categoryProduct.images[0]} alt="" fill sizes="50vw" />
             ) : null}
-            <strong>FLOWER</strong>
+            <strong>{copy.nav.flower}</strong>
           </Link>
           <Link prefetch={false} href="/wax">
             <Image src={assets.wax.images[0]} alt="" fill sizes="50vw" />
+            <span>{copy.status.comingSoon}</span>
             <strong>WAX</strong>
           </Link>
         </section>
@@ -117,6 +118,15 @@ export default function Home() {
                 label={`CUATESFARMZ ${filmProduct.name} film`}
               />
             ) : null}
+            <figure className="brand-chase-accent">
+              <Image
+                src={assets.extras.chaseDecoration}
+                alt=""
+                width={1254}
+                height={1254}
+              />
+              <figcaption>{copy.home.cloudLine}</figcaption>
+            </figure>
           </SectionReveal>
           <SectionReveal className="film-visual">
             {filmProduct ? (
@@ -166,6 +176,15 @@ export default function Home() {
             <p className="section-kicker">CUATESFARMZ / MAIL</p>
             <h2>{copy.home.newsletterTitle}</h2>
             <p>{copy.home.newsletterBody}</p>
+            <figure className="brand-flight-accent">
+              <Image
+                src={assets.extras.planeDecoration}
+                alt=""
+                width={1421}
+                height={1107}
+              />
+              <figcaption>{copy.home.planeLine}</figcaption>
+            </figure>
           </div>
           <NewsletterForm />
         </section>

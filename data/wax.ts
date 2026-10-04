@@ -14,7 +14,8 @@ export const waxProduct = {
   name: 'WAX',
   href: '/wax',
   images: assets.wax.images,
-  available: true,
+  status: 'COMING_SOON' as const,
+  available: false,
   hidden: false,
   inventoryMode: 'availability' as const,
   prices: {
