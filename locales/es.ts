@@ -8,7 +8,7 @@ export const es = {
     menu: 'Abrir menú',
     close: 'Cerrar menú',
   },
-  announcement: 'PEDIDOS DE MÁS DE $150 TIENEN ENVÍO GRATIS',
+  announcement: 'Pedidos superiores a $150 tienen envío gratis',
   language: {
     label: 'Idioma',
     select: 'Seleccionar idioma',
@@ -58,7 +58,7 @@ export const es = {
     categories: 'Explora la cultura',
     featuredKicker: 'Rotación actual',
     featured: 'Exclusive Drop',
-    featuredBody: 'Cuatro universos visuales. Un punto de vista inconfundible.',
+    featuredBody: 'Seis universos visuales. Un punto de vista inconfundible.',
     filmKicker: 'En movimiento',
     filmTitle: 'La planta toma el centro.',
     waxKicker: 'Wax / Coming Soon',
@@ -71,7 +71,7 @@ export const es = {
       'CUATESFARMZ es un universo visual construido alrededor de la planta: audaz, abierto, expresivo y siempre en movimiento.',
     newsletterTitle: 'Mantente bien informado.',
     newsletterBody:
-      'Notas de cultura y disponibilidad. Sin solicitudes de pedido.',
+      'Mantente atento a toda la información de nuestros futuros productos.',
     email: 'Correo electrónico',
     join: 'Unirme a la lista',
     consent: 'Acepto recibir novedades generales de CUATESFARMZ.',
@@ -97,7 +97,7 @@ export const es = {
     subtitle: 'Carcasa negra. Depósito dorado.',
     body: 'Un estudio de producto sobrio del dispositivo existente: su forma, acabado y marca física exactos son los protagonistas.',
     purchase: 'Comprar WAX',
-    comingSoon: 'Coming soon',
+    comingSoon: 'PRÓXIMAMENTE',
     comingSoonBody:
       'WAX se está preparando para un próximo drop. Explora el estudio actual del dispositivo mientras llega.',
     perPiece: 'por pieza',
@@ -109,9 +109,9 @@ export const es = {
     title: 'CULTIVANDO SUEÑOS, COSECHANDO LO EXTRAORDINARIO',
     lead: 'CUATESFARMZ une fotografía premium de producto con una voz gráfica nacida en la calle.',
     blockOne:
-      'El lenguaje visual es directo: espacio blanco, tipografía negra contundente y marcas rojas que guían la mirada.',
+      'CUATESFARMZ construye una identidad visual directa, urbana y fácil de reconocer. Cada lanzamiento combina selección curada, diseño contundente y una presentación clara para que la experiencia sea simple, visual y consistente.',
     blockTwo:
-      'La historia, fecha de fundación, equipo y relato corporativo aprobado están pendientes del contenido del cliente.',
+      'Desde nuestras flores hasta nuestras ediciones especiales, todo el catálogo sigue una misma línea: calidad, carácter y una estética que habla por sí sola.',
     note: 'BUENAS PLANTAS. MEJORES DÍAS.',
   },
   contact: {

@@ -24,7 +24,7 @@ export function ProductCard({ product }: { product: Product }) {
             <source media="(max-width: 700px)" srcSet={product.mobileImage} />
           )}
           <Image
-            src={product.images[0]}
+            src={product.cardImage || product.images[0]}
             alt={`${product.name} CUATESFARMZ flower`}
             fill
             sizes="(max-width: 700px) 82vw, (max-width: 1100px) 45vw, 25vw"

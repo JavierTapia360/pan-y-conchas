@@ -23,7 +23,17 @@ const unsupported = paths.filter(
   (item) => !supported.has(path.extname(item).toLowerCase()),
 );
 const duplicates = paths.filter((item, index) => paths.indexOf(item) !== index);
-const flowerImages = paths.filter((item) => item.startsWith('flower/'));
+const flowerPrefixes = [
+  'flower/mac-1/',
+  'flower/jelly-donut/',
+  'flower/skittles/',
+  'flower/frosted-fuel/',
+  'flower/bubble-gum/',
+  'flower/cereal-milk/',
+];
+const flowerImages = paths.filter((item) =>
+  flowerPrefixes.some((prefix) => item.startsWith(prefix)),
+);
 const jpegDimensions = (buffer) => {
   let offset = 2;
   const startOfFrame = new Set([
@@ -72,6 +82,8 @@ const expectedFlowerCounts = {
   'flower/jelly-donut/': 5,
   'flower/skittles/': 4,
   'flower/frosted-fuel/': 5,
+  'flower/bubble-gum/': 5,
+  'flower/cereal-milk/': 5,
 };
 const invalidFlowerCounts = Object.entries(expectedFlowerCounts).filter(
   ([prefix, expected]) =>
@@ -81,7 +93,7 @@ if (
   missing.length ||
   unsupported.length ||
   duplicates.length ||
-  flowerImages.length !== 18 ||
+  flowerImages.length !== 28 ||
   invalidFlowerCounts.length ||
   invalidFlowerDimensions.length
 ) {
@@ -102,5 +114,5 @@ if (
   process.exit(1);
 }
 console.log(
-  `Verified ${paths.length} asset references, including 18 approved gallery images and four unchanged 1254x1254 principals.`,
+  `Verified ${paths.length} asset references, including 28 gallery images and six 1254x1254 principals.`,
 );

@@ -24,18 +24,24 @@ const topKeys = (text) =>
 const missing = topKeys(en)
   .filter((key) => !topKeys(es).includes(key))
   .concat(topKeys(es).filter((key) => !topKeys(en).includes(key)));
-const requiredNames = ['MAC 1', 'JELLY DONUT', 'SKITTLES', 'FROSTED FUEL'];
+const requiredNames = [
+  'MAC 1',
+  'JELLY DONUT',
+  'ZKITTLEZ',
+  'FROSTED FUEL',
+  'BUBBLE GUM GELATTO',
+  'CEREAL MILK',
+];
 const absentNames = requiredNames.filter(
   (name) => !products.includes(`name: '${name}'`),
 );
 const forbiddenNames = [
   'J' + 'OLLY DONUT',
   'JELLY DONUT' + 'Z',
-  'Z' + 'KITTLEZ',
-  'SKITTLE' + 'Z',
+  'SKITTLES',
 ];
 const oldNames = forbiddenNames.filter((name) =>
-  products.toUpperCase().includes(name),
+  products.toUpperCase().includes(`NAME: '${name}'`),
 );
 const videoCount = [...products.matchAll(/video: assets\./g)].length;
 const sourceRoots = ['app', 'components', 'data', 'features', 'hooks', 'lib'];
@@ -80,7 +86,7 @@ if (
   missing.length ||
   absentNames.length ||
   oldNames.length ||
-  videoCount !== 4 ||
+  videoCount !== 6 ||
   apiRouteExists ||
   architectureLeaks.length ||
   duplicatedPrices.length
@@ -105,5 +111,5 @@ if (
   process.exit(1);
 }
 console.log(
-  `Verified ${slugs.length} product slugs, definitive names, 4 videos, locale namespaces and static-only architecture.`,
+  `Verified ${slugs.length} product slugs, definitive names, 6 videos, locale namespaces and static-only architecture.`,
 );

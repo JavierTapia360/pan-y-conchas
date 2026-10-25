@@ -6171,3 +6171,111 @@ html.gf-scroll-locked body {
     width: 88px;
   }
 }
+
+/* New campaign art remains fully visible at every WAX breakpoint. */
+.wax-hero-image,
+.wax-main {
+  background: #080303;
+}
+.wax-hero-image img,
+.wax-main img {
+  object-fit: contain;
+}
+.wax-arriving {
+  max-width: 11ch;
+  text-wrap: balance;
+  color: #d6aa48;
+  font-family: var(--font-display);
+  font-size: clamp(3.6rem, 7vw, 7.5rem) !important;
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+}
+
+/* The cut-out illustration sits alongside the newsletter heading. */
+.newsletter-section {
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 64px);
+}
+.newsletter-section > div:first-child {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, .95fr);
+  align-items: center;
+  column-gap: clamp(16px, 3vw, 44px);
+}
+.newsletter-section > div:first-child > :not(.brand-flight-accent) {
+  grid-column: 1;
+}
+.newsletter-section .brand-flight-accent {
+  grid-column: 2;
+  grid-row: 1 / 4;
+  width: 100%;
+  margin: 0;
+}
+.newsletter-section .brand-flight-accent img {
+  object-fit: contain;
+}
+@media (max-width: 1050px) {
+  .newsletter-section {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .newsletter-section > div:first-child {
+    grid-template-columns: 1fr;
+  }
+  .newsletter-section .brand-flight-accent {
+    grid-column: 1;
+    grid-row: auto;
+    width: min(100%, 540px);
+    margin: 16px auto 0;
+  }
+  .wax-arriving {
+    font-size: clamp(3.3rem, 13vw, 5.4rem) !important;
+  }
+}
+
+/* New Home artwork contains its own typography: only the entry CTAs overlay it. */
+.hero-media {
+  inset: 0;
+}
+.hero-shade {
+  background: linear-gradient(0deg, rgba(0, 0, 0, .64), transparent 28%);
+}
+.hero-copy {
+  position: absolute;
+  inset: auto 0 0;
+  width: 100%;
+  padding: 22px clamp(18px, 5vw, 80px) 32px;
+  display: flex;
+  justify-content: center;
+}
+.hero-actions {
+  width: min(100%, 520px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0;
+}
+.hero-actions .button {
+  width: 100%;
+}
+@media (max-width: 700px) {
+  .hero {
+    min-height: max(calc(100svh - 92px), 177.7vw);
+  }
+  .hero-copy {
+    min-height: 0;
+    padding: 20px 18px calc(28px + env(safe-area-inset-bottom));
+  }
+  .hero-actions {
+    width: 100%;
+  }
+  .hero-actions .button {
+    min-width: 0;
+    padding-inline: 8px;
+    font-size: clamp(9px, 3vw, 12px);
+    white-space: nowrap;
+  }
+}

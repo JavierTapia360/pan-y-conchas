@@ -8,7 +8,7 @@ export const en = {
     menu: 'Open menu',
     close: 'Close menu',
   },
-  announcement: 'ORDERS OVER $150 GET FREE SHIPPING',
+  announcement: 'Orders over $150 get free shipping',
   language: {
     label: 'Language',
     select: 'Select language',
@@ -57,7 +57,7 @@ export const en = {
     categories: 'Shop the culture',
     featuredKicker: 'Fresh rotation',
     featured: 'Exclusive Drop',
-    featuredBody: 'Four visual worlds. One unmistakable point of view.',
+    featuredBody: 'Six visual worlds. One unmistakable point of view.',
     filmKicker: 'In motion',
     filmTitle: 'The plant takes center stage.',
     waxKicker: 'Wax / Coming soon',
@@ -68,9 +68,8 @@ export const en = {
     cloudLine: 'FLYING THROUGH THE CLOUDS, WE ALWAYS BRING IT WITH US',
     brandBody:
       'CUATESFARMZ is a visual world built around the plant: bold, open, expressive and always moving.',
-    newsletterTitle: 'Stay highly informed.',
-    newsletterBody:
-      'Culture notes and product availability. No order requests.',
+    newsletterTitle: 'STAY INFORMED.',
+    newsletterBody: 'Stay tuned for all updates about our upcoming products.',
     email: 'Email address',
     join: 'Join the list',
     consent: 'I agree to receive general CUATESFARMZ updates.',
@@ -108,9 +107,9 @@ export const en = {
     title: 'CULTIVATING DREAMS, HARVESTING THE EXTRAORDINARY',
     lead: 'CUATESFARMZ brings premium product imagery together with a street-level graphic voice.',
     blockOne:
-      'The visual language is direct: white space, hard black type and red marks that move the eye.',
+      'CUATESFARMZ builds a visual identity that is direct, urban, and instantly recognizable. Every drop combines curated selection, bold design, and clear presentation so the experience stays simple, visual, and consistent.',
     blockTwo:
-      'The brand story, founding date, team and approved company history are pending client-supplied copy.',
+      'From our flower lineup to special editions, the entire catalog follows the same direction: quality, character, and an aesthetic that speaks for itself.',
     note: 'GOOD PLANTS. BETTER DAYS.',
   },
   contact: {

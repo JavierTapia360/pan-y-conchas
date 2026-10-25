@@ -53,21 +53,25 @@ describe('core rules', () => {
       prices: { qp: 47000, oz: 18000, halfOz: 9000 },
     });
     expect(bySlug.get('skittles')).toMatchObject({
-      name: 'SKITTLES',
+      name: 'ZKITTLEZ',
       prices: { qp: 47000, oz: 18000, halfOz: 9000 },
     });
     expect(bySlug.get('frosted-fuel')).toMatchObject({
       name: 'FROSTED FUEL',
       prices: { qp: 45000, oz: 17000, halfOz: 8000 },
     });
+    for (const slug of ['bubble-gum', 'cereal-milk']) {
+      expect(bySlug.get(slug)).toMatchObject({
+        stocks: { qp: 10, oz: 10, halfOz: 10 },
+        prices: { qp: 47000, oz: 18000, halfOz: 9000 },
+      });
+    }
+    expect(bySlug.get('bubble-gum')?.name).toBe('BUBBLE GUM GELATTO');
     const videos = products.map((product) => product.video);
     expect(videos.every(Boolean)).toBe(true);
-    expect(new Set(videos).size).toBe(4);
+    expect(new Set(videos).size).toBe(6);
     expect(
-      products.every(
-        (product) =>
-          product.videoPoster && !product.images.includes(product.videoPoster),
-      ),
+      products.every((product) => Boolean(product.videoPoster)),
     ).toBe(true);
     expect('video' in assets.wax).toBe(false);
   });
@@ -99,8 +103,8 @@ describe('core rules', () => {
     expect(JSON.stringify(products)).not.toMatch(/THC/i);
   });
   it('uses the approved bilingual client copy and official brand assets', () => {
-    expect(en.announcement).toBe('ORDERS OVER $150 GET FREE SHIPPING');
-    expect(es.announcement).toBe('PEDIDOS DE MÁS DE $150 TIENEN ENVÍO GRATIS');
+    expect(en.announcement).toBe('Orders over $150 get free shipping');
+    expect(es.announcement).toBe('Pedidos superiores a $150 tienen envío gratis');
     expect(en.nav.flower).toBe('Exclusive Drop');
     expect(es.nav.flower).toBe('Exclusive Drop');
     expect(en.home.planeLine).toBe('LIFE IS BETTER ON THE PLANE');
@@ -113,16 +117,16 @@ describe('core rules', () => {
     );
     expect(assets.extras).toMatchObject({
       logo: '/assets/brand/logo-circular-oficial-cuatesfarmz.jpg',
-      planeDecoration: '/assets/brand/decoracion-avion-envios-personajes.jpg',
+      planeDecoration: '/assets/brand/new/decoracion-avion-transparente.png',
       chaseDecoration:
         '/assets/brand/decoracion-persecucion-policia-personajes.jpg',
     });
   });
-  it('keeps every Flower principal first and every gallery source unique', () => {
+  it('keeps every current Flower cover first and every gallery source unique', () => {
     const galleryImages = products.flatMap((product) => product.images);
     const bySlug = new Map(products.map((product) => [product.slug, product]));
     expect(bySlug.get('mac-1')?.images).toEqual([
-      '/assets/flower/mac-1/principal.png',
+      '/assets/flower/identity/mac-1-cover.png',
       '/assets/flower/mac-1/mac1_secundaria_01.jpg',
       '/assets/flower/mac-1/mac1_secundaria_02.jpg',
       '/assets/flower/mac-1/mac1_secundaria_03.jpg',
@@ -130,14 +134,25 @@ describe('core rules', () => {
     expect(bySlug.get('jelly-donut')?.images).toHaveLength(5);
     expect(bySlug.get('skittles')?.images).toHaveLength(4);
     expect(bySlug.get('frosted-fuel')?.images).toHaveLength(5);
-    expect(
-      products.every((product) => product.images[0].endsWith('/principal.png')),
-    ).toBe(true);
-    expect(new Set(galleryImages).size).toBe(18);
-    expect(assets.mac1.video).toBe('/assets/Mac 1/Official MAC 1 HD.mp4');
-    expect(assets.mac1.videoPoster).toBe(
-      '/assets/Mac 1/ChatGPT Image 8 sept 2026, 04_12_58 a.m..webp',
+    expect(bySlug.get('jelly-donut')?.images[0]).toBe(
+      '/assets/flower/identity/jelly-donut-cover.png',
     );
+    expect(bySlug.get('skittles')?.images[0]).toBe(
+      '/assets/flower/identity/zkittlez-cover.png',
+    );
+    expect(bySlug.get('frosted-fuel')?.images[0]).toBe(
+      '/assets/flower/identity/frosted-fuel-cover.png',
+    );
+    expect(
+      products
+        .filter((product) => ['bubble-gum', 'cereal-milk'].includes(product.slug))
+        .every((product) => product.images[0].endsWith('/principal.png')),
+    ).toBe(true);
+    expect(bySlug.get('bubble-gum')?.images).toHaveLength(5);
+    expect(bySlug.get('cereal-milk')?.images).toHaveLength(5);
+    expect(new Set(galleryImages).size).toBe(28);
+    expect(assets.mac1.video).toBe('/assets/Mac 1/Official MAC 1 HD.mp4');
+    expect(assets.mac1.cover).toBe('/assets/flower/identity/mac-1-cover.png');
   });
   it('keeps WAX coming soon with the definitive pack prices preserved', () => {
     expect(waxProduct).toMatchObject({
@@ -298,6 +313,52 @@ describe('core rules', () => {
       presentation: 'qp',
       stock: 2,
     });
+  });
+  it('caps each new variety to its confirmed per-presentation stock', () => {
+    const result = reconcileCartItems(
+      [
+        { slug: 'bubble-gum', presentation: 'qp', quantity: 12 },
+        { slug: 'cereal-milk', presentation: 'oz', quantity: 10 },
+      ],
+      products,
+    );
+    expect(result.items).toEqual([
+      { slug: 'bubble-gum', presentation: 'qp', quantity: 10 },
+      { slug: 'cereal-milk', presentation: 'oz', quantity: 10 },
+    ]);
+  });
+  it('updates an untouched local SKITTLES name without changing its stable slug', () => {
+    const fallback = products.find((product) => product.slug === 'skittles')!;
+    const normalized = normalizeLocalProduct(
+      {
+        ...fallback,
+        name: 'SKITTLES',
+        videoPoster: '/assets/skittles/ChatGPT Image 8 sept 2026, 04_09_42 a.m..webp',
+      },
+      fallback,
+    );
+    expect(normalized.name).toBe('ZKITTLEZ');
+    expect(normalized.videoPoster).toBe(fallback.videoPoster);
+  });
+  it('updates the former local BUBBLE GUM default name', () => {
+    const fallback = products.find((product) => product.slug === 'bubble-gum')!;
+    expect(
+      normalizeLocalProduct({ ...fallback, name: 'BUBBLE GUM' }, fallback).name,
+    ).toBe('BUBBLE GUM GELATTO');
+  });
+  it('replaces retired local gallery covers with the current principal art', () => {
+    const fallback = products.find((product) => product.slug === 'mac-1')!;
+    const normalized = normalizeLocalProduct(
+      {
+        ...fallback,
+        images: [
+          '/assets/flower/mac-1/principal.png',
+          ...fallback.images.slice(1),
+        ],
+      },
+      fallback,
+    );
+    expect(normalized.images).toEqual(fallback.images);
   });
   it('normalizes invalid local edits without accepting negative values', () => {
     const fallback = products[0];

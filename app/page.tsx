@@ -5,7 +5,6 @@ import Link from '@/components/static-link';
 import { motion, useReducedMotion } from 'motion/react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { ProductCard } from '@/components/product-card';
 import { SectionReveal } from '@/components/section-reveal';
 import { VideoModal } from '@/components/video-modal';
 import { NewsletterForm } from '@/components/newsletter-form';
@@ -17,9 +16,6 @@ export default function Home() {
   const { copy } = useLanguage();
   const catalog = useCatalog();
   const reduceMotion = useReducedMotion();
-  const featured = catalog
-    .filter((product) => product.featured && !product.hidden)
-    .slice(0, 4);
   const filmProduct =
     catalog.find((product) => product.slug === 'skittles') || catalog[0];
   const categoryProduct =
@@ -53,9 +49,11 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="eyebrow">{copy.home.eyebrow}</p>
-            <h1 id="hero-title">{copy.home.title}</h1>
-            <p className="hero-subtitle">{copy.home.subtitle}</p>
+            <div className="sr-only">
+              <p className="eyebrow">{copy.home.eyebrow}</p>
+              <h1 id="hero-title">{copy.home.title}</h1>
+              <p className="hero-subtitle">{copy.home.subtitle}</p>
+            </div>
             <div className="hero-actions">
               <Link
                 prefetch={false}
@@ -78,7 +76,7 @@ export default function Home() {
         <section className="category-strip" aria-label={copy.home.categories}>
           <Link prefetch={false} href="/flower">
             {categoryProduct ? (
-              <Image src={categoryProduct.images[0]} alt="" fill sizes="50vw" />
+              <Image src={categoryProduct.cardImage || categoryProduct.images[0]} alt="" fill sizes="50vw" />
             ) : null}
             <strong>{copy.nav.flower}</strong>
           </Link>
@@ -87,24 +85,6 @@ export default function Home() {
             <span>{copy.status.comingSoon}</span>
             <strong>WAX</strong>
           </Link>
-        </section>
-
-        <section className="section featured-section">
-          <SectionReveal className="section-heading">
-            <div>
-              <p className="section-kicker">{copy.home.featuredKicker}</p>
-              <h2>{copy.home.featured}</h2>
-            </div>
-            <p>{copy.home.featuredBody}</p>
-          </SectionReveal>
-          <div className="product-grid product-swipe">
-            {featured.map((product) => (
-              <ProductCard key={product.slug} product={product} />
-            ))}
-          </div>
-          <div className="swipe-indicator" aria-hidden="true">
-            <span />
-          </div>
         </section>
 
         <section className="film-section">

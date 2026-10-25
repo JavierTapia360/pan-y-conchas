@@ -8,6 +8,16 @@ export type MediaLibraryItem = {
 };
 
 export const mediaLibrary: MediaLibraryItem[] = products.flatMap((product) => [
+  ...(product.cardImage && !product.images.includes(product.cardImage)
+    ? [
+        {
+          url: product.cardImage,
+          product: product.slug,
+          kind: 'image' as const,
+          role: 'gallery' as const,
+        },
+      ]
+    : []),
   ...product.images.map((url, index) => ({
     url,
     product: product.slug,

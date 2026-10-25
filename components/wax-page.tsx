@@ -6,13 +6,10 @@ import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { useLanguage } from '@/components/language-context';
 import { assets } from '@/data/assets';
-import { WaxPurchaseControl } from '@/components/wax-purchase-control';
 
 export function WaxPage() {
   const { copy, language, siteSettings } = useLanguage();
   const [active, setActive] = useState(0);
-  const getSetting = (key: string, fallback: string) =>
-    siteSettings[key]?.[language] || fallback;
   const configuredHero = siteSettings.waxHero?.[language];
   const waxImages = configuredHero?.startsWith('/assets/')
     ? [
@@ -28,9 +25,7 @@ export function WaxPage() {
           <div>
             <p className="section-kicker">{copy.wax.kicker}</p>
             <h1>{copy.wax.title}</h1>
-            <h2>{getSetting('waxHeadline', copy.wax.subtitle)}</h2>
-            <p>{getSetting('waxBody', copy.wax.body)}</p>
-            <WaxPurchaseControl />
+            <h2 className="wax-arriving">{copy.wax.comingSoon}</h2>
           </div>
           <div className="wax-hero-image">
             <Image

@@ -51,6 +51,13 @@ export function AdminProductEditor({
       ),
     [media, product.slug],
   );
+  const videos = useMemo(
+    () =>
+      media.filter(
+        (item) => item.kind === 'video' && item.product === product.slug,
+      ),
+    [media, product.slug],
+  );
   const selected = new Set(product.images);
   const available = Object.values(product.stocks).some((stock) => stock > 0);
   const availableStocks = useRef(
@@ -245,6 +252,34 @@ export function AdminProductEditor({
               </label>
             ))}
           </div>
+          <div className="admin-variant-row">
+            <b>Stock</b>
+            {productPresentationOrder.map((presentation) => (
+              <label
+                key={presentation}
+                data-presentation={productPresentationLabels[presentation]}
+              >
+                <span className="sr-only">
+                  Stock {productPresentationLabels[presentation]}
+                </span>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  inputMode="numeric"
+                  value={product.stocks[presentation]}
+                  onChange={(event) => {
+                    const stock = Number(event.target.value);
+                    if (Number.isInteger(stock) && stock >= 0) {
+                      onPatch({
+                        stocks: { ...product.stocks, [presentation]: stock },
+                      });
+                    }
+                  }}
+                />
+              </label>
+            ))}
+          </div>
         </fieldset>
       </section>
 
@@ -359,6 +394,19 @@ export function AdminProductEditor({
 
         <div className="admin-media-selects">
           <label>
+            <span>Portada de tarjeta</span>
+            <select
+              value={product.cardImage || product.images[0]}
+              onChange={(event) => onPatch({ cardImage: event.target.value })}
+            >
+              {images.map((item) => (
+                <option key={item.url} value={item.url}>
+                  {item.url.split('/').at(-1)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
             <span>Imagen móvil</span>
             <select
               value={product.mobileImage || ''}
@@ -374,15 +422,33 @@ export function AdminProductEditor({
               ))}
             </select>
           </label>
-          <div className="admin-video-lock">
-            <span>Video oficial</span>
-            <strong>
-              {product.video ? 'ASIGNADO · SIN CAMBIOS' : 'SIN VIDEO'}
-            </strong>
-            <small>
-              El video y su poster permanecen intactos en esta fase.
-            </small>
-          </div>
+          <label>
+            <span>Video del producto</span>
+            <select
+              value={product.video || ''}
+              onChange={(event) => onPatch({ video: event.target.value || undefined })}
+            >
+              <option value="">Sin video</option>
+              {videos.map((item) => (
+                <option key={item.url} value={item.url}>
+                  {item.url.split('/').at(-1)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Poster del video</span>
+            <select
+              value={product.videoPoster || product.images[0]}
+              onChange={(event) => onPatch({ videoPoster: event.target.value })}
+            >
+              {images.map((item) => (
+                <option key={item.url} value={item.url}>
+                  {item.url.split('/').at(-1)}
+                </option>
+              ))}
+            </select>
+          </label>
           {product.video ? (
             <video
               src={product.video}

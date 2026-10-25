@@ -8,6 +8,13 @@ import {
 export const LOCAL_CATALOG_KEY = 'gf_catalog_local_v1';
 export const LOCAL_CATALOG_EVENT = 'gf-catalog-local-change';
 
+const retiredPrimaryImages: Partial<Record<Product['slug'], string>> = {
+  skittles: '/assets/flower/skittles/principal.png',
+  'jelly-donut': '/assets/flower/jelly-donut/principal.png',
+  'frosted-fuel': '/assets/flower/frosted-fuel/principal.png',
+  'mac-1': '/assets/flower/mac-1/principal.png',
+};
+
 export const getDefaultCatalog = () =>
   products.map((product) => ({
     ...product,
@@ -64,18 +71,31 @@ export function normalizeLocalProduct(
         (item): item is string => typeof item === 'string' && item.length > 0,
       )
     : [...fallback.images];
+  const usesRetiredPrimaryImage =
+    candidateImages[0] === retiredPrimaryImages[fallback.slug];
   const usesRetiredDefaultGallery =
-    candidateImages[0] === fallback.images[0] &&
+    (candidateImages[0] === fallback.images[0] || usesRetiredPrimaryImage) &&
     candidateImages.length > 1 &&
     candidateImages.slice(1).every((item) => /\/product-\d+\.png$/.test(item));
   const images = usesRetiredDefaultGallery
     ? [...fallback.images]
-    : candidateImages;
+    : usesRetiredPrimaryImage
+      ? [fallback.images[0], ...candidateImages.slice(1)]
+      : candidateImages;
+  const usesRetiredDefaultName =
+    (fallback.slug === 'skittles' &&
+      typeof candidate.name === 'string' &&
+      candidate.name.trim().toUpperCase() === 'SKITTLES') ||
+    (fallback.slug === 'bubble-gum' &&
+      typeof candidate.name === 'string' &&
+      candidate.name.trim().toUpperCase() === 'BUBBLE GUM');
 
   return {
     ...fallback,
     name:
-      typeof candidate.name === 'string' && candidate.name.trim()
+      usesRetiredDefaultName
+        ? fallback.name
+        : typeof candidate.name === 'string' && candidate.name.trim()
         ? candidate.name.trim()
         : fallback.name,
     stocks,
@@ -86,6 +106,10 @@ export function normalizeLocalProduct(
         ? candidate.updatedAt
         : fallback.updatedAt,
     images: images.length ? images : [...fallback.images],
+    cardImage:
+      typeof candidate.cardImage === 'string' && candidate.cardImage
+        ? candidate.cardImage
+        : fallback.cardImage,
     mobileImage:
       typeof candidate.mobileImage === 'string' &&
       images.includes(candidate.mobileImage)
@@ -95,7 +119,12 @@ export function normalizeLocalProduct(
       typeof candidate.video === 'string' && candidate.video
         ? candidate.video
         : undefined,
-    videoPoster: fallback.videoPoster,
+    videoPoster:
+      typeof candidate.videoPoster === 'string' &&
+      candidate.videoPoster &&
+      !candidate.videoPoster.includes('ChatGPT Image 8 sept 2026')
+        ? candidate.videoPoster
+        : fallback.videoPoster,
     campaignImage: fallback.campaignImage,
     description: {
       es:
@@ -118,6 +147,7 @@ export function normalizeLocalProduct(
         ? candidate.hidden
         : fallback.hidden,
     sortOrder:
+      typeof candidate.updatedAt === 'string' &&
       Number.isInteger(candidate.sortOrder) && Number(candidate.sortOrder) >= 0
         ? Number(candidate.sortOrder)
         : fallback.sortOrder,
