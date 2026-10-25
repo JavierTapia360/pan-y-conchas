@@ -42,6 +42,7 @@ export const en = {
     videoUnavailable: 'The video could not load. Please try again later.',
     close: 'Close video',
     closeGallery: 'Close gallery',
+    viewPromotion: 'VIEW OFFER',
   },
   telegram: {
     contact: 'Contact on Telegram',

@@ -6,18 +6,16 @@ import { motion, useReducedMotion } from 'motion/react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import { SectionReveal } from '@/components/section-reveal';
-import { VideoModal } from '@/components/video-modal';
 import { NewsletterForm } from '@/components/newsletter-form';
 import { useLanguage } from '@/components/language-context';
 import { assets } from '@/data/assets';
 import { useCatalog } from '@/hooks/use-catalog';
+import { promotionDefaults } from '@/data/promotion';
 
 export default function Home() {
-  const { copy } = useLanguage();
+  const { copy, language } = useLanguage();
   const catalog = useCatalog();
   const reduceMotion = useReducedMotion();
-  const filmProduct =
-    catalog.find((product) => product.slug === 'skittles') || catalog[0];
   const categoryProduct =
     catalog.find((product) => !product.hidden && product.featured) ||
     catalog[0];
@@ -76,7 +74,12 @@ export default function Home() {
         <section className="category-strip" aria-label={copy.home.categories}>
           <Link prefetch={false} href="/flower">
             {categoryProduct ? (
-              <Image src={categoryProduct.cardImage || categoryProduct.images[0]} alt="" fill sizes="50vw" />
+              <Image
+                src={categoryProduct.cardImage || categoryProduct.images[0]}
+                alt=""
+                fill
+                sizes="50vw"
+              />
             ) : null}
             <strong>{copy.nav.flower}</strong>
           </Link>
@@ -87,17 +90,10 @@ export default function Home() {
           </Link>
         </section>
 
-        <section className="film-section">
+        <section className="film-section film-offer-section">
           <SectionReveal className="film-copy">
             <p className="section-kicker">{copy.home.filmKicker}</p>
             <h2>{copy.home.filmTitle}</h2>
-            {filmProduct?.video ? (
-              <VideoModal
-                src={filmProduct.video}
-                poster={filmProduct.videoPoster || filmProduct.images[0]}
-                label={`CUATESFARMZ ${filmProduct.name} film`}
-              />
-            ) : null}
             <figure className="brand-chase-accent">
               <Image
                 src={assets.extras.chaseDecoration}
@@ -108,15 +104,20 @@ export default function Home() {
               <figcaption>{copy.home.cloudLine}</figcaption>
             </figure>
           </SectionReveal>
-          <SectionReveal className="film-visual">
-            {filmProduct ? (
+          <SectionReveal className="film-visual film-offer-visual">
+            <Link
+              prefetch={false}
+              href={`/flower/${promotionDefaults.slug}`}
+              className="film-offer-link"
+              aria-label={copy.actions.viewPromotion}
+            >
               <Image
-                src={filmProduct.campaignImage || filmProduct.images[0]}
-                alt={`${filmProduct.name} CUATESFARMZ campaign portrait`}
+                src={promotionDefaults.image}
+                alt={`${promotionDefaults.names[language]}: ${promotionDefaults.descriptions[language]}`}
                 fill
                 sizes="(max-width: 800px) 100vw, 65vw"
               />
-            ) : null}
+            </Link>
           </SectionReveal>
         </section>
 

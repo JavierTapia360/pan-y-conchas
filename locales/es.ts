@@ -43,6 +43,7 @@ export const es = {
       'El video no pudo cargarse. Puedes volver a intentarlo más tarde.',
     close: 'Cerrar video',
     closeGallery: 'Cerrar galería',
+    viewPromotion: 'VER PROMOCIÓN',
   },
   telegram: {
     contact: 'Contactar por Telegram',

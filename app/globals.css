@@ -1722,6 +1722,21 @@ body {
   object-fit: cover;
   object-position: center;
 }
+.film-offer-visual {
+  background: #f7f3ed;
+}
+.film-offer-link {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.film-offer-visual .film-offer-link img {
+  object-fit: contain;
+}
+.film-offer-link:focus-visible {
+  outline: 4px solid var(--red);
+  outline-offset: -4px;
+}
 .video-trigger {
   min-height: 52px;
   margin-top: 34px;
@@ -4120,8 +4135,17 @@ body {
   .film-copy {
     order: 2;
   }
+  .film-offer-section {
+    min-height: 0;
+    grid-template-rows: auto auto;
+    border-top: 12px solid #f3f1ee;
+  }
   .film-visual {
     min-height: 58vh;
+  }
+  .film-offer-section .film-offer-visual {
+    min-height: 0;
+    aspect-ratio: 1;
   }
   .wax-photo {
     min-height: 70svh;
@@ -4242,6 +4266,9 @@ body {
   }
   .film-visual {
     min-height: 54svh;
+  }
+  .film-offer-section .film-offer-visual {
+    min-height: 0;
   }
   .film-copy,
   .wax-copy {
