@@ -7,8 +7,9 @@ import { useLanguage } from '@/components/language-context';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { assets } from '@/data/assets';
 
-const STORAGE_KEY = 'age_verified_v1';
-const ALTERNATE_STORAGE_KEY = 'gf_age_v1';
+export const AGE_STORAGE_KEY = 'age_verified_v1';
+export const AGE_ALTERNATE_STORAGE_KEY = 'gf_age_v1';
+export const AGE_VERIFIED_EVENT = 'gf-age-verified';
 
 export function AgeGate() {
   const [open, setOpen] = useState(false);
@@ -22,8 +23,8 @@ export function AgeGate() {
     let shouldOpen = true;
     try {
       shouldOpen =
-        window.localStorage.getItem(STORAGE_KEY) !== 'true' &&
-        window.localStorage.getItem(ALTERNATE_STORAGE_KEY) !== 'true';
+        window.localStorage.getItem(AGE_STORAGE_KEY) !== 'true' &&
+        window.localStorage.getItem(AGE_ALTERNATE_STORAGE_KEY) !== 'true';
     } catch {
       /* Keep the gate visible when storage is blocked. */
     }
@@ -120,15 +121,16 @@ export function AgeGate() {
                     className="button button-red"
                     onClick={() => {
                       try {
-                        window.localStorage.setItem(STORAGE_KEY, 'true');
+                        window.localStorage.setItem(AGE_STORAGE_KEY, 'true');
                         window.localStorage.setItem(
-                          ALTERNATE_STORAGE_KEY,
+                          AGE_ALTERNATE_STORAGE_KEY,
                           'true',
                         );
                       } catch {
                         /* Entry still works for this page view. */
                       }
                       setOpen(false);
+                      window.dispatchEvent(new Event(AGE_VERIFIED_EVENT));
                     }}
                   >
                     {copy.gate.enter}

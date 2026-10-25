@@ -44,6 +44,19 @@ export function normalizeLocalProduct(
   const candidateStocks = isFormerFrostedFuelDefault
     ? fallback.stocks
     : candidate.stocks;
+  const retiredPriceSets: Record<string, Product['prices']> = {
+    skittles: { halfOz: 9000, oz: 18000, qp: 47000 },
+    'jelly-donut': { halfOz: 9000, oz: 18000, qp: 47000 },
+    'mac-1': { halfOz: 11000, oz: 20000, qp: 52000 },
+    'bubble-gum': { halfOz: 9000, oz: 18000, qp: 47000 },
+    'cereal-milk': { halfOz: 9000, oz: 18000, qp: 47000 },
+  };
+  const retiredPrices = retiredPriceSets[fallback.slug];
+  const usesRetiredDefaultPrices =
+    retiredPrices != null &&
+    productPresentationOrder.every(
+      (key) => candidate.prices?.[key] === retiredPrices[key],
+    );
   const stocks = Object.fromEntries(
     productPresentationOrder.map((key) => {
       const value = candidateStocks?.[key];
@@ -57,7 +70,9 @@ export function normalizeLocalProduct(
   ) as Product['stocks'];
   const prices = Object.fromEntries(
     productPresentationOrder.map((key) => {
-      const value = candidate.prices?.[key];
+      const value = usesRetiredDefaultPrices
+        ? fallback.prices[key]
+        : candidate.prices?.[key];
       return [
         key,
         value === null || (Number.isInteger(value) && Number(value) >= 0)
@@ -88,14 +103,15 @@ export function normalizeLocalProduct(
       candidate.name.trim().toUpperCase() === 'SKITTLES') ||
     (fallback.slug === 'bubble-gum' &&
       typeof candidate.name === 'string' &&
-      candidate.name.trim().toUpperCase() === 'BUBBLE GUM');
+      ['BUBBLE GUM', 'BUBBLE GUM GELATTO'].includes(
+        candidate.name.trim().toUpperCase(),
+      ));
 
   return {
     ...fallback,
-    name:
-      usesRetiredDefaultName
-        ? fallback.name
-        : typeof candidate.name === 'string' && candidate.name.trim()
+    name: usesRetiredDefaultName
+      ? fallback.name
+      : typeof candidate.name === 'string' && candidate.name.trim()
         ? candidate.name.trim()
         : fallback.name,
     stocks,
@@ -148,7 +164,8 @@ export function normalizeLocalProduct(
         : fallback.hidden,
     sortOrder:
       typeof candidate.updatedAt === 'string' &&
-      Number.isInteger(candidate.sortOrder) && Number(candidate.sortOrder) >= 0
+      Number.isInteger(candidate.sortOrder) &&
+      Number(candidate.sortOrder) >= 0
         ? Number(candidate.sortOrder)
         : fallback.sortOrder,
   };

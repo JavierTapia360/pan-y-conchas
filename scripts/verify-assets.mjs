@@ -89,13 +89,23 @@ const invalidFlowerCounts = Object.entries(expectedFlowerCounts).filter(
   ([prefix, expected]) =>
     flowerImages.filter((item) => item.startsWith(prefix)).length !== expected,
 );
+const promotionAsset =
+  'promotion/promo_cereal_milk_bubblegum_gelato_170_12.png';
+const promotionDimensions = imageDimensions(
+  path.resolve('public/assets', promotionAsset),
+);
+const invalidPromotion =
+  !paths.includes(promotionAsset) ||
+  promotionDimensions?.width !== 1254 ||
+  promotionDimensions?.height !== 1254;
 if (
   missing.length ||
   unsupported.length ||
   duplicates.length ||
   flowerImages.length !== 28 ||
   invalidFlowerCounts.length ||
-  invalidFlowerDimensions.length
+  invalidFlowerDimensions.length ||
+  invalidPromotion
 ) {
   console.error(
     JSON.stringify(
@@ -106,6 +116,7 @@ if (
         flowerImageCount: flowerImages.length,
         invalidFlowerCounts,
         invalidFlowerDimensions,
+        invalidPromotion,
       },
       null,
       2,
@@ -114,5 +125,5 @@ if (
   process.exit(1);
 }
 console.log(
-  `Verified ${paths.length} asset references, including 28 gallery images and six 1254x1254 principals.`,
+  `Verified ${paths.length} asset references, including the original 1254x1254 promotion, 28 gallery images and six 1254x1254 principals.`,
 );

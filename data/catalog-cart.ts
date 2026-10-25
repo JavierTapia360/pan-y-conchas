@@ -6,11 +6,18 @@ import {
 } from '@/data/products';
 import { waxPresentationOrder, type WaxPresentation } from '@/data/wax';
 import type { Language } from '@/lib/language';
+import {
+  PROMOTION_PRESENTATION,
+  type PromotionSettings,
+} from '@/data/promotion';
 
-export type CatalogPresentation = ProductPresentation | WaxPresentation;
+export type CatalogPresentation =
+  | ProductPresentation
+  | WaxPresentation
+  | typeof PROMOTION_PRESENTATION;
 
 export type CatalogCartProduct = {
-  kind: 'flower' | 'wax';
+  kind: 'flower' | 'wax' | 'bundle';
   slug: string;
   name: string;
   href: string;
@@ -25,6 +32,7 @@ export type CatalogCartProduct = {
 export const catalogPresentationOrder: readonly CatalogPresentation[] = [
   ...productPresentationOrder,
   ...waxPresentationOrder,
+  PROMOTION_PRESENTATION,
 ];
 
 export function isCatalogPresentation(
@@ -48,12 +56,50 @@ export function toCatalogCartProduct(product: Product): CatalogCartProduct {
   };
 }
 
+export function isPromotionComponentsAvailable(
+  promotion: PromotionSettings,
+  products: readonly Product[],
+) {
+  return promotion.components.every((component) => {
+    const product = products.find((item) => item.slug === component.slug);
+    return Boolean(
+      product &&
+      !product.hidden &&
+      product.available &&
+      product.stocks[component.presentation] > 0,
+    );
+  });
+}
+
+export function toPromotionCartProduct(
+  promotion: PromotionSettings,
+  language: Language,
+  products: readonly Product[],
+): CatalogCartProduct {
+  return {
+    kind: 'bundle',
+    slug: promotion.slug,
+    name: promotion.names[language],
+    href: `/flower/${promotion.slug}`,
+    images: [promotion.image],
+    available:
+      promotion.active &&
+      promotion.available &&
+      isPromotionComponentsAvailable(promotion, products),
+    hidden: promotion.hidden || !promotion.active,
+    inventoryMode: 'availability',
+    prices: { [PROMOTION_PRESENTATION]: promotion.priceCents },
+  };
+}
+
 export function getCatalogPresentationLabel(
   presentation: CatalogPresentation,
   language: Language,
 ) {
   if (presentation in productPresentationLabels)
     return productPresentationLabels[presentation as ProductPresentation];
+  if (presentation === PROMOTION_PRESENTATION)
+    return language === 'es' ? 'PAQUETE' : 'BUNDLE';
   const pieces: Record<WaxPresentation, number> = {
     pieces5: 5,
     pieces10: 10,

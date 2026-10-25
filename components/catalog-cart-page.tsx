@@ -17,7 +17,8 @@ import { track } from '@/lib/analytics';
 
 export function CatalogCartPage() {
   const { copy, language } = useLanguage();
-  const { items, products, subtotalCents } = useCatalogCart();
+  const { items, products, subtotalCents, shippingCents, totalCents } =
+    useCatalogCart();
   const [reviewed, setReviewed] = useState(false);
   const [residenceType, setResidenceType] = useState<
     '' | 'house' | 'apartment'
@@ -83,6 +84,8 @@ export function CatalogCartPage() {
         unitPriceCents: getCatalogPrice(product, presentation) || 0,
       })),
       subtotalCents,
+      shippingCents,
+      totalCents,
       customer: {
         name: value('name'),
         address: value('address'),
@@ -162,6 +165,16 @@ export function CatalogCartPage() {
               <div className="catalog-summary-total">
                 <span>{copy.cart.subtotal}</span>
                 <strong>{currency.format(subtotalCents / 100)}</strong>
+                <span>
+                  {shippingCents === 0
+                    ? copy.cart.shippingIncluded
+                    : copy.cart.standardShipping}
+                </span>
+                <strong>{currency.format(shippingCents / 100)}</strong>
+                <span className="catalog-grand-total">{copy.cart.total}</span>
+                <strong className="catalog-grand-total">
+                  {currency.format(totalCents / 100)}
+                </strong>
               </div>
             </section>
 

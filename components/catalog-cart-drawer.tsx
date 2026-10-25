@@ -47,6 +47,8 @@ export function CatalogCartDrawer() {
     products,
     count,
     subtotalCents,
+    shippingCents,
+    totalCents,
     open,
     setOpen,
     remove,
@@ -186,6 +188,16 @@ export function CatalogCartDrawer() {
               <div className="catalog-cart-summary">
                 <span>{copy.cart.subtotal}</span>
                 <strong>{currency.format(subtotalCents / 100)}</strong>
+                <span>
+                  {shippingCents === 0
+                    ? copy.cart.shippingIncluded
+                    : copy.cart.standardShipping}
+                </span>
+                <strong>{currency.format(shippingCents / 100)}</strong>
+                <span className="catalog-grand-total">{copy.cart.total}</span>
+                <strong className="catalog-grand-total">
+                  {currency.format(totalCents / 100)}
+                </strong>
               </div>
               <AlertDialog>
                 <AlertDialogTrigger className="catalog-cart-clear">

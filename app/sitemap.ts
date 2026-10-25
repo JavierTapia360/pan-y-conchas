@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { products } from '@/data/products';
+import { promotionDefaults } from '@/data/promotion';
 
 const origin = 'https://cuatesfarmz.estradajokabet380.chatgpt.site';
 
@@ -32,5 +33,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     })),
+    {
+      url: `${origin}/flower/${promotionDefaults.slug}`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
   ];
 }

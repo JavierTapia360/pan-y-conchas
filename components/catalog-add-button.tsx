@@ -43,7 +43,12 @@ export function CatalogAddButton({
   const pricePending = pricedPresentations.length === 0;
   const currency = new Intl.NumberFormat(
     language === 'es' ? 'es-US' : 'en-US',
-    { style: 'currency', currency: 'USD', maximumFractionDigits: 0 },
+    {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    },
   );
   if (pricePending && !soldOut) return null;
 

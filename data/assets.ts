@@ -83,4 +83,7 @@ export const assets = {
       `${root}/wax/new/pair-angle.png`,
     ],
   },
+  promotion: {
+    cerealBubblegum: `${root}/promotion/promo_cereal_milk_bubblegum_gelato_170_12.png`,
+  },
 } as const;

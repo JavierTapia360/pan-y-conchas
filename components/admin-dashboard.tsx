@@ -13,6 +13,8 @@ import {
 import { waxPresentationOrder } from '@/data/wax';
 import { getCatalogPresentationLabel } from '@/data/catalog-cart';
 import { useWaxProduct } from '@/hooks/use-wax-product';
+import { usePromotionStore } from '@/components/promotion-provider';
+import type { PromotionSettings } from '@/data/promotion';
 import { mediaLibrary } from '@/lib/media-library';
 import {
   LOCAL_ADMIN_EVENT,
@@ -25,10 +27,11 @@ import {
   type LocalMessage,
 } from '@/lib/local-admin-store';
 
-type Tab = 'products' | 'wax' | 'messages' | 'metrics';
+type Tab = 'products' | 'promotion' | 'wax' | 'messages' | 'metrics';
 type SaveState = 'idle' | 'dirty' | 'saving' | 'saved' | 'error';
 const tabs: { id: Tab; label: string }[] = [
   { id: 'products', label: 'Catálogo Exclusive Drop' },
+  { id: 'promotion', label: 'Super Promoción' },
   { id: 'wax', label: 'Wax' },
   { id: 'messages', label: 'Mensajes' },
   { id: 'metrics', label: 'Analytics' },
@@ -50,6 +53,7 @@ function summarize(entries: LocalAnalyticsEntry[], key: 'event' | 'path') {
 export function AdminDashboard() {
   const { products, saveProduct } = useCatalogStore();
   const waxProduct = useWaxProduct();
+  const { promotion, savePromotion } = usePromotionStore();
   const [tab, setTab] = useState<Tab>('products');
   const [query, setQuery] = useState('');
   const [editing, setEditing] = useState<Product | null>(null);
@@ -57,6 +61,12 @@ export function AdminDashboard() {
   const [notice, setNotice] = useState('Datos locales listos.');
   const [messages, setMessages] = useState<LocalMessage[]>([]);
   const [analytics, setAnalytics] = useState<LocalAnalyticsEntry[]>([]);
+  const [promotionDraft, setPromotionDraft] =
+    useState<PromotionSettings>(promotion);
+
+  useEffect(() => {
+    queueMicrotask(() => setPromotionDraft(promotion));
+  }, [promotion]);
 
   useEffect(() => {
     const refresh = () => {
@@ -273,7 +283,7 @@ export function AdminDashboard() {
                             <b>{productPresentationLabels[presentation]}</b>{' '}
                             {product.prices[presentation] === null
                               ? '—'
-                              : `$${(product.prices[presentation]! / 100).toFixed(0)}`}
+                              : `$${(product.prices[presentation]! / 100).toFixed(2)}`}
                           </span>
                         ))}
                       </div>
@@ -310,6 +320,129 @@ export function AdminDashboard() {
                 }}
               />
             ) : null}
+          </section>
+        ) : null}
+
+        {tab === 'promotion' ? (
+          <section className="admin-promotion-view">
+            <form
+              className="admin-promotion-card"
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (
+                  !Number.isInteger(promotionDraft.priceCents) ||
+                  promotionDraft.priceCents < 0
+                ) {
+                  setSaveState('error');
+                  setNotice('El precio promocional no es válido.');
+                  return;
+                }
+                try {
+                  const next = {
+                    ...promotionDraft,
+                    updatedAt: new Date().toISOString(),
+                  };
+                  savePromotion(next);
+                  setPromotionDraft(next);
+                  setSaveState('saved');
+                  setNotice('Promoción guardada localmente en este navegador.');
+                } catch {
+                  setSaveState('error');
+                  setNotice('No se pudo guardar la promoción.');
+                }
+              }}
+            >
+              <header>
+                <div>
+                  <p className="section-kicker">PAQUETE / PROMOCIÓN</p>
+                  <h2>{promotionDraft.names.es}</h2>
+                </div>
+                <strong
+                  className={`admin-stock-status ${promotionDraft.available ? 'available' : 'sold-out'}`}
+                >
+                  {promotionDraft.available ? 'AVAILABLE' : 'SOLD OUT'}
+                </strong>
+              </header>
+              <div className="admin-promotion-layout">
+                <Image
+                  src={promotionDraft.image}
+                  alt="Arte de la Super Promoción"
+                  width={1254}
+                  height={1254}
+                />
+                <div>
+                  <p>CEREAL MILK · 1 Oz</p>
+                  <p>BUBBLEGUM GELATO · 1/2 Oz</p>
+                  <label>
+                    <span>Precio del paquete (USD)</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={(promotionDraft.priceCents / 100).toFixed(2)}
+                      onChange={(event) => {
+                        const value = Number(event.target.value);
+                        if (Number.isFinite(value) && value >= 0)
+                          setPromotionDraft((current) => ({
+                            ...current,
+                            priceCents: Math.round(value * 100),
+                          }));
+                        setSaveState('dirty');
+                        setNotice('Cambios sin guardar.');
+                      }}
+                    />
+                  </label>
+                  <div className="admin-promotion-flags">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={promotionDraft.active}
+                        onChange={(event) => {
+                          setPromotionDraft((current) => ({
+                            ...current,
+                            active: event.target.checked,
+                          }));
+                          setSaveState('dirty');
+                        }}
+                      />{' '}
+                      Activa
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={promotionDraft.available}
+                        onChange={(event) => {
+                          setPromotionDraft((current) => ({
+                            ...current,
+                            available: event.target.checked,
+                          }));
+                          setSaveState('dirty');
+                        }}
+                      />{' '}
+                      Available
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={promotionDraft.hidden}
+                        onChange={(event) => {
+                          setPromotionDraft((current) => ({
+                            ...current,
+                            hidden: event.target.checked,
+                          }));
+                          setSaveState('dirty');
+                        }}
+                      />{' '}
+                      Hidden
+                    </label>
+                  </div>
+                  <button className="button button-dark" type="submit">
+                    Guardar promoción
+                  </button>
+                </div>
+              </div>
+            </form>
           </section>
         ) : null}
 

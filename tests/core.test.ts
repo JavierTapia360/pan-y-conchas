@@ -7,6 +7,7 @@ import { assets } from '@/data/assets';
 import {
   getCatalogPresentationLabel,
   getCatalogPrice,
+  isPromotionComponentsAvailable,
 } from '@/data/catalog-cart';
 import { waxProduct } from '@/data/wax';
 import {
@@ -22,8 +23,95 @@ import { reconcileCartItems } from '@/components/catalog-cart-provider';
 import { buildTelegramOrderText, buildTelegramOrderUrl } from '@/lib/telegram';
 import { en } from '@/locales/en';
 import { es } from '@/locales/es';
+import { promotionDefaults } from '@/data/promotion';
+import { normalizePromotion } from '@/lib/local-promotion';
+import { calculateShippingCents } from '@/lib/shipping';
+import { shouldShowPromotion } from '@/lib/promotion-visibility';
 
 describe('core rules', () => {
+  it('keeps the official promotion fixed in integer cents', () => {
+    expect(promotionDefaults).toMatchObject({
+      slug: 'cereal-bubblegum-promo',
+      priceCents: 17012,
+      active: true,
+      available: true,
+      hidden: false,
+      components: [
+        { slug: 'cereal-milk', presentation: 'oz', quantity: 1 },
+        { slug: 'bubble-gum', presentation: 'halfOz', quantity: 1 },
+      ],
+    });
+    expect(promotionDefaults.names).toEqual({
+      es: 'SUPER PROMOCIÓN',
+      en: 'SUPER PROMOTION',
+    });
+  });
+
+  it('applies shipping once per order and keeps promo-only shipping free', () => {
+    expect(calculateShippingCents([])).toBe(0);
+    expect(
+      calculateShippingCents([{ slug: 'cereal-bubblegum-promo', quantity: 1 }]),
+    ).toBe(0);
+    expect(
+      calculateShippingCents([{ slug: 'cereal-bubblegum-promo', quantity: 2 }]),
+    ).toBe(0);
+    expect(calculateShippingCents([{ slug: 'cereal-milk', quantity: 1 }])).toBe(
+      1799,
+    );
+    expect(
+      calculateShippingCents([
+        { slug: 'cereal-bubblegum-promo', quantity: 1 },
+        { slug: 'mac-1', quantity: 3 },
+      ]),
+    ).toBe(1799);
+    expect(
+      10499 + calculateShippingCents([{ slug: 'cereal-milk', quantity: 1 }]),
+    ).toBe(12298);
+  });
+
+  it('normalizes local promotion values and rejects invalid prices', () => {
+    expect(
+      normalizePromotion({ priceCents: 18000, active: false }),
+    ).toMatchObject({
+      priceCents: 18000,
+      active: false,
+    });
+    expect(normalizePromotion({ priceCents: -1 }).priceCents).toBe(17012);
+    expect(normalizePromotion({ priceCents: Number.NaN }).priceCents).toBe(
+      17012,
+    );
+  });
+
+  it('requires both fixed bundle components to remain available', () => {
+    expect(isPromotionComponentsAvailable(promotionDefaults, products)).toBe(
+      true,
+    );
+    const unavailable = products.map((product) =>
+      product.slug === 'cereal-milk'
+        ? { ...product, stocks: { ...product.stocks, oz: 0 } }
+        : product,
+    );
+    expect(isPromotionComponentsAvailable(promotionDefaults, unavailable)).toBe(
+      false,
+    );
+  });
+
+  it('shows the promotion only after age verification and once per session', () => {
+    const ready = {
+      ageVerified: true,
+      seen: false,
+      active: true,
+      available: true,
+      hidden: false,
+    };
+    expect(shouldShowPromotion(ready)).toBe(true);
+    expect(shouldShowPromotion({ ...ready, ageVerified: false })).toBe(false);
+    expect(shouldShowPromotion({ ...ready, seen: true })).toBe(false);
+    expect(shouldShowPromotion({ ...ready, active: false })).toBe(false);
+    expect(shouldShowPromotion({ ...ready, available: false })).toBe(false);
+    expect(shouldShowPromotion({ ...ready, hidden: true })).toBe(false);
+  });
+
   it('manual locale wins over browser locale', () =>
     expect(detectLanguageFrom('en', ['es-MX'])).toBe('en'));
   it('detects Spanish and falls back to English', () => {
@@ -46,15 +134,15 @@ describe('core rules', () => {
     const bySlug = new Map(products.map((product) => [product.slug, product]));
     expect(bySlug.get('mac-1')).toMatchObject({
       name: 'MAC 1',
-      prices: { qp: 52000, oz: 20000, halfOz: 11000 },
+      prices: { qp: 32250, oz: 11999, halfOz: 6499 },
     });
     expect(bySlug.get('jelly-donut')).toMatchObject({
       name: 'JELLY DONUT',
-      prices: { qp: 47000, oz: 18000, halfOz: 9000 },
+      prices: { qp: 32250, oz: 11999, halfOz: 6499 },
     });
     expect(bySlug.get('skittles')).toMatchObject({
       name: 'ZKITTLEZ',
-      prices: { qp: 47000, oz: 18000, halfOz: 9000 },
+      prices: { qp: 32250, oz: 11999, halfOz: 6499 },
     });
     expect(bySlug.get('frosted-fuel')).toMatchObject({
       name: 'FROSTED FUEL',
@@ -63,16 +151,16 @@ describe('core rules', () => {
     for (const slug of ['bubble-gum', 'cereal-milk']) {
       expect(bySlug.get(slug)).toMatchObject({
         stocks: { qp: 10, oz: 10, halfOz: 10 },
-        prices: { qp: 47000, oz: 18000, halfOz: 9000 },
+        prices: { qp: 28999, oz: 10499, halfOz: 5999 },
       });
     }
-    expect(bySlug.get('bubble-gum')?.name).toBe('BUBBLE GUM GELATTO');
+    expect(bySlug.get('bubble-gum')?.name).toBe('BUBBLEGUM GELATO');
     const videos = products.map((product) => product.video);
     expect(videos.every(Boolean)).toBe(true);
     expect(new Set(videos).size).toBe(6);
-    expect(
-      products.every((product) => Boolean(product.videoPoster)),
-    ).toBe(true);
+    expect(products.every((product) => Boolean(product.videoPoster))).toBe(
+      true,
+    );
     expect('video' in assets.wax).toBe(false);
   });
   it('uses the final bilingual slogan and product attributes without THC', () => {
@@ -103,8 +191,12 @@ describe('core rules', () => {
     expect(JSON.stringify(products)).not.toMatch(/THC/i);
   });
   it('uses the approved bilingual client copy and official brand assets', () => {
-    expect(en.announcement).toBe('Orders over $150 get free shipping');
-    expect(es.announcement).toBe('Pedidos superiores a $150 tienen envío gratis');
+    expect(en.announcement).toBe(
+      'Standard shipping $17.99 · Super Promotion ships free',
+    );
+    expect(es.announcement).toBe(
+      'Envío estándar $17.99 · La Super Promoción incluye envío',
+    );
     expect(en.nav.flower).toBe('Exclusive Drop');
     expect(es.nav.flower).toBe('Exclusive Drop');
     expect(en.home.planeLine).toBe('LIFE IS BETTER ON THE PLANE');
@@ -145,7 +237,9 @@ describe('core rules', () => {
     );
     expect(
       products
-        .filter((product) => ['bubble-gum', 'cereal-milk'].includes(product.slug))
+        .filter((product) =>
+          ['bubble-gum', 'cereal-milk'].includes(product.slug),
+        )
         .every((product) => product.images[0].endsWith('/principal.png')),
     ).toBe(true);
     expect(bySlug.get('bubble-gum')?.images).toHaveLength(5);
@@ -333,7 +427,8 @@ describe('core rules', () => {
       {
         ...fallback,
         name: 'SKITTLES',
-        videoPoster: '/assets/skittles/ChatGPT Image 8 sept 2026, 04_09_42 a.m..webp',
+        videoPoster:
+          '/assets/skittles/ChatGPT Image 8 sept 2026, 04_09_42 a.m..webp',
       },
       fallback,
     );
@@ -344,7 +439,7 @@ describe('core rules', () => {
     const fallback = products.find((product) => product.slug === 'bubble-gum')!;
     expect(
       normalizeLocalProduct({ ...fallback, name: 'BUBBLE GUM' }, fallback).name,
-    ).toBe('BUBBLE GUM GELATTO');
+    ).toBe('BUBBLEGUM GELATO');
   });
   it('replaces retired local gallery covers with the current principal art', () => {
     const fallback = products.find((product) => product.slug === 'mac-1')!;
@@ -522,6 +617,8 @@ describe('core rules', () => {
         },
       ],
       subtotalCents: 40000,
+      shippingCents: 1799,
+      totalCents: 41799,
       customer: {
         name: 'Ana Pérez',
         address: '123 Main St',
@@ -560,6 +657,8 @@ describe('core rules', () => {
         },
       ],
       subtotalCents: 70000,
+      shippingCents: 1799,
+      totalCents: 71799,
       customer: {
         name: 'Alex',
         address: '10 Market St',

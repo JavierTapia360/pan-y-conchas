@@ -67,8 +67,8 @@
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 7vw, 4.1rem);
   font-weight: 400;
-  line-height: 0.84;
-  letter-spacing: -0.025em;
+  line-height: var(--display-compact-leading);
+  letter-spacing: 0.008em;
   text-transform: uppercase;
 }
 .catalog-cart-sheet [data-slot='sheet-description'] {
@@ -688,4 +688,19 @@
   .catalog-cart-lines article > a img {
     transition: none;
   }
+}
+
+/* Marketplace display type follows the shared CUATESFARMZ heading rhythm. */
+:is(
+  .catalog-cart-sheet [data-slot='sheet-title'],
+  .catalog-cart-lines article h3,
+  .catalog-cart-empty h3,
+  .catalog-cart-summary strong,
+  .catalog-cart-alert [data-slot='alert-dialog-title'],
+  .catalog-cart-toast strong,
+  .mobile-catalog-cart-bar > div strong
+) {
+  line-height: var(--display-compact-leading);
+  letter-spacing: 0.008em;
+  word-spacing: 0.025em;
 }

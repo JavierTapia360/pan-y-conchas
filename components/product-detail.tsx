@@ -3,12 +3,11 @@
 import Image from 'next/image';
 import Link from '@/components/static-link';
 import { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play, X } from 'lucide-react';
 import type { Product } from '@/data/products';
 import { useLanguage } from '@/components/language-context';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { VideoModal } from '@/components/video-modal';
 import { useCatalog } from '@/hooks/use-catalog';
 import { track } from '@/lib/analytics';
 import { CatalogAddButton } from '@/components/catalog-add-button';
@@ -32,8 +31,15 @@ export function ProductDetail({
   const lightboxDialog = useRef<HTMLDialogElement>(null);
   const lightboxTrigger = useRef<HTMLButtonElement>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoState, setVideoState] = useState<
+    'idle' | 'loading' | 'ready' | 'error'
+  >('idle');
   useBodyScrollLock(lightbox);
-  const activeIndex = active < product.images.length ? active : 0;
+  const mediaLength = product.images.length + (product.video ? 1 : 0);
+  const activeIndex = active < mediaLength ? active : 0;
+  const videoIndex = product.video ? product.images.length : -1;
+  const videoActive = activeIndex === videoIndex;
 
   useEffect(() => {
     if (liveProduct?.hidden) window.location.replace('/flower');
@@ -78,11 +84,24 @@ export function ProductDetail({
     };
   }, [lightbox, product.images.length]);
 
+  useEffect(() => {
+    if (!videoActive) {
+      videoRef.current?.pause();
+    }
+  }, [videoActive]);
+
+  useEffect(() => () => videoRef.current?.pause(), []);
+
   const status = product.available
     ? copy.status.available
     : copy.status.soldOut;
 
   function moveGallery(direction: -1 | 1) {
+    setActive((value) => (value + direction + mediaLength) % mediaLength);
+    track('gallery_interaction', { slug: product.slug, language });
+  }
+
+  function moveLightbox(direction: -1 | 1) {
     setActive(
       (value) =>
         (value + direction + product.images.length) % product.images.length,
@@ -95,10 +114,8 @@ export function ProductDetail({
       <SiteHeader />
       <main className="detail-layout">
         <section className="detail-gallery" aria-label={copy.product.gallery}>
-          <button
-            ref={lightboxTrigger}
-            className="detail-main"
-            onClick={() => setLightbox(true)}
+          <div
+            className={`detail-main ${videoActive ? 'detail-main-video' : ''}`}
             onTouchStart={(event) => {
               const touch = event.touches[0];
               touchStart.current = { x: touch.clientX, y: touch.clientY };
@@ -114,17 +131,63 @@ export function ProductDetail({
                 moveGallery(dx < 0 ? 1 : -1);
             }}
             style={{ viewTransitionName: `product-${product.slug}` }}
-            aria-label={`${copy.product.gallery}: ${product.name}, ${activeIndex + 1}/${product.images.length}`}
           >
-            <Image
-              key={product.images[activeIndex]}
-              src={product.images[activeIndex]}
-              alt={`${product.name} image ${activeIndex + 1}`}
-              fill
-              priority={activeIndex === 0}
-              sizes="(max-width: 900px) 100vw, 58vw"
-            />
-          </button>
+            {videoActive && product.video ? (
+              <>
+                <video
+                  ref={videoRef}
+                  key={product.video}
+                  src={product.video}
+                  poster={product.videoPoster || product.images[0]}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  onLoadStart={() => setVideoState('loading')}
+                  onCanPlay={() => setVideoState('ready')}
+                  onError={() => setVideoState('error')}
+                  onPlay={() =>
+                    track('video_play', { slug: product.slug, language })
+                  }
+                  aria-label={`${product.name} ${copy.product.videoItem}`}
+                >
+                  <track
+                    kind="captions"
+                    src="/assets/video-captions.vtt"
+                    srcLang={language}
+                    label={language === 'es' ? 'Sin diálogo' : 'No dialogue'}
+                    default
+                  />
+                </video>
+                {videoState === 'loading' ? (
+                  <span className="gallery-video-status">
+                    {copy.product.videoLoading}
+                  </span>
+                ) : null}
+                {videoState === 'error' ? (
+                  <span className="gallery-video-error" role="alert">
+                    {copy.actions.videoUnavailable}
+                  </span>
+                ) : null}
+              </>
+            ) : (
+              <button
+                ref={lightboxTrigger}
+                type="button"
+                className="detail-image-open"
+                onClick={() => setLightbox(true)}
+                aria-label={`${copy.product.gallery}: ${product.name}, ${activeIndex + 1}/${mediaLength}`}
+              >
+                <Image
+                  key={product.images[activeIndex]}
+                  src={product.images[activeIndex]}
+                  alt={`${product.name} image ${activeIndex + 1}`}
+                  fill
+                  priority={activeIndex === 0}
+                  sizes="(max-width: 900px) 100vw, 58vw"
+                />
+              </button>
+            )}
+          </div>
           <div className="thumb-rail">
             {product.images.map((image, index) => (
               <button
@@ -142,6 +205,29 @@ export function ProductDetail({
                 <Image src={image} alt="" fill sizes="110px" />
               </button>
             ))}
+            {product.video ? (
+              <button
+                className={`detail-video-thumb ${videoActive ? 'active' : ''}`}
+                onClick={() => {
+                  setActive(videoIndex);
+                  track('gallery_interaction', {
+                    slug: product.slug,
+                    language,
+                  });
+                }}
+                aria-label={`${copy.product.videoItem}: ${product.name}`}
+              >
+                <Image
+                  src={product.videoPoster || product.images[0]}
+                  alt=""
+                  fill
+                  sizes="110px"
+                />
+                <span>
+                  <Play aria-hidden="true" />
+                </span>
+              </button>
+            ) : null}
           </div>
         </section>
 
@@ -169,18 +255,6 @@ export function ProductDetail({
             </strong>
           </div>
           <CatalogAddButton product={product} className="detail-cart-button" />
-
-          {product.video && (
-            <div className="detail-video">
-              <p className="section-kicker">{copy.product.video}</p>
-              <VideoModal
-                src={product.video}
-                poster={product.videoPoster || product.images[0]}
-                label={`${product.name} film`}
-                preview
-              />
-            </div>
-          )}
         </aside>
       </main>
 
@@ -201,7 +275,7 @@ export function ProductDetail({
           </button>
           <button
             className="lightbox-prev"
-            onClick={() => moveGallery(-1)}
+            onClick={() => moveLightbox(-1)}
             aria-label="Previous image"
           >
             <ChevronLeft aria-hidden="true" />
@@ -216,7 +290,7 @@ export function ProductDetail({
           </div>
           <button
             className="lightbox-next"
-            onClick={() => moveGallery(1)}
+            onClick={() => moveLightbox(1)}
             aria-label="Next image"
           >
             <ChevronRight aria-hidden="true" />

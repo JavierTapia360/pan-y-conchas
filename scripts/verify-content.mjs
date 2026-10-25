@@ -29,17 +29,13 @@ const requiredNames = [
   'JELLY DONUT',
   'ZKITTLEZ',
   'FROSTED FUEL',
-  'BUBBLE GUM GELATTO',
+  'BUBBLEGUM GELATO',
   'CEREAL MILK',
 ];
 const absentNames = requiredNames.filter(
   (name) => !products.includes(`name: '${name}'`),
 );
-const forbiddenNames = [
-  'J' + 'OLLY DONUT',
-  'JELLY DONUT' + 'Z',
-  'SKITTLES',
-];
+const forbiddenNames = ['J' + 'OLLY DONUT', 'JELLY DONUT' + 'Z', 'SKITTLES'];
 const oldNames = forbiddenNames.filter((name) =>
   products.toUpperCase().includes(`NAME: '${name}'`),
 );

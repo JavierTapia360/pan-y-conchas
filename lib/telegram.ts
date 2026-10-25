@@ -29,6 +29,8 @@ type TelegramOrder = {
   language: Language;
   lines: TelegramOrderLine[];
   subtotalCents: number;
+  shippingCents: number;
+  totalCents: number;
   customer: TelegramCustomerDetails;
 };
 
@@ -38,6 +40,8 @@ export function buildTelegramOrderText({
   language,
   lines,
   subtotalCents,
+  shippingCents,
+  totalCents,
   customer,
 }: TelegramOrder) {
   const es = language === 'es';
@@ -54,6 +58,8 @@ export function buildTelegramOrderText({
     ...productLines,
     '',
     `${es ? 'SUBTOTAL' : 'SUBTOTAL'}: ${money(subtotalCents)}`,
+    `${es ? 'ENVÍO' : 'SHIPPING'}: ${money(shippingCents)}`,
+    `${es ? 'TOTAL' : 'TOTAL'}: ${money(totalCents)}`,
     '',
     es ? 'DATOS DE ENTREGA' : 'DELIVERY DETAILS',
     `${es ? 'Nombre' : 'Name'}: ${customer.name}`,

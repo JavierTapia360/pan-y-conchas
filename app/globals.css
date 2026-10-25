@@ -46,6 +46,10 @@
   --card-border: var(--line);
   --hero-title-outline: var(--brand-black);
   --section-space: clamp(80px, 10vw, 160px);
+  --display-heading-tracking: 0.012em;
+  --display-heading-word-spacing: 0.04em;
+  --display-heading-leading: 0.96;
+  --display-compact-leading: 1;
 }
 * {
   box-sizing: border-box;
@@ -367,8 +371,8 @@ select:focus-visible {
   font-family: var(--font-display), Impact, sans-serif;
   font-size: clamp(4.4rem, 8.6vw, 9.5rem);
   font-weight: 400;
-  line-height: 0.87;
-  letter-spacing: -0.025em;
+  line-height: var(--display-heading-leading);
+  letter-spacing: var(--display-heading-tracking);
   text-transform: uppercase;
   text-wrap: balance;
   -webkit-text-stroke: clamp(1.5px, 0.13vw, 2.25px) var(--hero-title-outline);
@@ -526,7 +530,7 @@ select:focus-visible {
   gap: 20px;
   font-family: var(--font-display);
   font-size: clamp(3.8rem, 8vw, 8.5rem);
-  line-height: 0.86;
+  line-height: var(--display-heading-leading);
   text-transform: uppercase;
   transition:
     color 0.2s,
@@ -1465,8 +1469,8 @@ body {
   font-family: var(--font-display);
   font-size: clamp(3.5rem, 7vw, 7.6rem);
   font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: -0.02em;
+  line-height: var(--display-heading-leading);
+  letter-spacing: var(--display-heading-tracking);
   text-transform: uppercase;
 }
 .section-heading > p {
@@ -1547,7 +1551,7 @@ body {
 .category-strip strong {
   font-family: var(--font-display);
   font-size: clamp(4rem, 8vw, 8rem);
-  line-height: 0.8;
+  line-height: var(--display-heading-leading);
   font-weight: 400;
 }
 .category-strip b {
@@ -1939,8 +1943,8 @@ body {
   font-family: var(--font-display);
   font-size: clamp(7rem, 20vw, 22rem);
   font-weight: 400;
-  line-height: 0.7;
-  letter-spacing: -0.04em;
+  line-height: var(--display-heading-leading);
+  letter-spacing: var(--display-heading-tracking);
 }
 .brand-statement > div > p {
   max-width: 610px;
@@ -2128,9 +2132,9 @@ body {
   font-family: var(--font-display);
   font-size: clamp(5.5rem, 16vw, 16rem);
   font-weight: 400;
-  line-height: 0.78;
+  line-height: var(--display-heading-leading);
   text-transform: uppercase;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--display-heading-tracking);
 }
 .page-hero h1 {
   width: fit-content;
@@ -2234,7 +2238,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(5rem, 10vw, 10rem);
   font-weight: 400;
-  line-height: 0.8;
+  line-height: var(--display-heading-leading);
   text-transform: uppercase;
 }
 .detail-copy h1::after {
@@ -2467,7 +2471,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(7rem, 16vw, 16rem);
   font-weight: 400;
-  line-height: 0.75;
+  line-height: var(--display-heading-leading);
   text-transform: uppercase;
   color: #fff;
 }
@@ -2475,7 +2479,7 @@ body {
   margin: 32px 0 18px;
   color: #d6aa48;
   font-size: clamp(1.6rem, 3vw, 3.2rem);
-  letter-spacing: -0.03em;
+  letter-spacing: 0.01em;
 }
 .wax-hero p:not(.section-kicker) {
   max-width: 510px;
@@ -2529,7 +2533,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(3rem, 5vw, 4.8rem);
   font-weight: 400;
-  line-height: 0.85;
+  line-height: var(--display-compact-leading);
 }
 .wax-purchase-price span {
   color: #b9b2b2;
@@ -2671,7 +2675,7 @@ body {
 .about-page header h1 {
   max-width: 1250px;
   font-size: clamp(4.5rem, 9vw, 9rem);
-  line-height: 0.84;
+  line-height: var(--display-heading-leading);
 }
 .about-page header > p:last-child,
 .contact-page header > p:not(.section-kicker),
@@ -2712,7 +2716,7 @@ body {
 .about-editorial > div {
   font-size: clamp(1.45rem, 2.8vw, 3rem);
   line-height: 1.35;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.005em;
 }
 .contact-page {
   max-width: 1600px;
@@ -2902,7 +2906,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(4rem, 9vw, 9rem);
   font-weight: 400;
-  line-height: 0.85;
+  line-height: var(--display-heading-leading);
   text-transform: uppercase;
 }
 .empty-drop p {
@@ -3242,7 +3246,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(4rem, 7vw, 7rem);
   font-weight: 400;
-  line-height: 0.85;
+  line-height: var(--display-heading-leading);
   text-transform: uppercase;
 }
 .admin-main > header > span {
@@ -3346,7 +3350,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 4vw, 4.4rem);
   font-weight: 400;
-  line-height: 0.88;
+  line-height: var(--display-compact-leading);
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
@@ -4034,7 +4038,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(4rem, 10vw, 9rem);
   font-weight: 400;
-  line-height: 0.85;
+  line-height: var(--display-heading-leading);
   text-transform: uppercase;
 }
 .admin-login small {
@@ -4069,7 +4073,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(5rem, 13vw, 12rem);
   font-weight: 400;
-  line-height: 0.85;
+  line-height: var(--display-heading-leading);
   text-transform: uppercase;
 }
 .not-found p {
@@ -4476,7 +4480,7 @@ body {
   .admin-main > header h1 {
     max-width: 100%;
     font-size: clamp(3.5rem, 17vw, 4.5rem);
-    line-height: 0.88;
+    line-height: var(--display-heading-leading);
     overflow-wrap: anywhere;
   }
   .admin-notice {
@@ -5111,8 +5115,8 @@ body {
   font-family: var(--font-display);
   font-size: clamp(5rem, 12vw, 12rem);
   font-weight: 400;
-  line-height: 0.8;
-  letter-spacing: -0.035em;
+  line-height: var(--display-heading-leading);
+  letter-spacing: var(--display-heading-tracking);
   text-transform: uppercase;
 }
 .catalog-summary-page > header > p:last-child {
@@ -6188,8 +6192,8 @@ html.gf-scroll-locked body {
   font-family: var(--font-display);
   font-size: clamp(3.6rem, 7vw, 7.5rem) !important;
   font-weight: 400;
-  line-height: .9;
-  letter-spacing: -.04em;
+  line-height: var(--display-heading-leading);
+  letter-spacing: var(--display-heading-tracking);
   text-transform: uppercase;
 }
 
@@ -6278,4 +6282,292 @@ html.gf-scroll-locked body {
     font-size: clamp(9px, 3vw, 12px);
     white-space: nowrap;
   }
+}
+
+/* Shared display typography: preserve Anton while giving large editorial
+   titles enough air to render cleanly in both languages and every viewport. */
+:is(
+  .hero h1,
+  .age-panel h2,
+  .menu-overlay nav a,
+  .wax-coming-soon h3,
+  .section-heading h2,
+  .film-copy h2,
+  .wax-copy h2,
+  .newsletter-section h2,
+  .faq-section h2,
+  .category-strip strong,
+  .brand-statement h2,
+  .page-hero h1,
+  .about-page h1,
+  .contact-page h1,
+  .merch-page h1,
+  .cart-page > h1,
+  .checkout-page > h1,
+  .legal-page > h1,
+  .detail-copy h1,
+  .wax-hero h1,
+  .contact-success h2,
+  .empty-drop h2,
+  .admin-main > header h1,
+  .admin-login h1,
+  .not-found h1,
+  .catalog-summary-page > header h1,
+  .catalog-summary-empty h2,
+  .admin-wax-card h2,
+  .wax-arriving
+) {
+  max-width: 100%;
+  line-height: var(--display-heading-leading);
+  letter-spacing: var(--display-heading-tracking);
+  word-spacing: var(--display-heading-word-spacing);
+  overflow-wrap: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+:is(
+  .admin-section-title > span,
+  .admin-section-title h3,
+  .admin-metric-cards strong,
+  .admin-metric-lists h2,
+  .admin-messages article h2,
+  .sold-overlay,
+  .product-meta h3,
+  .brand-marquee div,
+  .wax-purchase-price strong,
+  .merch-card-copy h2,
+  .cart-items h2,
+  .admin-product-form-header h2,
+  .admin-analytics h2,
+  .admin-toolbar h2,
+  .admin-editor-head h2,
+  .admin-editor-fields > h3,
+  .admin-media-editor h3,
+  .admin-preview-card h3,
+  .catalog-summary-items article strong,
+  .catalog-summary-total strong,
+  .admin-wax-packages strong
+) {
+  line-height: var(--display-compact-leading);
+  letter-spacing: 0.008em;
+  word-spacing: 0.025em;
+}
+
+@media (max-width: 700px) {
+  :is(
+    .page-hero h1,
+    .contact-page h1,
+    .merch-page h1,
+    .cart-page > h1,
+    .checkout-page > h1,
+    .legal-page > h1,
+    .catalog-summary-page > header h1
+  ) {
+    font-size: clamp(4rem, 20vw, 8rem);
+  }
+
+  .about-page header h1 {
+    font-size: clamp(3rem, 13vw, 4.5rem);
+  }
+
+  .detail-copy h1 {
+    font-size: clamp(4.25rem, 20vw, 7rem);
+  }
+
+  .wax-hero h1 {
+    font-size: clamp(5.25rem, 27vw, 8rem);
+  }
+
+  .brand-statement h2 {
+    font-size: clamp(5.5rem, 27vw, 9rem);
+  }
+}
+/* Promotion bundle, mixed-media galleries, and exact cart totals. */
+.promotion-dialog {
+  position: fixed;
+  z-index: 10020;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: max(18px, env(safe-area-inset-top)) 18px
+    max(18px, env(safe-area-inset-bottom));
+  border: 0;
+  background: rgb(0 0 0 / 0.78);
+  overflow: auto;
+}
+
+.promotion-dialog-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 620px) minmax(260px, 400px);
+  width: min(1020px, 100%);
+  margin: auto;
+  background: #fff;
+  color: #080808;
+}
+
+.promotion-dialog-panel > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.promotion-dialog-close {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  background: #050505;
+  color: #fff;
+}
+
+.promotion-dialog-close svg { width: 20px; }
+
+.promotion-dialog-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  padding: clamp(28px, 5vw, 64px);
+}
+
+.promotion-dialog-copy > p,
+.promotion-detail-badge,
+.promotion-badge {
+  color: #ee1c25;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.promotion-dialog-copy h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.7rem, 6vw, 5.7rem);
+  line-height: 0.96;
+  letter-spacing: var(--display-heading-tracking);
+}
+
+.promotion-dialog-copy nav { display: grid; gap: 10px; margin-top: 8px; }
+.promotion-dialog-copy .button { justify-content: center; }
+
+.promotion-card { --product-accent: #ee1c25; }
+.promotion-card .product-image { aspect-ratio: 1; }
+.promotion-card .product-image img { object-fit: contain; }
+.promotion-badge {
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  left: 14px;
+  padding: 8px 10px;
+  background: #fff;
+}
+.promotion-card-description { max-width: 38ch; margin: 8px 0; }
+.promotion-card-price { display: block; font-size: 1.2rem; margin-bottom: 9px; }
+
+.promotion-detail-image { aspect-ratio: 1; min-height: 0; background: #f8f5f0; }
+.promotion-detail-image img { object-fit: contain; }
+.promotion-components { display: grid; gap: 0; margin: 6px 0 20px; padding: 0; list-style: none; border-top: 1px solid #ccc; }
+.promotion-components li { display: flex; justify-content: space-between; gap: 18px; padding: 14px 0; border-bottom: 1px solid #ccc; }
+.promotion-price-block { display: grid; gap: 7px; margin: 2px 0 24px; }
+.promotion-price-block > span,
+.promotion-price-block > small { font-size: 0.76rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.promotion-price-block > strong { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5.2rem); line-height: .98; }
+.promotion-price-block > small { color: #16843e; }
+
+.detail-main-video { background: #050505; }
+.detail-main-video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #050505;
+}
+.detail-image-open {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+.detail-video-thumb { position: relative; overflow: hidden; }
+.detail-video-thumb > span {
+  position: absolute;
+  z-index: 2;
+  inset: 50% auto auto 50%;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #ee1c25;
+  color: #fff;
+}
+.detail-video-thumb svg { width: 18px; fill: currentColor; }
+.gallery-video-status,
+.gallery-video-error {
+  position: absolute;
+  z-index: 3;
+  left: 16px;
+  bottom: 16px;
+  padding: 10px 12px;
+  background: rgb(0 0 0 / 0.82);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 800;
+}
+.gallery-video-error { background: #9d1117; }
+
+.catalog-cart-summary,
+.catalog-summary-total {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 8px 20px;
+}
+.catalog-cart-summary .catalog-grand-total,
+.catalog-summary-total .catalog-grand-total {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid currentColor;
+  font-size: 1.12em;
+  font-weight: 900;
+}
+
+.admin-promotion-card { padding: clamp(18px, 3vw, 36px); background: #fff; border: 1px solid #d8d8d8; }
+.admin-promotion-card > header { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 26px; }
+.admin-promotion-card h2 { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 5rem); line-height: .98; }
+.admin-promotion-layout { display: grid; grid-template-columns: minmax(260px, 480px) 1fr; gap: clamp(22px, 4vw, 56px); align-items: start; }
+.admin-promotion-layout > img { width: 100%; height: auto; }
+.admin-promotion-layout > div { display: grid; gap: 14px; }
+.admin-promotion-layout label > span { display: block; margin-bottom: 8px; font-size: .72rem; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
+.admin-promotion-layout input[type='number'] { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #aaa; }
+.admin-promotion-flags { display: flex; flex-wrap: wrap; gap: 14px 22px; padding: 16px 0; }
+.admin-promotion-flags label { display: flex; gap: 8px; align-items: center; font-weight: 800; }
+
+@media (max-width: 760px) {
+  .promotion-dialog { padding-inline: 10px; }
+  .promotion-dialog-panel { grid-template-columns: 1fr; }
+  .promotion-dialog-copy { padding: 24px 20px; }
+  .promotion-dialog-copy h2 { font-size: clamp(2.4rem, 15vw, 4rem); }
+  .promotion-dialog-copy nav { grid-template-columns: 1fr 1fr; }
+  .promotion-dialog-copy .button { padding-inline: 10px; font-size: .75rem; }
+  .admin-promotion-layout { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promotion-dialog, .promotion-dialog-panel { animation: none !important; transition: none !important; }
 }

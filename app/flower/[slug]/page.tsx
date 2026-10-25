@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProductDetail } from '@/components/product-detail';
 import { products } from '@/data/products';
+import { PROMOTION_SLUG, promotionDefaults } from '@/data/promotion';
+import { PromotionDetail } from '@/components/promotion-detail';
 
 export function generateStaticParams() {
-  return products.map(({ slug }) => ({ slug }));
+  return [...products.map(({ slug }) => ({ slug })), { slug: PROMOTION_SLUG }];
 }
 export async function generateMetadata({
   params,
@@ -12,6 +14,14 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  if (slug === PROMOTION_SLUG) {
+    return {
+      title: promotionDefaults.names.en,
+      description: promotionDefaults.descriptions.en,
+      alternates: { canonical: `/flower/${PROMOTION_SLUG}` },
+      openGraph: { images: [{ url: promotionDefaults.image }] },
+    };
+  }
   const product = products.find((item) => item.slug === slug);
   if (!product) return {};
   return {
@@ -37,6 +47,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  if (slug === PROMOTION_SLUG) return <PromotionDetail />;
   const product = products.find((item) => item.slug === slug);
   if (!product || product.hidden) notFound();
   return <ProductDetail product={product} />;

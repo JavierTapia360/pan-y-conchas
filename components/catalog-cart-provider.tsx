@@ -15,12 +15,16 @@ import {
   isCatalogPresentation,
   isCatalogPresentationAvailable,
   toCatalogCartProduct,
+  toPromotionCartProduct,
   type CatalogCartProduct,
   type CatalogPresentation,
 } from '@/data/catalog-cart';
 import { useCatalog } from '@/hooks/use-catalog';
 import { useWaxProduct } from '@/hooks/use-wax-product';
 import { track } from '@/lib/analytics';
+import { usePromotionStore } from '@/components/promotion-provider';
+import { useLanguage } from '@/components/language-context';
+import { calculateShippingCents } from '@/lib/shipping';
 
 export type CatalogCartItem = {
   slug: string;
@@ -106,6 +110,8 @@ const CatalogCartContext = createContext<{
   products: CatalogCartProduct[];
   count: number;
   subtotalCents: number;
+  shippingCents: number;
+  totalCents: number;
   open: boolean;
   notice: CatalogCartNotice | null;
   setOpen: (open: boolean) => void;
@@ -130,9 +136,15 @@ export function CatalogCartProvider({
 }) {
   const catalogProducts = useCatalog();
   const waxProduct = useWaxProduct();
+  const { promotion } = usePromotionStore();
+  const { language } = useLanguage();
   const products = useMemo<CatalogCartProduct[]>(
-    () => [...catalogProducts.map(toCatalogCartProduct), { ...waxProduct }],
-    [catalogProducts, waxProduct],
+    () => [
+      ...catalogProducts.map(toCatalogCartProduct),
+      toPromotionCartProduct(promotion, language, catalogProducts),
+      { ...waxProduct },
+    ],
+    [catalogProducts, language, promotion, waxProduct],
   );
   const [items, setItems] = useState<CatalogCartItem[]>([]);
   const [open, setOpen] = useState(false);
@@ -309,11 +321,14 @@ export function CatalogCartProvider({
           item.quantity
       );
     }, 0);
+    const shippingCents = calculateShippingCents(items);
     return {
       items,
       products,
       count,
       subtotalCents,
+      shippingCents,
+      totalCents: subtotalCents + shippingCents,
       open,
       notice,
       setOpen,

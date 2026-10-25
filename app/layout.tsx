@@ -7,6 +7,8 @@ import { CatalogCartProvider } from '@/components/catalog-cart-provider';
 import { CatalogCartToast } from '@/components/catalog-cart-toast';
 import { AnalyticsProvider } from '@/components/analytics-provider';
 import { CatalogProvider } from '@/components/catalog-provider';
+import { PromotionProvider } from '@/components/promotion-provider';
+import { PromotionModal } from '@/components/promotion-modal';
 import './globals.css';
 import './marketplace.css';
 
@@ -45,17 +47,20 @@ export default function RootLayout({
         </noscript>
         <LanguageProvider>
           <CatalogProvider>
-            <CartProvider>
-              <CatalogCartProvider>
-                <a className="skip-link" href="#page-content">
-                  Skip to content
-                </a>
-                <AgeGate />
-                <AnalyticsProvider />
-                <div id="page-content">{children}</div>
-                <CatalogCartToast />
-              </CatalogCartProvider>
-            </CartProvider>
+            <PromotionProvider>
+              <CartProvider>
+                <CatalogCartProvider>
+                  <a className="skip-link" href="#page-content">
+                    Skip to content
+                  </a>
+                  <AgeGate />
+                  <PromotionModal />
+                  <AnalyticsProvider />
+                  <div id="page-content">{children}</div>
+                  <CatalogCartToast />
+                </CatalogCartProvider>
+              </CartProvider>
+            </PromotionProvider>
           </CatalogProvider>
         </LanguageProvider>
       </body>
