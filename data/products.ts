@@ -116,7 +116,7 @@ export const products: Product[] = [
       es: ['HÍBRIDA', 'DULCE', 'EUFORIA', 'RELAJACIÓN', 'CREATIVIDAD'],
     },
     featured: true,
-    hidden: false,
+    hidden: true,
     sortOrder: 3,
   },
   {

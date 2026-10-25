@@ -158,10 +158,11 @@ export function normalizeLocalProduct(
       typeof candidate.featured === 'boolean'
         ? candidate.featured
         : fallback.featured,
-    hidden:
-      typeof candidate.hidden === 'boolean'
+    hidden: fallback.hidden
+      ? true
+      : typeof candidate.hidden === 'boolean'
         ? candidate.hidden
-        : fallback.hidden,
+        : false,
     sortOrder:
       typeof candidate.updatedAt === 'string' &&
       Number.isInteger(candidate.sortOrder) &&

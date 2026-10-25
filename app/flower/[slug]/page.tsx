@@ -6,7 +6,12 @@ import { PROMOTION_SLUG, promotionDefaults } from '@/data/promotion';
 import { PromotionDetail } from '@/components/promotion-detail';
 
 export function generateStaticParams() {
-  return [...products.map(({ slug }) => ({ slug })), { slug: PROMOTION_SLUG }];
+  return [
+    ...products
+      .filter((product) => !product.hidden)
+      .map(({ slug }) => ({ slug })),
+    { slug: PROMOTION_SLUG },
+  ];
 }
 export async function generateMetadata({
   params,
