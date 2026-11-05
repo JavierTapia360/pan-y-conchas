@@ -4,18 +4,19 @@ import Image from 'next/image';
 import Link from '@/components/static-link';
 import { ShoppingBag } from 'lucide-react';
 import { useLanguage } from '@/components/language-context';
-import { usePromotionStore } from '@/components/promotion-provider';
 import { useCatalog } from '@/hooks/use-catalog';
 import { useCatalogCart } from '@/components/catalog-cart-provider';
 import {
   isPromotionComponentsAvailable,
   toPromotionCartProduct,
 } from '@/data/catalog-cart';
-import { PROMOTION_PRESENTATION } from '@/data/promotion';
+import {
+  PROMOTION_PRESENTATION,
+  type PromotionSettings,
+} from '@/data/promotion';
 
-export function PromotionCard() {
+export function PromotionCard({ promotion }: { promotion: PromotionSettings }) {
   const { language, copy } = useLanguage();
-  const { promotion } = usePromotionStore();
   const products = useCatalog();
   const { add } = useCatalogCart();
   const item = toPromotionCartProduct(promotion, language, products);

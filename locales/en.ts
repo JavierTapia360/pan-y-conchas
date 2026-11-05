@@ -8,7 +8,7 @@ export const en = {
     menu: 'Open menu',
     close: 'Close menu',
   },
-  announcement: 'Standard shipping $17.99 · Super Promotion ships free',
+  announcement: 'Standard shipping $17 · Select promotions include shipping',
   language: {
     label: 'Language',
     select: 'Select language',
@@ -56,6 +56,9 @@ export const en = {
     waxCta: 'Explore wax',
     heroAlt: 'CUATESFARMZ Exclusive Drop & Wax campaign',
     categories: 'Shop the culture',
+    promotionsTitle: 'Promotions',
+    previousPromotion: 'Previous promotion',
+    nextPromotion: 'Next promotion',
     featuredKicker: 'Fresh rotation',
     featured: 'Exclusive Drop',
     featuredBody: 'Six visual worlds. One unmistakable point of view.',
@@ -70,7 +73,8 @@ export const en = {
     brandBody:
       'CUATESFARMZ is a visual world built around the plant: bold, open, expressive and always moving.',
     newsletterTitle: 'STAY INFORMED.',
-    newsletterBody: 'Stay tuned for all updates about our upcoming products.',
+    newsletterBody:
+      'Get updates on drops, availability, promotions and upcoming CUATESFARMZ releases. A space to stay current with new strains, visuals and catalog updates.',
     email: 'Email address',
     join: 'Join the list',
     consent: 'I agree to receive general CUATESFARMZ updates.',
@@ -110,9 +114,9 @@ export const en = {
     title: 'CULTIVATING DREAMS, HARVESTING THE EXTRAORDINARY',
     lead: 'CUATESFARMZ brings premium product imagery together with a street-level graphic voice.',
     blockOne:
-      'CUATESFARMZ builds a visual identity that is direct, urban, and instantly recognizable. Every drop combines curated selection, bold design, and clear presentation so the experience stays simple, visual, and consistent.',
+      'CUATESFARMZ presents a curated selection of flower and wax with a direct, clean and recognizable visual identity. Each drop is built as its own visual experience: selected strains, exclusive materials and an editorial presentation that puts the product at the center.',
     blockTwo:
-      'From our flower lineup to special editions, the entire catalog follows the same direction: quality, character, and an aesthetic that speaks for itself.',
+      'The catalog evolves seasonally through limited releases, special promotions and a clear relationship between aesthetics, availability and novelty.',
     note: 'GOOD PLANTS. BETTER DAYS.',
   },
   contact: {

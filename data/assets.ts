@@ -74,6 +74,17 @@ export const assets = {
     ],
     video: `${root}/flower/new-videos/cereal-milk.mp4`,
   },
+  whiteGummies: {
+    images: [
+      `${root}/flower/white-gummies/principal.png`,
+      `${root}/flower/white-gummies/photo-01.jpg`,
+      `${root}/flower/white-gummies/photo-02.jpg`,
+      `${root}/flower/white-gummies/photo-03.jpg`,
+      `${root}/flower/white-gummies/photo-04.jpg`,
+      `${root}/flower/white-gummies/photo-05.jpg`,
+    ],
+    video: `${root}/flower/new-videos/white-gummies.mp4`,
+  },
   wax: {
     images: [
       `${root}/wax/new/front.png`,
@@ -84,6 +95,8 @@ export const assets = {
     ],
   },
   promotion: {
-    cerealBubblegum: `${root}/promotion/promo_cereal_milk_bubblegum_gelato_170_12.png`,
+    cerealBubblegum: `${root}/promotion/promo_cereal_milk_bubblegum_gelato_127_34.png`,
+    cerealWhiteGummiesBubblegum: `${root}/promotion/promo_cereal_white_gummies_bubblegum_249_49.png`,
+    cerealWhiteGummiesJelly: `${root}/promotion/promo_cereal_white_gummies_jelly_461_99.png`,
   },
 } as const;

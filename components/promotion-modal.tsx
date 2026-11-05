@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import Link from '@/components/static-link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import {
   AGE_ALTERNATE_STORAGE_KEY,
   AGE_STORAGE_KEY,
@@ -17,23 +17,32 @@ import { isPromotionComponentsAvailable } from '@/data/catalog-cart';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { shouldShowPromotion } from '@/lib/promotion-visibility';
 
-export const PROMOTION_SESSION_KEY = 'gf_promo_seen_session_v1';
+export const PROMOTION_SESSION_KEY = 'gf_promo_seen_session_v2';
 
 export function PromotionModal() {
   const { language } = useLanguage();
-  const { promotion } = usePromotionStore();
+  const { promotions } = usePromotionStore();
   const products = useCatalog();
   const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
   const reduceMotion = useReducedMotion();
   useBodyScrollLock(open);
 
-  const componentsAvailable = isPromotionComponentsAvailable(
-    promotion,
-    products,
+  const visiblePromotions = useMemo(
+    () =>
+      promotions.filter(
+        (promotion) =>
+          promotion.active &&
+          promotion.available &&
+          !promotion.hidden &&
+          isPromotionComponentsAvailable(promotion, products),
+      ),
+    [products, promotions],
   );
+  const promotion = visiblePromotions[activeIndex] || visiblePromotions[0];
 
   useEffect(() => {
     const evaluate = () => {
@@ -51,9 +60,9 @@ export function PromotionModal() {
         shouldShowPromotion({
           ageVerified,
           seen,
-          active: promotion.active,
-          available: promotion.available && componentsAvailable,
-          hidden: promotion.hidden,
+          active: visiblePromotions.length > 0,
+          available: visiblePromotions.length > 0,
+          hidden: false,
         })
       ) {
         try {
@@ -62,6 +71,7 @@ export function PromotionModal() {
           /* Session storage is optional. */
         }
         previousFocus.current = document.activeElement as HTMLElement | null;
+        setActiveIndex(0);
         setOpen(true);
       }
     };
@@ -71,12 +81,15 @@ export function PromotionModal() {
       window.cancelAnimationFrame(frame);
       window.removeEventListener(AGE_VERIFIED_EVENT, evaluate);
     };
-  }, [
-    componentsAvailable,
-    promotion.active,
-    promotion.available,
-    promotion.hidden,
-  ]);
+  }, [visiblePromotions.length]);
+
+  useEffect(() => {
+    if (!open || reduceMotion || visiblePromotions.length < 2) return;
+    const interval = window.setInterval(() => {
+      setActiveIndex((index) => (index + 1) % visiblePromotions.length);
+    }, 4800);
+    return () => window.clearInterval(interval);
+  }, [open, reduceMotion, visiblePromotions.length]);
 
   useEffect(() => {
     if (!open) return;
@@ -115,6 +128,12 @@ export function PromotionModal() {
 
   const closeLabel = language === 'es' ? 'CERRAR' : 'CLOSE';
   const viewLabel = language === 'es' ? 'VER PROMOCIÓN' : 'VIEW OFFER';
+  const previousLabel =
+    language === 'es' ? 'PROMOCIÓN ANTERIOR' : 'PREVIOUS OFFER';
+  const nextLabel =
+    language === 'es' ? 'SIGUIENTE PROMOCIÓN' : 'NEXT OFFER';
+
+  if (!promotion) return null;
 
   return (
     <AnimatePresence>
@@ -145,21 +164,89 @@ export function PromotionModal() {
             >
               <X aria-hidden="true" />
             </button>
-            <Image
-              src={promotion.image}
-              alt={`${promotion.names[language]}: ${promotion.descriptions[language]}`}
-              width={1254}
-              height={1254}
-              priority
-            />
-            <div className="promotion-dialog-copy">
-              <p>
-                {language === 'es'
-                  ? 'OFERTA POR TIEMPO LIMITADO'
-                  : 'LIMITED-TIME OFFER'}
-              </p>
-              <h2 id="promotion-dialog-title">{promotion.names[language]}</h2>
-              <span>{promotion.descriptions[language]}</span>
+            <div className="promotion-dialog-media">
+              <AnimatePresence initial={false} mode="wait">
+                <motion.div
+                  key={promotion.slug}
+                  initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -14 }}
+                  transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Image
+                    src={promotion.image}
+                    alt={`${promotion.names[language]}: ${promotion.descriptions[language]}`}
+                    width={1254}
+                    height={1254}
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <div className="promotion-dialog-copy" aria-live="polite">
+              <div>
+                <p>
+                  {language === 'es'
+                    ? 'OFERTA POR TIEMPO LIMITADO'
+                    : 'LIMITED-TIME OFFER'}
+                </p>
+                <span className="promotion-dialog-count">
+                  {activeIndex + 1} / {visiblePromotions.length}
+                </span>
+              </div>
+              <AnimatePresence initial={false} mode="wait">
+                <motion.div
+                  className="promotion-dialog-message"
+                  key={`${promotion.slug}-${language}`}
+                  initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
+                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <h2 id="promotion-dialog-title">
+                    {promotion.names[language]}
+                  </h2>
+                  <span>{promotion.descriptions[language]}</span>
+                </motion.div>
+              </AnimatePresence>
+              <div className="promotion-dialog-pagination">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveIndex(
+                      (index) =>
+                        (index - 1 + visiblePromotions.length) %
+                        visiblePromotions.length,
+                    )
+                  }
+                  aria-label={previousLabel}
+                >
+                  <ChevronLeft aria-hidden="true" />
+                </button>
+                <div aria-label={`${activeIndex + 1} / ${visiblePromotions.length}`}>
+                  {visiblePromotions.map((item, index) => (
+                    <button
+                      key={item.slug}
+                      type="button"
+                      className={index === activeIndex ? 'active' : ''}
+                      onClick={() => setActiveIndex(index)}
+                      aria-label={`${language === 'es' ? 'Ver promoción' : 'View offer'} ${index + 1}`}
+                      aria-current={index === activeIndex ? 'true' : undefined}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveIndex(
+                      (index) => (index + 1) % visiblePromotions.length,
+                    )
+                  }
+                  aria-label={nextLabel}
+                >
+                  <ChevronRight aria-hidden="true" />
+                </button>
+              </div>
               <nav>
                 <Link
                   className="button button-red"

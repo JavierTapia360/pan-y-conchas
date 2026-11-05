@@ -8,7 +8,7 @@ export const es = {
     menu: 'Abrir menú',
     close: 'Cerrar menú',
   },
-  announcement: 'Envío estándar $17.99 · La Super Promoción incluye envío',
+  announcement: 'Envío estándar $17 · Promociones seleccionadas incluyen envío',
   language: {
     label: 'Idioma',
     select: 'Seleccionar idioma',
@@ -57,6 +57,9 @@ export const es = {
     waxCta: 'Ver wax',
     heroAlt: 'Campaña Exclusive Drop y Wax de CUATESFARMZ',
     categories: 'Explora la cultura',
+    promotionsTitle: 'Promociones',
+    previousPromotion: 'Promoción anterior',
+    nextPromotion: 'Promoción siguiente',
     featuredKicker: 'Rotación actual',
     featured: 'Exclusive Drop',
     featuredBody: 'Seis universos visuales. Un punto de vista inconfundible.',
@@ -72,7 +75,7 @@ export const es = {
       'CUATESFARMZ es un universo visual construido alrededor de la planta: audaz, abierto, expresivo y siempre en movimiento.',
     newsletterTitle: 'Mantente bien informado.',
     newsletterBody:
-      'Mantente atento a toda la información de nuestros futuros productos.',
+      'Recibe novedades sobre drops, disponibilidad, promociones y próximos lanzamientos de CUATESFARMZ. Un espacio para mantenerte al día con nuevas variedades, visuales y actualizaciones del catálogo.',
     email: 'Correo electrónico',
     join: 'Unirme a la lista',
     consent: 'Acepto recibir novedades generales de CUATESFARMZ.',
@@ -112,9 +115,9 @@ export const es = {
     title: 'CULTIVANDO SUEÑOS, COSECHANDO LO EXTRAORDINARIO',
     lead: 'CUATESFARMZ une fotografía premium de producto con una voz gráfica nacida en la calle.',
     blockOne:
-      'CUATESFARMZ construye una identidad visual directa, urbana y fácil de reconocer. Cada lanzamiento combina selección curada, diseño contundente y una presentación clara para que la experiencia sea simple, visual y consistente.',
+      'CUATESFARMZ presenta una selección curada de flores y wax con una identidad visual directa, limpia y reconocible. Cada drop está planteado como una experiencia visual propia: variedades seleccionadas, materiales exclusivos y una presentación editorial que pone el producto al centro.',
     blockTwo:
-      'Desde nuestras flores hasta nuestras ediciones especiales, todo el catálogo sigue una misma línea: calidad, carácter y una estética que habla por sí sola.',
+      'El catálogo evoluciona por temporadas, con lanzamientos limitados, promociones especiales y una comunicación clara entre estética, disponibilidad y novedad.',
     note: 'BUENAS PLANTAS. MEJORES DÍAS.',
   },
   contact: {

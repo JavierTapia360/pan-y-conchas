@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProductDetail } from '@/components/product-detail';
 import { products } from '@/data/products';
-import { PROMOTION_SLUG, promotionDefaults } from '@/data/promotion';
+import { getPromotion, promotions } from '@/data/promotion';
 import { PromotionDetail } from '@/components/promotion-detail';
 
 export function generateStaticParams() {
@@ -10,7 +10,9 @@ export function generateStaticParams() {
     ...products
       .filter((product) => !product.hidden)
       .map(({ slug }) => ({ slug })),
-    { slug: PROMOTION_SLUG },
+    ...promotions
+      .filter((promotion) => promotion.active && !promotion.hidden)
+      .map(({ slug }) => ({ slug })),
   ];
 }
 export async function generateMetadata({
@@ -19,12 +21,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  if (slug === PROMOTION_SLUG) {
+  const promotion = getPromotion(slug);
+  if (promotion) {
     return {
-      title: promotionDefaults.names.en,
-      description: promotionDefaults.descriptions.en,
-      alternates: { canonical: `/flower/${PROMOTION_SLUG}` },
-      openGraph: { images: [{ url: promotionDefaults.image }] },
+      title: promotion.names.en,
+      description: promotion.descriptions.en,
+      alternates: { canonical: `/flower/${promotion.slug}` },
+      openGraph: { images: [{ url: promotion.image }] },
     };
   }
   const product = products.find((item) => item.slug === slug);
@@ -52,7 +55,8 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  if (slug === PROMOTION_SLUG) return <PromotionDetail />;
+  const promotion = getPromotion(slug);
+  if (promotion) return <PromotionDetail slug={promotion.slug} />;
   const product = products.find((item) => item.slug === slug);
   if (!product || product.hidden) notFound();
   return <ProductDetail product={product} />;

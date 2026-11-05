@@ -186,6 +186,27 @@ export const products: Product[] = [
     hidden: false,
     sortOrder: 5,
   },
+  {
+    slug: 'white-gummies',
+    name: 'WHITE GUMMIES',
+    stocks: initialStocks(10),
+    available: true,
+    updatedAt: null,
+    prices: { halfOz: 6499, oz: 11999, qp: 32250 },
+    accent: 'candy',
+    images: assets.whiteGummies.images,
+    cardImage: assets.whiteGummies.images[0],
+    video: assets.whiteGummies.video,
+    videoPoster: assets.whiteGummies.images[0],
+    description: {
+      en: 'A bright, candy-inspired identity paired with a close-up flower study and its own official CUATESFARMZ film.',
+      es: 'Una identidad luminosa inspirada en dulces, acompañada por un estudio cercano de la flor y su propia película oficial de CUATESFARMZ.',
+    },
+    attributes: { en: [], es: [] },
+    featured: true,
+    hidden: false,
+    sortOrder: 6,
+  },
 ];
 
 export function getProduct(slug: string) {

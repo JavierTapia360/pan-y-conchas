@@ -23,7 +23,7 @@ import { reconcileCartItems } from '@/components/catalog-cart-provider';
 import { buildTelegramOrderText, buildTelegramOrderUrl } from '@/lib/telegram';
 import { en } from '@/locales/en';
 import { es } from '@/locales/es';
-import { promotionDefaults } from '@/data/promotion';
+import { promotionDefaults, promotions } from '@/data/promotion';
 import { normalizePromotion } from '@/lib/local-promotion';
 import { calculateShippingCents } from '@/lib/shipping';
 import { shouldShowPromotion } from '@/lib/promotion-visibility';
@@ -32,41 +32,63 @@ describe('core rules', () => {
   it('keeps the official promotion fixed in integer cents', () => {
     expect(promotionDefaults).toMatchObject({
       slug: 'cereal-bubblegum-promo',
-      priceCents: 17012,
+      priceCents: 12734,
+      normalPriceCents: 16498,
+      shippingIncluded: false,
       active: true,
       available: true,
       hidden: false,
       components: [
         { slug: 'cereal-milk', presentation: 'oz', quantity: 1 },
-        { slug: 'bubble-gum', presentation: 'halfOz', quantity: 1 },
+        { slug: 'bubble-gum', presentation: 'oz', quantity: 1 },
       ],
     });
     expect(promotionDefaults.names).toEqual({
       es: 'SUPER PROMOCIÓN',
       en: 'SUPER PROMOTION',
     });
+    expect(
+      promotions.map(({ slug, priceCents }) => ({ slug, priceCents })),
+    ).toEqual([
+      { slug: 'cereal-bubblegum-promo', priceCents: 12734 },
+      {
+        slug: 'cereal-white-gummies-bubblegum-promo',
+        priceCents: 24949,
+      },
+      { slug: 'cereal-white-gummies-jelly-promo', priceCents: 46199 },
+    ]);
   });
 
-  it('applies shipping once per order and keeps promo-only shipping free', () => {
+  it('applies $17 shipping once and preserves only shipping-included promotions', () => {
     expect(calculateShippingCents([])).toBe(0);
     expect(
       calculateShippingCents([{ slug: 'cereal-bubblegum-promo', quantity: 1 }]),
-    ).toBe(0);
+    ).toBe(1700);
     expect(
       calculateShippingCents([{ slug: 'cereal-bubblegum-promo', quantity: 2 }]),
+    ).toBe(1700);
+    expect(
+      calculateShippingCents([
+        { slug: 'cereal-white-gummies-bubblegum-promo', quantity: 1 },
+      ]),
+    ).toBe(0);
+    expect(
+      calculateShippingCents([
+        { slug: 'cereal-white-gummies-jelly-promo', quantity: 1 },
+      ]),
     ).toBe(0);
     expect(calculateShippingCents([{ slug: 'cereal-milk', quantity: 1 }])).toBe(
-      1799,
+      1700,
     );
     expect(
       calculateShippingCents([
         { slug: 'cereal-bubblegum-promo', quantity: 1 },
         { slug: 'mac-1', quantity: 3 },
       ]),
-    ).toBe(1799);
+    ).toBe(1700);
     expect(
       10499 + calculateShippingCents([{ slug: 'cereal-milk', quantity: 1 }]),
-    ).toBe(12298);
+    ).toBe(12199);
   });
 
   it('normalizes local promotion values and rejects invalid prices', () => {
@@ -76,9 +98,9 @@ describe('core rules', () => {
       priceCents: 18000,
       active: false,
     });
-    expect(normalizePromotion({ priceCents: -1 }).priceCents).toBe(17012);
+    expect(normalizePromotion({ priceCents: -1 }).priceCents).toBe(12734);
     expect(normalizePromotion({ priceCents: Number.NaN }).priceCents).toBe(
-      17012,
+      12734,
     );
   });
 
@@ -154,10 +176,15 @@ describe('core rules', () => {
         prices: { qp: 28999, oz: 10499, halfOz: 5999 },
       });
     }
+    expect(bySlug.get('white-gummies')).toMatchObject({
+      name: 'WHITE GUMMIES',
+      stocks: { qp: 10, oz: 10, halfOz: 10 },
+      prices: { qp: 32250, oz: 11999, halfOz: 6499 },
+    });
     expect(bySlug.get('bubble-gum')?.name).toBe('BUBBLEGUM GELATO');
     const videos = products.map((product) => product.video);
     expect(videos.every(Boolean)).toBe(true);
-    expect(new Set(videos).size).toBe(6);
+    expect(new Set(videos).size).toBe(7);
     expect(products.every((product) => Boolean(product.videoPoster))).toBe(
       true,
     );
@@ -192,10 +219,10 @@ describe('core rules', () => {
   });
   it('uses the approved bilingual client copy and official brand assets', () => {
     expect(en.announcement).toBe(
-      'Standard shipping $17.99 · Super Promotion ships free',
+      'Standard shipping $17 · Select promotions include shipping',
     );
     expect(es.announcement).toBe(
-      'Envío estándar $17.99 · La Super Promoción incluye envío',
+      'Envío estándar $17 · Promociones seleccionadas incluyen envío',
     );
     expect(en.nav.flower).toBe('Exclusive Drop');
     expect(es.nav.flower).toBe('Exclusive Drop');
@@ -238,13 +265,14 @@ describe('core rules', () => {
     expect(
       products
         .filter((product) =>
-          ['bubble-gum', 'cereal-milk'].includes(product.slug),
+          ['bubble-gum', 'cereal-milk', 'white-gummies'].includes(product.slug),
         )
         .every((product) => product.images[0].endsWith('/principal.png')),
     ).toBe(true);
     expect(bySlug.get('bubble-gum')?.images).toHaveLength(5);
     expect(bySlug.get('cereal-milk')?.images).toHaveLength(5);
-    expect(new Set(galleryImages).size).toBe(28);
+    expect(bySlug.get('white-gummies')?.images).toHaveLength(6);
+    expect(new Set(galleryImages).size).toBe(34);
     expect(assets.mac1.video).toBe('/assets/Mac 1/Official MAC 1 HD.mp4');
     expect(assets.mac1.cover).toBe('/assets/flower/identity/mac-1-cover.png');
   });
@@ -617,8 +645,8 @@ describe('core rules', () => {
         },
       ],
       subtotalCents: 40000,
-      shippingCents: 1799,
-      totalCents: 41799,
+      shippingCents: 1700,
+      totalCents: 41700,
       customer: {
         name: 'Ana Pérez',
         address: '123 Main St',
@@ -657,8 +685,8 @@ describe('core rules', () => {
         },
       ],
       subtotalCents: 70000,
-      shippingCents: 1799,
-      totalCents: 71799,
+      shippingCents: 1700,
+      totalCents: 71700,
       customer: {
         name: 'Alex',
         address: '10 Market St',

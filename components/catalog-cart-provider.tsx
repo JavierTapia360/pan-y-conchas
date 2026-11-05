@@ -136,15 +136,17 @@ export function CatalogCartProvider({
 }) {
   const catalogProducts = useCatalog();
   const waxProduct = useWaxProduct();
-  const { promotion } = usePromotionStore();
+  const { promotions } = usePromotionStore();
   const { language } = useLanguage();
   const products = useMemo<CatalogCartProduct[]>(
     () => [
       ...catalogProducts.map(toCatalogCartProduct),
-      toPromotionCartProduct(promotion, language, catalogProducts),
+      ...promotions.map((promotion) =>
+        toPromotionCartProduct(promotion, language, catalogProducts),
+      ),
       { ...waxProduct },
     ],
-    [catalogProducts, language, promotion, waxProduct],
+    [catalogProducts, language, promotions, waxProduct],
   );
   const [items, setItems] = useState<CatalogCartItem[]>([]);
   const [open, setOpen] = useState(false);

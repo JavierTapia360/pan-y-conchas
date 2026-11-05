@@ -15,10 +15,12 @@ import {
   toPromotionCartProduct,
 } from '@/data/catalog-cart';
 import { PROMOTION_PRESENTATION } from '@/data/promotion';
+import { productPresentationLabels } from '@/data/products';
 
-export function PromotionDetail() {
+export function PromotionDetail({ slug }: { slug: string }) {
   const { language, copy } = useLanguage();
-  const { promotion } = usePromotionStore();
+  const { promotions } = usePromotionStore();
+  const promotion = promotions.find((item) => item.slug === slug)!;
   const products = useCatalog();
   const { add } = useCatalogCart();
   const available =
@@ -62,22 +64,37 @@ export function PromotionDetail() {
             {promotion.descriptions[language]}
           </p>
           <ul className="promotion-components">
-            <li>
-              <strong>CEREAL MILK</strong>
-              <span>1 Oz</span>
-            </li>
-            <li>
-              <strong>BUBBLEGUM GELATO</strong>
-              <span>1/2 Oz</span>
-            </li>
+            {promotion.components.map((component) => {
+              const product = products.find(
+                (item) => item.slug === component.slug,
+              );
+              return (
+                <li key={`${component.slug}-${component.presentation}`}>
+                  <strong>{product?.name || component.slug}</strong>
+                  <span>
+                    {component.quantity}{' '}
+                    {productPresentationLabels[component.presentation]}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
           <div className="promotion-price-block">
             <span>
               {language === 'es' ? 'PRECIO DEL PAQUETE' : 'BUNDLE PRICE'}
             </span>
             <strong>${(promotion.priceCents / 100).toFixed(2)}</strong>
+            {promotion.normalPriceCents ? (
+              <del>${(promotion.normalPriceCents / 100).toFixed(2)}</del>
+            ) : null}
             <small>
-              {language === 'es' ? 'ENVÍO INCLUIDO' : 'SHIPPING INCLUDED'}
+              {promotion.shippingIncluded
+                ? language === 'es'
+                  ? 'ENVÍO INCLUIDO'
+                  : 'SHIPPING INCLUDED'
+                : language === 'es'
+                  ? 'ENVÍO ESTÁNDAR DE $17 AL FINAL'
+                  : '$17 STANDARD SHIPPING AT SUMMARY'}
             </small>
           </div>
           <div className="availability">

@@ -30,6 +30,7 @@ const flowerPrefixes = [
   'flower/frosted-fuel/',
   'flower/bubble-gum/',
   'flower/cereal-milk/',
+  'flower/white-gummies/',
 ];
 const flowerImages = paths.filter((item) =>
   flowerPrefixes.some((prefix) => item.startsWith(prefix)),
@@ -84,28 +85,36 @@ const expectedFlowerCounts = {
   'flower/frosted-fuel/': 5,
   'flower/bubble-gum/': 5,
   'flower/cereal-milk/': 5,
+  'flower/white-gummies/': 6,
 };
 const invalidFlowerCounts = Object.entries(expectedFlowerCounts).filter(
   ([prefix, expected]) =>
     flowerImages.filter((item) => item.startsWith(prefix)).length !== expected,
 );
-const promotionAsset =
-  'promotion/promo_cereal_milk_bubblegum_gelato_170_12.png';
-const promotionDimensions = imageDimensions(
-  path.resolve('public/assets', promotionAsset),
-);
-const invalidPromotion =
-  !paths.includes(promotionAsset) ||
-  promotionDimensions?.width !== 1254 ||
-  promotionDimensions?.height !== 1254;
+const promotionAssets = [
+  'promotion/promo_cereal_milk_bubblegum_gelato_127_34.png',
+  'promotion/promo_cereal_white_gummies_bubblegum_249_49.png',
+  'promotion/promo_cereal_white_gummies_jelly_461_99.png',
+];
+const invalidPromotions = promotionAssets.flatMap((promotionAsset) => {
+  const dimensions = imageDimensions(
+    path.resolve('public/assets', promotionAsset),
+  );
+  return paths.includes(promotionAsset) &&
+    dimensions &&
+    dimensions.width === dimensions.height &&
+    dimensions.width >= 1080
+    ? []
+    : [promotionAsset];
+});
 if (
   missing.length ||
   unsupported.length ||
   duplicates.length ||
-  flowerImages.length !== 28 ||
+  flowerImages.length !== 34 ||
   invalidFlowerCounts.length ||
   invalidFlowerDimensions.length ||
-  invalidPromotion
+  invalidPromotions.length
 ) {
   console.error(
     JSON.stringify(
@@ -116,7 +125,7 @@ if (
         flowerImageCount: flowerImages.length,
         invalidFlowerCounts,
         invalidFlowerDimensions,
-        invalidPromotion,
+        invalidPromotions,
       },
       null,
       2,
@@ -125,5 +134,5 @@ if (
   process.exit(1);
 }
 console.log(
-  `Verified ${paths.length} asset references, including the original 1254x1254 promotion, 28 gallery images and six 1254x1254 principals.`,
+  `Verified ${paths.length} asset references, including three square promotions, 34 gallery images and seven 1254x1254 principals.`,
 );

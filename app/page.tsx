@@ -10,10 +10,10 @@ import { NewsletterForm } from '@/components/newsletter-form';
 import { useLanguage } from '@/components/language-context';
 import { assets } from '@/data/assets';
 import { useCatalog } from '@/hooks/use-catalog';
-import { promotionDefaults } from '@/data/promotion';
+import { PromotionCarousel } from '@/components/promotion-carousel';
 
 export default function Home() {
-  const { copy, language } = useLanguage();
+  const { copy } = useLanguage();
   const catalog = useCatalog();
   const reduceMotion = useReducedMotion();
   const categoryProduct =
@@ -27,7 +27,7 @@ export default function Home() {
           <div className="hero-media">
             <picture>
               <source
-                media="(max-width: 680px)"
+                media="(max-width: 700px)"
                 srcSet={assets.extras.mobileHero.replaceAll(' ', '%20')}
               />
               <Image
@@ -71,6 +71,8 @@ export default function Home() {
           </motion.div>
         </section>
 
+        <PromotionCarousel />
+
         <section className="category-strip" aria-label={copy.home.categories}>
           <Link prefetch={false} href="/flower">
             {categoryProduct ? (
@@ -88,37 +90,6 @@ export default function Home() {
             <span>{copy.status.comingSoon}</span>
             <strong>WAX</strong>
           </Link>
-        </section>
-
-        <section className="film-section film-offer-section">
-          <SectionReveal className="film-copy">
-            <p className="section-kicker">{copy.home.filmKicker}</p>
-            <h2>{copy.home.filmTitle}</h2>
-            <figure className="brand-chase-accent">
-              <Image
-                src={assets.extras.chaseDecoration}
-                alt=""
-                width={1254}
-                height={1254}
-              />
-              <figcaption>{copy.home.cloudLine}</figcaption>
-            </figure>
-          </SectionReveal>
-          <SectionReveal className="film-visual film-offer-visual">
-            <Link
-              prefetch={false}
-              href={`/flower/${promotionDefaults.slug}`}
-              className="film-offer-link"
-              aria-label={copy.actions.viewPromotion}
-            >
-              <Image
-                src={promotionDefaults.image}
-                alt={`${promotionDefaults.names[language]}: ${promotionDefaults.descriptions[language]}`}
-                fill
-                sizes="(max-width: 800px) 100vw, 65vw"
-              />
-            </Link>
-          </SectionReveal>
         </section>
 
         <section className="wax-teaser">

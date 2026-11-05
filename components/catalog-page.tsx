@@ -6,10 +6,12 @@ import { ProductCard } from '@/components/product-card';
 import { useLanguage } from '@/components/language-context';
 import { useCatalog } from '@/hooks/use-catalog';
 import { PromotionCard } from '@/components/promotion-card';
+import { usePromotionStore } from '@/components/promotion-provider';
 
 export function CatalogPage() {
   const { copy } = useLanguage();
   const visible = useCatalog().filter((product) => !product.hidden);
+  const { promotions } = usePromotionStore();
   return (
     <>
       <SiteHeader />
@@ -20,7 +22,9 @@ export function CatalogPage() {
           <p>{copy.flower.intro}</p>
         </header>
         <section className="catalog-grid">
-          <PromotionCard />
+          {promotions.map((promotion) => (
+            <PromotionCard key={promotion.slug} promotion={promotion} />
+          ))}
           {visible.map((product) => (
             <ProductCard key={product.slug} product={product} />
           ))}

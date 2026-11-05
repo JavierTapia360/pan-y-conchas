@@ -31,6 +31,7 @@ const requiredNames = [
   'FROSTED FUEL',
   'BUBBLEGUM GELATO',
   'CEREAL MILK',
+  'WHITE GUMMIES',
 ];
 const absentNames = requiredNames.filter(
   (name) => !products.includes(`name: '${name}'`),
@@ -82,7 +83,7 @@ if (
   missing.length ||
   absentNames.length ||
   oldNames.length ||
-  videoCount !== 6 ||
+  videoCount !== 7 ||
   apiRouteExists ||
   architectureLeaks.length ||
   duplicatedPrices.length
@@ -107,5 +108,5 @@ if (
   process.exit(1);
 }
 console.log(
-  `Verified ${slugs.length} product slugs, definitive names, 6 videos, locale namespaces and static-only architecture.`,
+  `Verified ${slugs.length} product slugs, definitive names, 7 videos, locale namespaces and static-only architecture.`,
 );

@@ -8,7 +8,11 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { promotionDefaults, type PromotionSettings } from '@/data/promotion';
+import {
+  additionalPromotions,
+  promotionDefaults,
+  type PromotionSettings,
+} from '@/data/promotion';
 import {
   LOCAL_PROMOTION_EVENT,
   LOCAL_PROMOTION_KEY,
@@ -18,6 +22,7 @@ import {
 
 type PromotionContextValue = {
   promotion: PromotionSettings;
+  promotions: readonly PromotionSettings[];
   savePromotion: (promotion: PromotionSettings) => void;
 };
 
@@ -44,6 +49,7 @@ export function PromotionProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(
     () => ({
       promotion,
+      promotions: [promotion, ...additionalPromotions],
       savePromotion(next: PromotionSettings) {
         writeLocalPromotion(next);
         setPromotion(next);
