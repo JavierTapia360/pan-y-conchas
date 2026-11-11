@@ -32,9 +32,9 @@ describe('core rules', () => {
   it('keeps the official promotion fixed in integer cents', () => {
     expect(promotionDefaults).toMatchObject({
       slug: 'cereal-bubblegum-promo',
-      priceCents: 12734,
+      priceCents: 14434,
       normalPriceCents: 16498,
-      shippingIncluded: false,
+      shippingIncluded: true,
       active: true,
       available: true,
       hidden: false,
@@ -50,7 +50,7 @@ describe('core rules', () => {
     expect(
       promotions.map(({ slug, priceCents }) => ({ slug, priceCents })),
     ).toEqual([
-      { slug: 'cereal-bubblegum-promo', priceCents: 12734 },
+      { slug: 'cereal-bubblegum-promo', priceCents: 14434 },
       {
         slug: 'cereal-white-gummies-bubblegum-promo',
         priceCents: 24949,
@@ -59,14 +59,14 @@ describe('core rules', () => {
     ]);
   });
 
-  it('applies $17 shipping once and preserves only shipping-included promotions', () => {
+  it('applies $17 shipping once and keeps every promotion shipping-free', () => {
     expect(calculateShippingCents([])).toBe(0);
     expect(
       calculateShippingCents([{ slug: 'cereal-bubblegum-promo', quantity: 1 }]),
-    ).toBe(1700);
+    ).toBe(0);
     expect(
       calculateShippingCents([{ slug: 'cereal-bubblegum-promo', quantity: 2 }]),
-    ).toBe(1700);
+    ).toBe(0);
     expect(
       calculateShippingCents([
         { slug: 'cereal-white-gummies-bubblegum-promo', quantity: 1 },
@@ -98,9 +98,9 @@ describe('core rules', () => {
       priceCents: 18000,
       active: false,
     });
-    expect(normalizePromotion({ priceCents: -1 }).priceCents).toBe(12734);
+    expect(normalizePromotion({ priceCents: -1 }).priceCents).toBe(14434);
     expect(normalizePromotion({ priceCents: Number.NaN }).priceCents).toBe(
-      12734,
+      14434,
     );
   });
 
@@ -219,10 +219,10 @@ describe('core rules', () => {
   });
   it('uses the approved bilingual client copy and official brand assets', () => {
     expect(en.announcement).toBe(
-      'Standard shipping $17 · Select promotions include shipping',
+      'Standard shipping $17 · All promotions ship free',
     );
     expect(es.announcement).toBe(
-      'Envío estándar $17 · Promociones seleccionadas incluyen envío',
+      'Envío estándar $17 · Todas las promociones tienen envío gratis',
     );
     expect(en.nav.flower).toBe('Exclusive Drop');
     expect(es.nav.flower).toBe('Exclusive Drop');

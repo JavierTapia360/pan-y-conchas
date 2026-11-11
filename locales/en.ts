@@ -8,7 +8,7 @@ export const en = {
     menu: 'Open menu',
     close: 'Close menu',
   },
-  announcement: 'Standard shipping $17 · Select promotions include shipping',
+  announcement: 'Standard shipping $17 · All promotions ship free',
   language: {
     label: 'Language',
     select: 'Select language',
@@ -199,7 +199,7 @@ export const en = {
     subtotal: 'Subtotal',
     shipping: 'Shipping',
     standardShipping: 'Standard shipping',
-    shippingIncluded: 'Shipping included',
+    shippingIncluded: 'Free shipping',
     total: 'Total',
     remove: 'Remove',
     quantity: 'Quantity',
@@ -228,7 +228,7 @@ export const en = {
     subtotal: 'Subtotal',
     shipping: 'Shipping',
     standardShipping: 'Standard shipping',
-    shippingIncluded: 'Shipping included',
+    shippingIncluded: 'Free shipping',
     total: 'Total',
     summary: 'Order summary',
     summaryDescription:

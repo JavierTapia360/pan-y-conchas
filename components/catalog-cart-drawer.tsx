@@ -203,7 +203,10 @@ export function CatalogCartDrawer() {
                 <AlertDialogTrigger className="catalog-cart-clear">
                   {copy.cart.clear}
                 </AlertDialogTrigger>
-                <AlertDialogContent className="catalog-cart-alert">
+                <AlertDialogContent
+                  className="catalog-cart-alert"
+                  overlayClassName="catalog-cart-alert-overlay"
+                >
                   <AlertDialogHeader>
                     <AlertDialogTitle>{copy.cart.clearTitle}</AlertDialogTitle>
                     <AlertDialogDescription>

@@ -235,7 +235,13 @@ export function ProductDetail({
           <Link className="detail-back-link" href="/flower" prefetch={false}>
             {copy.actions.backFlower}
           </Link>
-          <h1>{product.name}</h1>
+          <h1
+            className={
+              product.slug === 'bubble-gum' ? 'detail-title-long' : undefined
+            }
+          >
+            {product.name}
+          </h1>
           <p className="detail-description">{product.description[language]}</p>
           {product.attributes[language].length > 0 && (
             <ul

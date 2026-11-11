@@ -2260,6 +2260,9 @@ body {
   line-height: var(--display-heading-leading);
   text-transform: uppercase;
 }
+.detail-copy h1.detail-title-long {
+  font-size: clamp(4.5rem, 6.5vw, 8.5rem);
+}
 .detail-copy h1::after {
   content: '';
   display: block;

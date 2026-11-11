@@ -8,7 +8,7 @@ export const es = {
     menu: 'Abrir menú',
     close: 'Cerrar menú',
   },
-  announcement: 'Envío estándar $17 · Promociones seleccionadas incluyen envío',
+  announcement: 'Envío estándar $17 · Todas las promociones tienen envío gratis',
   language: {
     label: 'Idioma',
     select: 'Seleccionar idioma',
@@ -201,7 +201,7 @@ export const es = {
     subtotal: 'Subtotal',
     shipping: 'Envío',
     standardShipping: 'Envío estándar',
-    shippingIncluded: 'Envío incluido',
+    shippingIncluded: 'Envío gratis',
     total: 'Total',
     remove: 'Eliminar',
     quantity: 'Cantidad',
@@ -231,7 +231,7 @@ export const es = {
     subtotal: 'Subtotal',
     shipping: 'Envío',
     standardShipping: 'Envío estándar',
-    shippingIncluded: 'Envío incluido',
+    shippingIncluded: 'Envío gratis',
     total: 'Total',
     summary: 'Resumen',
     summaryDescription:

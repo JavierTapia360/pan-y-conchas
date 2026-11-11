@@ -90,8 +90,8 @@ export function PromotionDetail({ slug }: { slug: string }) {
             <small>
               {promotion.shippingIncluded
                 ? language === 'es'
-                  ? 'ENVÍO INCLUIDO'
-                  : 'SHIPPING INCLUDED'
+                  ? 'ENVÍO GRATIS'
+                  : 'FREE SHIPPING'
                 : language === 'es'
                   ? 'ENVÍO ESTÁNDAR DE $17 AL FINAL'
                   : '$17 STANDARD SHIPPING AT SUMMARY'}

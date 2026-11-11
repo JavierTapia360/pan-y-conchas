@@ -1,6 +1,6 @@
 import { promotionDefaults, type PromotionSettings } from '@/data/promotion';
 
-export const LOCAL_PROMOTION_KEY = 'gf_promo_local_v2';
+export const LOCAL_PROMOTION_KEY = 'gf_promo_local_v3';
 export const LOCAL_PROMOTION_EVENT = 'gf-promo-local-change';
 
 export function normalizePromotion(value: unknown): PromotionSettings {
