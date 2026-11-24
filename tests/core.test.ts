@@ -449,6 +449,31 @@ describe('core rules', () => {
       { slug: 'cereal-milk', presentation: 'oz', quantity: 10 },
     ]);
   });
+  it('keeps JELLY DONUT and MAC 1 sold out across saved catalog and cart data', () => {
+    for (const slug of ['jelly-donut', 'mac-1']) {
+      const fallback = products.find((product) => product.slug === slug)!;
+      const normalized = normalizeLocalProduct(
+        {
+          ...fallback,
+          stocks: { halfOz: 4, oz: 4, qp: 4 },
+          available: true,
+          updatedAt: '2026-11-10T00:00:00.000Z',
+        },
+        fallback,
+      );
+      expect(normalized.stocks).toEqual({ halfOz: 0, oz: 0, qp: 0 });
+      expect(normalized.available).toBe(false);
+      expect(
+        reconcileCartItems(
+          [{ slug, presentation: 'oz', quantity: 1 }],
+          products,
+        ).items,
+      ).toEqual([]);
+    }
+    expect(
+      isPromotionComponentsAvailable(promotions[2], products),
+    ).toBe(false);
+  });
   it('updates an untouched local SKITTLES name without changing its stable slug', () => {
     const fallback = products.find((product) => product.slug === 'skittles')!;
     const normalized = normalizeLocalProduct(

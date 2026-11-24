@@ -41,7 +41,15 @@ export function normalizeLocalProduct(
     fallback.slug === 'frosted-fuel' &&
     typeof candidate.updatedAt !== 'string' &&
     productPresentationOrder.every((key) => candidate.stocks?.[key] === 0);
-  const candidateStocks = isFormerFrostedFuelDefault
+  const hasNewerStockEdit =
+    typeof fallback.updatedAt === 'string' &&
+    typeof candidate.updatedAt === 'string' &&
+    Date.parse(candidate.updatedAt) > Date.parse(fallback.updatedAt);
+  const isNewSoldOutDefault =
+    typeof fallback.updatedAt === 'string' &&
+    !hasAvailablePresentation(fallback.stocks) &&
+    !hasNewerStockEdit;
+  const candidateStocks = isFormerFrostedFuelDefault || isNewSoldOutDefault
     ? fallback.stocks
     : candidate.stocks;
   const retiredPriceSets: Record<string, Product['prices']> = {
